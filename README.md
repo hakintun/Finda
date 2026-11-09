@@ -1,4 +1,9 @@
 # Finda
+Finda is a marketplace app designed to connect buyers and sellers, allowing buyers to easily find products, check prices and availability, locate sellers, and saves time without walking around searching for the sellers that have what they need.
+
+## Member 2 prototype
+
+See [MEMBER2_GUIDE.md](MEMBER2_GUIDE.md) for the local test demo, the separate Supabase schema, limitations, and GitHub push instructions. This is not production-ready.
 
 Finda is a discovery-first local marketplace PWA for **Port Harcourt**, designed to connect buyers and nearby sellers—allowing buyers to check today's Naira (`₦`) price, confirmed stock availability, and street-landmark directions without walking around markets or calling five numbers only to hear *"come and check"* or *"e don finish."*
 

@@ -1,3 +1,4 @@
+{"name":"finda-member2-foundation","version":"0.1.0","private":true,"type":"module","scripts":{"start":"node demo/server.js","test":"node --test demo/*.test.js"},"engines":{"node":">=20"}}
 {
   "name": "finda",
   "version": "0.1.0",

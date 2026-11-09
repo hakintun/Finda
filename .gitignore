@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Member 3 demo persistence (regenerated from data/seed.json — never commit)
+/data/db.json
+*.tsbuildinfo

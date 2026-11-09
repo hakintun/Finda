@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  /* Sunlit-legible Port Harcourt palette (WCAG 2.1 AA >= 4.5:1 contrast) */
+  --bg-canvas: #faf9f5;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f3f2ec;
+  --ink-primary: #111827;
+  --ink-secondary: #374151;
+  --ink-muted: #4b5563;
+  --brand-primary: #065f46;
+  --brand-primary-hover: #064e3b;
+  --brand-tint: #ecfdf5;
+  --border-default: #d1d5db;
+  --border-strong: #9ca3af;
+}
+
+@layer base {
+  html {
+    background-color: var(--bg-canvas);
+    color: var(--ink-primary);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--bg-canvas);
+    color: var(--ink-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.45;
+  }
+
+  /* Eliminate 300ms mobile tap delay and enforce visible keyboard focus (NFR-6) */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+
+  :focus-visible {
+    outline: 3px solid #047857;
+    outline-offset: 2px;
+  }
+}
+
+/* Tabular figures keep Naira prices aligned side-by-side when comparing sellers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

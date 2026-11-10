@@ -175,7 +175,7 @@ export function VerifyChannelsPanel({
       {activeChannel && otpMeta ? (
         <form
           onSubmit={submitCode}
-          className="rounded-2xl border-2 border-[#00B53F] bg-[#ECFDF5]/60 p-4 space-y-3"
+          className="rounded-2xl border-2 border-[#064E3B] bg-[#ECFDF5]/60 p-4 space-y-3"
         >
           <p className="text-sm font-bold text-[#111827]">
             Enter the 6-digit code sent via{" "}

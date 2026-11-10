@@ -41,33 +41,32 @@ export default async function PublicShopPage({
       }
     : null;
 
-  // Strictly require `status === "active"` so Admin delisting hides shop immediately
   const seller = (db.sellers || []).find(
     (s: any) => s.slug === slug && s.status === "active"
   );
 
   if (!seller) {
     return (
-      <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+      <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
         <TopBar customer={topCustomer} />
         <main className="mx-auto w-full max-w-xl flex-1 px-4 py-14">
-          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center space-y-4 shadow-xs">
+          <div className="rounded-2xl border border-[#E4E1D6] bg-white p-8 text-center space-y-4 shadow-xs">
             <div className="text-4xl" aria-hidden="true">
               🏪
             </div>
             <h1 className="text-xl font-extrabold text-[#111827]">
-              Shop &ldquo;{slug}&rdquo; is not available
+              Stall &ldquo;{slug}&rdquo; is not available
             </h1>
             <p className="text-sm text-[#4B5563]">
-              This shop link may have a typo or the seller account is currently
-              delisted. Browse active Port Harcourt sellers below.
+              This QR link may have a typo or the shop is currently delisted.
+              Browse active Port Harcourt stalls below.
             </p>
             <div className="flex flex-wrap justify-center gap-2.5 pt-1">
               <Link href="/search" className="btn btn-primary">
-                Browse Active Shops
+                Explore Active Stalls
               </Link>
               <Link href="/" className="btn">
-                Marketplace Home
+                Home
               </Link>
             </div>
           </div>
@@ -94,7 +93,7 @@ export default async function PublicShopPage({
     );
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
       <TopBar
         activeClusterLabel={zone?.name || "Port Harcourt"}
         customer={topCustomer}
@@ -103,26 +102,27 @@ export default async function PublicShopPage({
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-6 space-y-6">
         {sp.reported === "1" ? (
           <div className="notice notice-ok">
-            ✓ Report received. Thank you for helping keep Finda safe.
+            ✓ Report received. Thank you for helping keep Finda accurate.
           </div>
         ) : null}
 
-        {/* Jiji Storefront Banner */}
-        <section className="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-xs">
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+        {/* Deep Forest Storefront Banner */}
+        <section className="overflow-hidden rounded-3xl border border-[#E4E1D6] bg-white shadow-xs">
+          <div className="finda-canopy px-6 py-4 text-white flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-[#FDE68A]">
+              📍 {zone?.name || "Port Harcourt"} · Verified Market Stall
+            </span>
+            <VerificationBadge tier={mapDbTierToUi(seller.verification_tier)} />
+          </div>
+
+          <div className="p-6 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl font-black tracking-tight text-[#111827]">
-                  {seller.business_name}
-                </h1>
-                <VerificationBadge
-                  tier={mapDbTierToUi(seller.verification_tier)}
-                />
-              </div>
+              <h1 className="text-2xl font-black tracking-tight text-[#111827]">
+                {seller.business_name}
+              </h1>
 
               <p className="text-sm font-semibold text-[#374151]">
-                📍 {zone?.name ? `${zone.name} · ` : ""}
-                {seller.landmark_text}
+                🧭 {seller.landmark_text}
               </p>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-[#4B5563]">
@@ -137,7 +137,7 @@ export default async function PublicShopPage({
                     className={
                       openState.open === false
                         ? "text-[#991B1B]"
-                        : "text-[#00B53F]"
+                        : "text-[#064E3B]"
                     }
                   >
                     {openState.label}
@@ -155,7 +155,7 @@ export default async function PublicShopPage({
                 href={`/s/${seller.slug}/map`}
                 className="btn btn-primary"
               >
-                🗺️ Directions & Map
+                🗺️ Directions &amp; Pin Map
               </Link>
               <RevealPhoneButton
                 sellerId={seller.id}
@@ -165,25 +165,25 @@ export default async function PublicShopPage({
           </div>
         </section>
 
-        {/* Storefront Items Grid */}
+        {/* Storefront Stock Grid */}
         <section className="space-y-3.5">
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-extrabold text-[#111827]">
-              Active Ads from {seller.business_name} ({listings.length})
+              Confirmed Stock at {seller.business_name} ({listings.length})
             </h2>
             <Link
               href="/search"
-              className="text-xs font-extrabold text-[#00B53F] hover:underline"
+              className="text-xs font-extrabold text-[#064E3B] hover:underline"
             >
-              Search all Port Harcourt ads →
+              Compare across markets →
             </Link>
           </div>
 
           {listings.length === 0 ? (
-            <div className="rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center text-sm text-[#4B5563]">
-              No active confirmed ads right now. Tap{" "}
+            <div className="rounded-2xl border border-[#E4E1D6] bg-white p-8 text-center text-sm text-[#4B5563]">
+              No active confirmed items right now. Tap{" "}
               <strong>Show phone number</strong> above to check directly with
-              the shop.
+              the stall.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

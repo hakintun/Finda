@@ -33,11 +33,17 @@ export default async function SavedAdsPage() {
     : null;
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
       <TopBar customer={topCustomer} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-6 space-y-4">
-        <h1 className="text-2xl font-black text-[#111827]">My Saved Ads</h1>
+        <div>
+          <h1 className="text-2xl font-black text-[#111827]">Saved Stock</h1>
+          <p className="text-xs text-[#4B5563]">
+            Compare prices and street landmarks across your shortlisted Port
+            Harcourt stalls.
+          </p>
+        </div>
         <SavedAdsClient catalog={catalog} />
       </main>
 

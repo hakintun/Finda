@@ -83,7 +83,7 @@ export default async function ShopDirectionsMapPage({
   );
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
       <TopBar
         activeClusterLabel={zone?.name || "Directions"}
         customer={topCustomer}
@@ -93,15 +93,15 @@ export default async function ShopDirectionsMapPage({
         <div className="flex items-center justify-between">
           <Link
             href={`/s/${seller.slug}`}
-            className="text-xs font-extrabold text-[#00B53F] hover:underline"
+            className="text-xs font-extrabold text-[#064E3B] hover:underline"
           >
             ← Back to {seller.business_name}
           </Link>
           <VerificationBadge tier={mapDbTierToUi(seller.verification_tier)} />
         </div>
 
-        <section className="rounded-2xl border-2 border-[#00B53F] bg-white p-5 space-y-3 shadow-xs">
-          <span className="inline-flex rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#065F46]">
+        <section className="rounded-2xl border-2 border-[#064E3B] bg-white p-5 space-y-3 shadow-xs">
+          <span className="inline-flex rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#064E3B]">
             STEP 1 · TELL KEKE / BOLT DRIVER THIS LANDMARK
           </span>
           <h1 className="text-xl font-extrabold text-[#111827]">
@@ -110,7 +110,7 @@ export default async function ShopDirectionsMapPage({
           </h1>
 
           {askFor ? (
-            <p className="rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] p-3 text-sm text-[#111827]">
+            <p className="rounded-xl bg-[#F8F7F2] border border-[#E4E1D6] p-3 text-sm text-[#111827]">
               🗣️ Once inside the line/plaza, ask for: <strong>{askFor}</strong>{" "}
               ({seller.business_name})
             </p>
@@ -121,7 +121,7 @@ export default async function ShopDirectionsMapPage({
               🕒{" "}
               <strong
                 className={
-                  openState.open === false ? "text-[#991B1B]" : "text-[#00B53F]"
+                  openState.open === false ? "text-[#991B1B]" : "text-[#064E3B]"
                 }
               >
                 {openState.label}
@@ -178,7 +178,7 @@ export default async function ShopDirectionsMapPage({
                 rx="4"
                 fill="#ECFDF5"
                 fillOpacity="0.65"
-                stroke="#00B53F"
+                stroke="#064E3B"
                 strokeWidth="0.7"
                 strokeDasharray="2 1.5"
               />
@@ -187,7 +187,7 @@ export default async function ShopDirectionsMapPage({
                 y="12"
                 fontSize="3.4"
                 fontWeight="700"
-                fill="#065F46"
+                fill="#064E3B"
               >
                 {(zone?.name || "MARKET ZONE").toUpperCase()}
               </text>
@@ -196,14 +196,14 @@ export default async function ShopDirectionsMapPage({
                 cx={px}
                 cy={(py * 62) / 100}
                 r="6"
-                fill="#00B53F"
+                fill="#064E3B"
                 fillOpacity="0.2"
               />
               <circle
                 cx={px}
                 cy={(py * 62) / 100}
                 r="2.8"
-                fill="#00B53F"
+                fill="#064E3B"
                 stroke="#FFFFFF"
                 strokeWidth="1"
               />

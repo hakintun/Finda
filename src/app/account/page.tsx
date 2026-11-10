@@ -21,11 +21,18 @@ export default async function AccountPage() {
     .slice(0, 10);
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
-      <TopBar />
+    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
+      <TopBar
+        customer={{
+          name: user.name,
+          role: user.role,
+          isVerified: Boolean(user.is_verified),
+          hasShop: Boolean(shop),
+        }}
+      />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-7 space-y-6">
-        <section className="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-xs flex flex-wrap items-center justify-between gap-4">
+        <section className="rounded-2xl border border-[#E4E1D6] bg-white p-6 shadow-xs flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-extrabold text-[#111827]">
@@ -47,15 +54,15 @@ export default async function AccountPage() {
           <div className="flex flex-wrap gap-2">
             {shop ? (
               <Link href="/seller" className="btn btn-primary btn-sm">
-                🏪 Open My Shop ({shop.business_name})
+                🏪 Open My Stall ({shop.business_name})
               </Link>
             ) : (
               <Link href="/seller/onboard" className="btn btn-primary btn-sm">
-                + Start Selling on Finda
+                + List Your Shop
               </Link>
             )}
             <Link href="/saved" className="btn btn-sm">
-              ♡ Saved Ads
+              ♡ Saved Stock
             </Link>
           </div>
         </section>

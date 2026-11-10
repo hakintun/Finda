@@ -19,7 +19,8 @@ export interface TopBarCustomer {
 }
 
 /**
- * Jiji.ng-inspired Signature Green Marketplace Header (#00B53F).
+ * Finda's Own Distinctive Warm-Stone & Deep-Forest Header.
+ * Crisp editorial surface with a custom Radar-Pin emblem and live city indicator.
  * Strictly customer-facing — zero Admin links exposed.
  */
 export function TopBar({
@@ -30,45 +31,72 @@ export function TopBar({
   customer?: TopBarCustomer | null;
 }) {
   return (
-    <header className="sticky top-0 z-40 bg-[#00B53F] text-white shadow-sm">
+    <header className="sticky top-0 z-40 border-b border-[#E4E1D6] bg-[#FAF9F5]/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5">
-        {/* Brand Logo + Tagline */}
+        {/* Unique Finda Radar-Pin Brand Mark */}
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="inline-flex min-h-10 items-center gap-2 rounded-xl pr-1 text-white hover:opacity-95"
+            className="inline-flex min-h-10 items-center gap-2.5 rounded-xl pr-1 text-[#111827] hover:opacity-90"
           >
             <span
               aria-hidden="true"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white text-lg font-black text-[#00B53F] shadow-xs"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#064E3B] text-[#FDE68A] shadow-xs"
             >
-              F
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                className="h-5 w-5"
+                stroke="currentColor"
+                strokeWidth="2.2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10Z"
+                />
+                <circle cx="12" cy="11" r="2.2" fill="currentColor" />
+              </svg>
             </span>
             <span className="flex flex-col">
-              <span className="text-xl font-black tracking-tight leading-none">
+              <span className="text-lg font-black tracking-tight text-[#042F22] leading-none">
                 Finda
               </span>
-              <span className="mt-0.5 text-[10px] font-semibold text-white/90 leading-none">
+              <span className="mt-0.5 inline-flex items-center gap-1 text-[10px] font-bold text-[#065F46] leading-none">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#059669]" />
                 {activeClusterLabel}
               </span>
             </span>
           </Link>
-          <span className="hidden md:inline-block text-xs font-semibold text-white/85 border-l border-white/25 pl-3">
-            Sell faster, buy smarter
-          </span>
+
+          <div className="hidden lg:flex items-center gap-1 border-l border-[#E4E1D6] pl-3 text-xs font-semibold text-[#374151]">
+            <Link
+              href="/search"
+              className="rounded-lg px-2.5 py-1.5 hover:bg-[#EFECE3] hover:text-[#064E3B]"
+            >
+              Explore Stock
+            </Link>
+            <Link
+              href="/market-data"
+              className="rounded-lg px-2.5 py-1.5 hover:bg-[#EFECE3] hover:text-[#064E3B]"
+            >
+              Market Index
+            </Link>
+          </div>
         </div>
 
-        {/* Customer Actions + Iconic Orange SELL CTA */}
+        {/* Customer Actions + Distinctive Deep Forest CTA */}
         <nav
-          aria-label="Marketplace navigation"
-          className="flex items-center gap-2 sm:gap-3"
+          aria-label="Primary navigation"
+          className="flex items-center gap-2"
         >
           <Link
             href="/saved"
-            title="Saved Ads"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white hover:bg-white/25"
+            title="Saved Items"
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#E4E1D6] bg-white px-3 text-xs font-bold text-[#374151] hover:border-[#064E3B] hover:text-[#064E3B]"
           >
-            ♡
+            <span aria-hidden="true">♡</span>
+            <span className="hidden sm:inline">Saved</span>
           </Link>
 
           {customer ? (
@@ -76,20 +104,20 @@ export function TopBar({
               {customer.hasShop ? (
                 <Link
                   href="/seller"
-                  className="hidden sm:inline-flex min-h-10 items-center rounded-xl bg-white/15 px-3 text-xs font-bold text-white hover:bg-white/25"
+                  className="hidden sm:inline-flex min-h-10 items-center rounded-xl border border-[#A7F3D0] bg-[#ECFDF5] px-3 text-xs font-bold text-[#064E3B] hover:bg-[#D1FAE5]"
                 >
-                  🏪 My Shop
+                  🏪 Stall Console
                 </Link>
               ) : null}
               <Link
                 href="/account"
-                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-white/15 px-3 text-xs font-bold text-white hover:bg-white/25"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#E4E1D6] bg-white px-3 text-xs font-bold text-[#111827] hover:border-[#064E3B]"
               >
-                <span>👤 {customer.name.split(" ")[0]}</span>
+                <span>{customer.name.split(" ")[0]}</span>
                 {customer.isVerified ? (
                   <span
                     title="Verified Account"
-                    className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-black text-[#00B53F]"
+                    className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#064E3B] text-[10px] font-black text-[#FDE68A]"
                   >
                     ✓
                   </span>
@@ -97,28 +125,28 @@ export function TopBar({
               </Link>
             </div>
           ) : (
-            <div className="flex items-center text-xs sm:text-sm font-bold">
+            <div className="flex items-center gap-1.5">
               <Link
                 href="/auth?tab=login"
-                className="rounded-lg px-2.5 py-2 text-white hover:bg-white/15"
+                className="inline-flex min-h-10 items-center rounded-xl px-3 text-xs font-bold text-[#374151] hover:bg-[#EFECE3] hover:text-[#111827]"
               >
                 Sign in
               </Link>
-              <span className="opacity-50">|</span>
               <Link
                 href="/auth?tab=register"
-                className="rounded-lg px-2.5 py-2 text-white hover:bg-white/15"
+                className="hidden sm:inline-flex min-h-10 items-center rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-bold text-[#111827] hover:border-[#064E3B]"
               >
-                Registration
+                Join
               </Link>
             </div>
           )}
 
           <Link
             href={customer?.hasShop ? "/seller/items?fast=1" : "/sell"}
-            className="inline-flex min-h-10 items-center justify-center rounded-xl bg-[#FF8900] px-4 sm:px-5 text-xs sm:text-sm font-black uppercase tracking-wide text-white shadow-sm hover:bg-[#EA7B00]"
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-[#064E3B] px-3.5 sm:px-4 text-xs font-extrabold text-white shadow-xs hover:bg-[#043927]"
           >
-            SELL
+            <span className="text-[#FDE68A] font-black">+</span>
+            <span>{customer?.hasShop ? "Add Stock" : "List Your Shop"}</span>
           </Link>
         </nav>
       </div>
@@ -127,7 +155,9 @@ export function TopBar({
 }
 
 /**
- * Jiji.ng-style Grid Ad Card for Homepage & Search Grid.
+ * Finda's Signature "Live-Stock & Street-Landmark Ticket Card".
+ * Purpose-built around real Naira price, live confirmation freshness, and Keke/street landmarks
+ * (distinct from classified photo-box templates).
  */
 export function JijiAdCard({
   listing,
@@ -143,97 +173,90 @@ export function JijiAdCard({
   const vis = getCategoryVisual(category);
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-xs transition hover:-translate-y-0.5 hover:border-[#00B53F] hover:shadow-md">
-      {/* Visual Product Tile Header */}
-      <Link
-        href={`/item/${listing.id}`}
-        className="relative flex h-36 items-center justify-center overflow-hidden border-b border-[#F2F4F7]"
-        style={{ backgroundColor: vis.bg }}
-      >
-        <span
-          aria-hidden="true"
-          className="text-5xl transition-transform duration-200 group-hover:scale-110 select-none"
-        >
-          {vis.emoji}
-        </span>
+    <article className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#E4E1D6] bg-white shadow-2xs transition duration-150 hover:-translate-y-0.5 hover:border-[#064E3B] hover:shadow-md">
+      {/* Top Body: Category Micro-Tag + Title + Deep Forest Price + Stock/Freshness */}
+      <div className="p-4 space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <Link
+            href={`/item/${listing.id}`}
+            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold"
+            style={{ backgroundColor: vis.bg, color: vis.accent }}
+          >
+            <span aria-hidden="true">{vis.emoji}</span>
+            <span>{vis.shortLabel}</span>
+          </Link>
 
-        {/* Top-left Verified Pill (Jiji-style) */}
-        <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1">
-          {listing.verificationTier !== "unverified" ? (
-            <span className="inline-flex items-center gap-1 rounded-md bg-[#00B53F] px-2 py-0.5 text-[10px] font-extrabold text-white shadow-2xs">
-              ✓ Verified{" "}
-              {listing.verificationTier === "visit"
-                ? "Stall"
-                : listing.verificationTier === "id"
-                ? "ID"
-                : "Seller"}
-            </span>
-          ) : null}
+          <SaveAdButton listingId={listing.id} />
         </div>
 
-        {/* Bottom-left Category label */}
-        <span
-          className="absolute bottom-2 left-2.5 rounded-md bg-white/90 px-2 py-0.5 text-[10px] font-bold"
-          style={{ color: vis.accent }}
-        >
-          {vis.shortLabel}
-        </span>
-      </Link>
+        <div className="space-y-1.5">
+          <Link
+            href={`/item/${listing.id}`}
+            className="block text-base font-extrabold leading-snug text-[#111827] group-hover:text-[#064E3B] line-clamp-2"
+          >
+            {listing.titleAsListed}
+          </Link>
 
-      {/* Save Heart Floating Button */}
-      <div className="absolute right-2.5 top-2.5 z-10">
-        <SaveAdButton listingId={listing.id} />
-      </div>
-
-      {/* Card Content */}
-      <div className="flex flex-1 flex-col justify-between p-3.5 space-y-2.5">
-        <div className="space-y-1">
-          {/* Jiji Signature Green Bold Price */}
-          <div className="flex items-baseline justify-between gap-2">
-            <p className="text-lg font-black tracking-tight text-[#00B53F] tabular-nums">
-              {formatNairaFromKobo(listing.priceKobo)}
-            </p>
+          <div className="flex items-baseline justify-between gap-2 pt-0.5">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl font-black tracking-tight text-[#064E3B] tabular-nums">
+                {formatNairaFromKobo(listing.priceKobo)}
+              </span>
+              {unit ? (
+                <span className="text-xs font-medium text-[#6B7280]">
+                  / {unit}
+                </span>
+              ) : null}
+            </div>
             {listing.priceNegotiable ? (
-              <span className="text-[10px] font-bold uppercase text-[#6B7280]">
+              <span className="rounded-md bg-[#FFFBEB] border border-[#FDE68A] px-2 py-0.5 text-[10px] font-bold text-[#92400E]">
                 Negotiable
               </span>
             ) : null}
           </div>
-
-          <Link
-            href={`/item/${listing.id}`}
-            className="block text-sm font-bold leading-snug text-[#111827] group-hover:text-[#00B53F] line-clamp-2"
-          >
-            {listing.titleAsListed}
-          </Link>
         </div>
 
-        <div className="space-y-2 pt-1">
-          {/* Stock + Freshness */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <StockBadge status={listing.stockStatus} />
-            {unit ? (
-              <span className="rounded bg-[#F2F4F7] px-2 py-0.5 text-[10px] font-semibold text-[#374151]">
-                {unit}
-              </span>
-            ) : null}
-          </div>
+        {/* Live Stock + Confirmation Freshness */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+          <StockBadge status={listing.stockStatus} />
+          <FreshnessTag confirmedAt={listing.confirmedAt} now={now} />
+        </div>
+      </div>
 
-          <div className="text-[11px]">
-            <FreshnessTag confirmedAt={listing.confirmedAt} now={now} />
-          </div>
-
-          {/* Location & Shop */}
-          <div className="border-t border-[#F2F4F7] pt-2 text-[11px] text-[#4B5563]">
-            <p className="font-semibold text-[#374151] truncate">
+      {/* Perforated Street-Landmark Footer Ticket */}
+      <div className="border-t border-dashed border-[#DFDCD2] bg-[#F7F5EE] px-4 py-3 space-y-2">
+        <div className="flex items-start justify-between gap-2 text-xs">
+          <div className="min-w-0">
+            <p className="font-bold text-[#111827] truncate">
               📍 {listing.zoneName}
               {listing.distanceKm !== null &&
               Number.isFinite(listing.distanceKm)
                 ? ` · ${formatDistanceKm(listing.distanceKm)}`
                 : ""}
             </p>
-            <p className="truncate text-[#6B7280]">{listing.landmarkText}</p>
+            <p className="text-[11px] text-[#4B5563] truncate">
+              {listing.landmarkText}
+            </p>
           </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-2 pt-0.5">
+          <div className="flex items-center gap-1.5 min-w-0 text-[11px]">
+            <Link
+              href={`/s/${listing.sellerSlug}`}
+              className="truncate font-bold text-[#374151] hover:text-[#064E3B] hover:underline"
+            >
+              {listing.sellerName}
+            </Link>
+            <VerificationBadge tier={listing.verificationTier} />
+          </div>
+
+          <Link
+            href={`/item/${listing.id}`}
+            className="shrink-0 rounded-lg bg-[#064E3B] px-2.5 py-1 text-[11px] font-bold text-white hover:bg-[#043927]"
+          >
+            Details →
+          </Link>
         </div>
       </div>
     </article>
@@ -261,11 +284,11 @@ export function ResultCard({
   onDirections?: (listing: ResultCardListing) => void;
 }) {
   return (
-    <article className="rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-xs transition hover:border-[#00B53F]">
+    <article className="rounded-2xl border border-[#E4E1D6] bg-white p-4 shadow-xs transition hover:border-[#064E3B]">
       <div className="flex items-start justify-between gap-3">
         <Link
           href={`/item/${listing.id}`}
-          className="text-base font-bold leading-snug text-[#111827] hover:text-[#00B53F]"
+          className="text-base font-bold leading-snug text-[#111827] hover:text-[#064E3B]"
         >
           {listing.titleAsListed}
         </Link>
@@ -273,7 +296,7 @@ export function ResultCard({
           priceKobo={listing.priceKobo}
           negotiable={listing.priceNegotiable}
           size="lg"
-          className="shrink-0 justify-end text-right text-[#00B53F]"
+          className="shrink-0 justify-end text-right text-[#064E3B]"
         />
       </div>
 
@@ -293,12 +316,12 @@ export function ResultCard({
         <p className="mt-0.5 text-[#4B5563]">{listing.landmarkText}</p>
       </div>
 
-      <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-[#F2F4F7] pt-2.5">
+      <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-[#F1EFE7] pt-2.5">
         <div className="flex flex-wrap items-center gap-1.5 text-xs">
           {sellerHref ? (
             <Link
               href={sellerHref}
-              className="font-semibold text-[#00B53F] hover:underline"
+              className="font-semibold text-[#064E3B] hover:underline"
             >
               {listing.sellerName}
             </Link>
@@ -320,7 +343,7 @@ export function ResultCard({
         {confirmHref ? (
           <Link
             href={confirmHref}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#00B53F] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#009933]"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#064E3B] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#043927]"
           >
             Confirm Stock
           </Link>
@@ -333,7 +356,7 @@ export function ResultCard({
         {directionsHref ? (
           <Link
             href={directionsHref}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#D1D5DB] bg-white px-4 py-2.5 text-sm font-bold text-[#111827] hover:bg-[#F3F4F6]"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#D1CEC2] bg-white px-4 py-2.5 text-sm font-bold text-[#111827] hover:bg-[#F1EFE7]"
           >
             Directions
           </Link>
@@ -352,37 +375,46 @@ export function ResultCard({
 }
 
 /**
- * Clean Jiji-style Marketplace Footer (100% Customer-Safe — No Admin Links).
+ * Deep Forest Canopy Footer (100% Customer-Safe — Zero Admin Links).
  */
 export function MarketplaceFooter() {
   return (
-    <footer className="mt-12 border-t border-[#009933] bg-[#00B53F] text-white">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4 text-xs">
-        <div className="space-y-2">
-          <p className="text-base font-black">Finda Port Harcourt</p>
-          <p className="text-white/85 leading-relaxed">
-            Buy smarter and sell faster across Port Harcourt markets. Live Naira
-            prices, confirmed stock status, and exact street landmarks.
+    <footer className="mt-14 border-t border-[#064E3B] bg-[#042F22] text-[#ECFDF5]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-11 sm:grid-cols-2 md:grid-cols-4 text-xs">
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[#065F46] text-xs font-black text-[#FDE68A]">
+              F
+            </span>
+            <p className="text-base font-black text-white">Finda</p>
+          </div>
+          <p className="text-[#A7F3D0]/85 leading-relaxed">
+            Port Harcourt&apos;s live market inventory &amp; price radar. Check
+            verified stalls, real Naira prices, and street landmarks before
+            leaving home.
           </p>
         </div>
 
         <div className="space-y-2">
-          <p className="font-extrabold uppercase tracking-wider text-white/95">
-            For Buyers
+          <p className="font-extrabold uppercase tracking-wider text-[#FDE68A]">
+            Discover Stock
           </p>
-          <ul className="space-y-1.5 text-white/90">
+          <ul className="space-y-1.5 text-white/85">
             <li>
-              <Link href="/search" className="hover:underline">
-                Browse All Ads
+              <Link href="/search" className="hover:text-white hover:underline">
+                Search Live Inventory
               </Link>
             </li>
             <li>
-              <Link href="/saved" className="hover:underline">
-                Saved Ads
+              <Link href="/saved" className="hover:text-white hover:underline">
+                Saved Items
               </Link>
             </li>
             <li>
-              <Link href="/market-data" className="hover:underline">
+              <Link
+                href="/market-data"
+                className="hover:text-white hover:underline"
+              >
                 Port Harcourt Price Index
               </Link>
             </li>
@@ -390,54 +422,67 @@ export function MarketplaceFooter() {
         </div>
 
         <div className="space-y-2">
-          <p className="font-extrabold uppercase tracking-wider text-white/95">
-            For Sellers
+          <p className="font-extrabold uppercase tracking-wider text-[#FDE68A]">
+            For Market Traders
           </p>
-          <ul className="space-y-1.5 text-white/90">
+          <ul className="space-y-1.5 text-white/85">
             <li>
-              <Link href="/sell" className="hover:underline">
-                Sell on Finda (Free)
+              <Link href="/sell" className="hover:text-white hover:underline">
+                Why List Your Stall
               </Link>
             </li>
             <li>
-              <Link href="/seller/onboard" className="hover:underline">
-                Register Your Shop
+              <Link
+                href="/seller/onboard"
+                className="hover:text-white hover:underline"
+              >
+                15-Minute Shop Onboarding
               </Link>
             </li>
             <li>
-              <Link href="/seller" className="hover:underline">
-                Seller Dashboard
+              <Link href="/seller" className="hover:text-white hover:underline">
+                Seller Console
               </Link>
             </li>
           </ul>
         </div>
 
         <div className="space-y-2">
-          <p className="font-extrabold uppercase tracking-wider text-white/95">
+          <p className="font-extrabold uppercase tracking-wider text-[#FDE68A]">
             Account & Trust
           </p>
-          <ul className="space-y-1.5 text-white/90">
+          <ul className="space-y-1.5 text-white/85">
             <li>
-              <Link href="/auth?tab=login" className="hover:underline">
-                Sign In / Registration
+              <Link
+                href="/auth?tab=login"
+                className="hover:text-white hover:underline"
+              >
+                Sign In / Create Account
               </Link>
             </li>
             <li>
-              <Link href="/account" className="hover:underline">
-                Verify Email, SMS or WhatsApp
+              <Link
+                href="/account"
+                className="hover:text-white hover:underline"
+              >
+                Email, SMS &amp; WhatsApp Verification
               </Link>
             </li>
             <li>
-              <Link href="/privacy" className="hover:underline">
-                Privacy & Safety Policy
+              <Link
+                href="/privacy"
+                className="hover:text-white hover:underline"
+              >
+                Privacy &amp; Buyer Safety
               </Link>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-white/15 py-4 text-center text-[11px] text-white/85">
-        © {new Date().getFullYear()} Finda Marketplace · Port Harcourt, Rivers State
+      <div className="border-t border-white/10 py-4 text-center text-[11px] text-white/70">
+        © {new Date().getFullYear()} Finda · Built for Port Harcourt Markets,
+        Rivers State
       </div>
     </footer>
   );

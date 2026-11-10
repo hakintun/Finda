@@ -28,17 +28,17 @@ export function SavedAdsClient({
 
   if (savedItems.length === 0) {
     return (
-      <div className="rounded-2xl border border-[#E5E7EB] bg-white p-10 text-center space-y-3 shadow-xs">
+      <div className="rounded-2xl border border-[#E4E1D6] bg-white p-10 text-center space-y-3 shadow-2xs">
         <div className="text-4xl">♡</div>
         <h2 className="text-lg font-extrabold text-[#111827]">
-          No saved ads yet
+          No saved items yet
         </h2>
         <p className="text-sm text-[#4B5563]">
-          Tap the heart icon on any listing to save it here for quick price
+          Tap the heart icon on any stock card to save it here for quick market
           comparison.
         </p>
         <Link href="/search" className="btn btn-primary">
-          Browse Port Harcourt Ads
+          Explore Port Harcourt Stock
         </Link>
       </div>
     );

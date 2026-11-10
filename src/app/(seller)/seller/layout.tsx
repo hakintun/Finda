@@ -30,8 +30,8 @@ export default async function SellerLayout({
   ];
 
   return (
-    <div className="min-h-dvh bg-[#F2F4F7]">
-      <header className="bg-[#00B53F] text-white shadow-xs">
+    <div className="min-h-dvh bg-[#F8F7F2]">
+      <header className="bg-[#042F22] text-white shadow-xs border-b border-white/10">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
             <Link
@@ -40,22 +40,22 @@ export default async function SellerLayout({
             >
               Finda
             </Link>
-            <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold">
-              Seller Hub
+            <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-bold text-[#FDE68A]">
+              Stall Manager
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/"
-              className="rounded-lg bg-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/25"
+              className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20"
             >
               ← Marketplace
             </Link>
             <Link
               href="/account"
-              className="rounded-lg bg-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/25"
+              className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20"
             >
-              Account & Verification
+              Account &amp; Verification
             </Link>
           </div>
         </div>

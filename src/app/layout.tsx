@@ -4,11 +4,11 @@ import { RealtimeRefresh } from "@/components/buyer/realtime-refresh";
 
 export const metadata: Metadata = {
   title: {
-    default: "Finda.ng — Buy & Sell in Port Harcourt · Live Prices & Verified Stock",
+    default: "Finda — Live Market Prices & Verified Stock in Port Harcourt",
     template: "%s · Finda Port Harcourt",
   },
   description:
-    "Buy smarter, sell faster in Port Harcourt. Browse verified local shops, live Naira prices, confirmed stock status, and street landmarks.",
+    "Know which Port Harcourt stall has it in stock, today's real Naira price, and exact street landmarks before you make the trip.",
   applicationName: "Finda",
   appleWebApp: {
     capable: true,
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
   },
   openGraph: {
-    title: "Finda — Buy & Sell Smarter in Port Harcourt",
+    title: "Finda — Port Harcourt Live Stock & Market Finder",
     description:
-      "Local marketplace for Port Harcourt. Today's price, confirmed stock, and street landmark directions.",
+      "Verified local stalls, today's confirmed Naira prices, and landmark-first directions across Port Harcourt.",
     locale: "en_NG",
     type: "website",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#00B53F",
+  themeColor: "#064E3B",
 };
 
 export default function RootLayout({
@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en-NG">
-      <body className="antialiased selection:bg-[#BBF7D0] selection:text-[#064E3B]">
+      <body className="antialiased selection:bg-[#A7F3D0] selection:text-[#042F22]">
         <RealtimeRefresh />
         {children}
       </body>

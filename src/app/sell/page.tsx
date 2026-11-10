@@ -26,51 +26,52 @@ export default async function SellLandingPage() {
     : null;
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
-      <TopBar activeClusterLabel="Sell on Finda" customer={topCustomer} />
+    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
+      <TopBar activeClusterLabel="List Your Stall" customer={topCustomer} />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 pt-8 space-y-6">
-        <section className="rounded-3xl bg-gradient-to-br from-[#00B53F] to-[#008A30] p-8 text-white shadow-md space-y-4">
-          <span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold uppercase tracking-wider">
-            100% Free for Port Harcourt Sellers
+        <section className="finda-canopy rounded-3xl p-8 text-white shadow-md space-y-4">
+          <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#FDE68A]">
+            100% Free for Port Harcourt Market Traders
           </span>
           <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
-            Sell faster to buyers already searching near your stall
+            Put your physical stall on Port Harcourt&apos;s live stock radar
           </h1>
-          <p className="max-w-2xl text-sm text-white/90 leading-relaxed">
-            Join {activeShops}+ verified Port Harcourt traders across{" "}
+          <p className="max-w-2xl text-sm text-white/85 leading-relaxed">
+            Join {activeShops}+ verified stalls across{" "}
             {zones.map((z: any) => z.name).join(", ")}. Verify your account via
-            Email, Phone SMS, or WhatsApp and publish your prices in minutes.
+            Email, Phone SMS, or WhatsApp and publish your stall landmark &amp;
+            prices in minutes.
           </p>
 
           <div className="flex flex-wrap gap-3 pt-2">
             {customerSession?.shop ? (
               <Link
                 href="/seller"
-                className="inline-flex min-h-12 items-center rounded-xl bg-[#FF8900] px-6 text-sm font-black uppercase text-white shadow-sm hover:bg-[#EA7B00]"
+                className="inline-flex min-h-12 items-center rounded-xl bg-[#FDE68A] px-6 text-sm font-black uppercase text-[#042F22] shadow-sm hover:bg-[#FCD34D]"
               >
                 Open My Shop Dashboard →
               </Link>
             ) : customerSession ? (
               <Link
                 href="/seller/onboard"
-                className="inline-flex min-h-12 items-center rounded-xl bg-[#FF8900] px-6 text-sm font-black uppercase text-white shadow-sm hover:bg-[#EA7B00]"
+                className="inline-flex min-h-12 items-center rounded-xl bg-[#FDE68A] px-6 text-sm font-black uppercase text-[#042F22] shadow-sm hover:bg-[#FCD34D]"
               >
-                Set Up My Shop Profile →
+                Set Up My Stall Profile →
               </Link>
             ) : (
               <>
                 <Link
                   href="/auth?tab=register&role=seller&next=/seller/onboard"
-                  className="inline-flex min-h-12 items-center rounded-xl bg-[#FF8900] px-6 text-sm font-black uppercase text-white shadow-sm hover:bg-[#EA7B00]"
+                  className="inline-flex min-h-12 items-center rounded-xl bg-[#FDE68A] px-6 text-sm font-black uppercase text-[#042F22] shadow-sm hover:bg-[#FCD34D]"
                 >
-                  Register as Seller (Free) →
+                  Register Your Stall (Free) →
                 </Link>
                 <Link
                   href="/auth?tab=login&role=seller&next=/seller"
-                  className="inline-flex min-h-12 items-center rounded-xl bg-white px-6 text-sm font-extrabold text-[#00B53F] hover:bg-white/90"
+                  className="inline-flex min-h-12 items-center rounded-xl bg-white/15 border border-white/25 px-6 text-sm font-extrabold text-white hover:bg-white/25"
                 >
-                  Sign In to Existing Shop
+                  Sign In to Existing Stall
                 </Link>
               </>
             )}
@@ -78,33 +79,39 @@ export default async function SellLandingPage() {
         </section>
 
         <section className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs space-y-1.5">
-            <div className="text-2xl">✅</div>
-            <h2 className="text-sm font-extrabold text-[#111827]">
-              1. Verify via Email, SMS or WhatsApp
+          <div className="rounded-2xl border border-[#E4E1D6] bg-white p-5 shadow-2xs space-y-1.5">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-xs font-black text-[#FDE68A]">
+              01
+            </span>
+            <h2 className="text-sm font-extrabold text-[#111827] pt-1">
+              Verify via Email, SMS or WhatsApp
             </h2>
             <p className="text-xs text-[#4B5563]">
               Choose whichever verification channel works best for you to earn
-              your Verified Seller badge.
+              your Verified Stall badge.
             </p>
           </div>
-          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs space-y-1.5">
-            <div className="text-2xl">📍</div>
-            <h2 className="text-sm font-extrabold text-[#111827]">
-              2. Add Your Street Landmark & Items
+          <div className="rounded-2xl border border-[#E4E1D6] bg-white p-5 shadow-2xs space-y-1.5">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-xs font-black text-[#FDE68A]">
+              02
+            </span>
+            <h2 className="text-sm font-extrabold text-[#111827] pt-1">
+              Add Your Street Landmark &amp; Stock
             </h2>
             <p className="text-xs text-[#4B5563]">
-              Tick common items in your category and enter today&apos;s Naira
+              Tick common items in your department and enter today&apos;s Naira
               prices — no studio photos required.
             </p>
           </div>
-          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs space-y-1.5">
-            <div className="text-2xl">💬</div>
-            <h2 className="text-sm font-extrabold text-[#111827]">
-              3. Receive Serious Ready-to-Buy Customers
+          <div className="rounded-2xl border border-[#E4E1D6] bg-white p-5 shadow-2xs space-y-1.5">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-xs font-black text-[#FDE68A]">
+              03
+            </span>
+            <h2 className="text-sm font-extrabold text-[#111827] pt-1">
+              Welcome Ready-to-Buy Walk-Ins
             </h2>
             <p className="text-xs text-[#4B5563]">
-              Buyers check your price & stock first, then call, WhatsApp, or
+              Buyers check your price &amp; stock first, then call, WhatsApp, or
               walk straight to your stall.
             </p>
           </div>

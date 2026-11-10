@@ -164,9 +164,9 @@ export function AuthClient({
   }
 
   return (
-    <div className="mx-auto w-full max-w-md rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-md">
+    <div className="mx-auto w-full max-w-md rounded-3xl border border-[#E4E1D6] bg-white p-6 shadow-md">
       {tab !== "verify" ? (
-        <div className="grid grid-cols-2 rounded-xl bg-[#F2F4F7] p-1 mb-5">
+        <div className="grid grid-cols-2 rounded-xl bg-[#F1EFE7] p-1 mb-5">
           <button
             type="button"
             onClick={() => {
@@ -175,7 +175,7 @@ export function AuthClient({
             }}
             className={`min-h-10 rounded-lg text-sm font-bold transition ${
               tab === "login"
-                ? "bg-white text-[#00B53F] shadow-xs"
+                ? "bg-white text-[#064E3B] shadow-xs"
                 : "text-[#4B5563]"
             }`}
           >
@@ -189,11 +189,11 @@ export function AuthClient({
             }}
             className={`min-h-10 rounded-lg text-sm font-bold transition ${
               tab === "register"
-                ? "bg-white text-[#00B53F] shadow-xs"
+                ? "bg-white text-[#064E3B] shadow-xs"
                 : "text-[#4B5563]"
             }`}
           >
-            Registration
+            Create account
           </button>
         </div>
       ) : null}
@@ -249,7 +249,7 @@ export function AuthClient({
           <button
             type="submit"
             disabled={busy}
-            className="min-h-12 w-full rounded-xl bg-[#00B53F] px-4 text-sm font-extrabold text-white hover:bg-[#009933] disabled:opacity-60 cursor-pointer"
+            className="min-h-12 w-full rounded-xl bg-[#064E3B] px-4 text-sm font-extrabold text-white hover:bg-[#043927] disabled:opacity-60 cursor-pointer"
           >
             {busy ? "Signing in…" : "SIGN IN"}
           </button>
@@ -259,7 +259,7 @@ export function AuthClient({
             <button
               type="button"
               onClick={() => setTab("register")}
-              className="font-bold text-[#00B53F] hover:underline cursor-pointer"
+              className="font-bold text-[#064E3B] hover:underline cursor-pointer"
             >
               Register now
             </button>
@@ -290,8 +290,8 @@ export function AuthClient({
                 onClick={() => setRole("buyer")}
                 className={`min-h-11 rounded-xl border px-3 py-2 text-xs font-bold cursor-pointer ${
                   role === "buyer"
-                    ? "border-2 border-[#00B53F] bg-[#ECFDF5] text-[#065F46]"
-                    : "border-[#D1D5DB] bg-white text-[#374151]"
+                    ? "border-2 border-[#064E3B] bg-[#ECFDF5] text-[#064E3B]"
+                    : "border-[#D5D1C4] bg-white text-[#374151]"
                 }`}
               >
                 🛒 Buyer Account
@@ -301,11 +301,11 @@ export function AuthClient({
                 onClick={() => setRole("seller")}
                 className={`min-h-11 rounded-xl border px-3 py-2 text-xs font-bold cursor-pointer ${
                   role === "seller"
-                    ? "border-2 border-[#00B53F] bg-[#ECFDF5] text-[#065F46]"
-                    : "border-[#D1D5DB] bg-white text-[#374151]"
+                    ? "border-2 border-[#064E3B] bg-[#ECFDF5] text-[#064E3B]"
+                    : "border-[#D5D1C4] bg-white text-[#374151]"
                 }`}
               >
-                🏪 Seller / Shop
+                🏪 Seller / Stall
               </button>
             </div>
           </div>
@@ -344,8 +344,8 @@ export function AuthClient({
                   onClick={() => setChannel(opt.id)}
                   className={`min-h-10 rounded-xl border px-2 py-1.5 text-xs font-bold cursor-pointer ${
                     channel === opt.id
-                      ? "border-2 border-[#00B53F] bg-[#ECFDF5] text-[#065F46]"
-                      : "border-[#D1D5DB] bg-white text-[#374151]"
+                      ? "border-2 border-[#064E3B] bg-[#ECFDF5] text-[#064E3B]"
+                      : "border-[#D5D1C4] bg-white text-[#374151]"
                   }`}
                 >
                   {opt.label}
@@ -405,7 +405,7 @@ export function AuthClient({
           <button
             type="submit"
             disabled={busy}
-            className="min-h-12 w-full rounded-xl bg-[#00B53F] px-4 text-sm font-extrabold text-white hover:bg-[#009933] disabled:opacity-60 cursor-pointer"
+            className="min-h-12 w-full rounded-xl bg-[#064E3B] px-4 text-sm font-extrabold text-white hover:bg-[#043927] disabled:opacity-60 cursor-pointer"
           >
             {busy
               ? "Sending verification code…"
@@ -414,7 +414,7 @@ export function AuthClient({
 
           <p className="text-center text-[11px] text-[#6B7280]">
             By registering you agree to our{" "}
-            <Link href="/privacy" className="text-[#00B53F] underline">
+            <Link href="/privacy" className="text-[#064E3B] underline">
               Privacy Policy
             </Link>
             .
@@ -492,12 +492,12 @@ export function AuthClient({
           <button
             type="submit"
             disabled={busy}
-            className="min-h-12 w-full rounded-xl bg-[#00B53F] px-4 text-sm font-extrabold text-white hover:bg-[#009933] disabled:opacity-60 cursor-pointer"
+            className="min-h-12 w-full rounded-xl bg-[#064E3B] px-4 text-sm font-extrabold text-white hover:bg-[#043927] disabled:opacity-60 cursor-pointer"
           >
             {busy ? "Verifying…" : "✓ VERIFY & CONTINUE"}
           </button>
 
-          <div className="border-t border-[#E5E7EB] pt-3 text-center space-y-2">
+          <div className="border-t border-[#E4E1D6] pt-3 text-center space-y-2">
             <p className="text-xs text-[#4B5563]">
               Prefer another verification channel?
             </p>
@@ -508,7 +508,7 @@ export function AuthClient({
                   type="button"
                   disabled={busy}
                   onClick={() => handleResend(ch)}
-                  className="rounded-lg border border-[#D1D5DB] bg-white px-2.5 py-1 text-xs font-semibold text-[#374151] hover:border-[#00B53F] cursor-pointer"
+                  className="rounded-lg border border-[#D5D1C4] bg-white px-2.5 py-1 text-xs font-semibold text-[#374151] hover:border-[#064E3B] cursor-pointer"
                 >
                   Send via {ch === "phone" ? "SMS" : ch === "whatsapp" ? "WhatsApp" : "Email"}
                 </button>

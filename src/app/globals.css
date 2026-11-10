@@ -1,31 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  /* Shared Port Harcourt sunlit-legible palette (WCAG 2.1 AA >= 4.5:1) */
-  --bg-canvas: #faf9f5;
+  /* Finda Signature Deep Forest & Warm Sunlit Stone Palette (WCAG 2.1 AA+) */
+  --bg-canvas: #f8f7f2;
   --bg-surface: #ffffff;
-  --bg-subtle: #f3f2ec;
+  --bg-subtle: #f1efe7;
   --ink-primary: #111827;
   --ink-secondary: #374151;
   --ink-muted: #4b5563;
-  --brand-primary: #00b53f;
-  --brand-primary-hover: #009933;
+  --brand-primary: #064e3b;
+  --brand-primary-hover: #043927;
+  --brand-deep: #032b1e;
   --brand-tint: #ecfdf5;
-  --border-default: #e5e7eb;
+  --accent-gold: #d97706;
+  --border-default: #e4e1d6;
   --border-strong: #9ca3af;
 
   /* Semantic aliases used across Seller, Admin, Market-Data & Test-Plan */
   --green-50: #ecfdf5;
-  --green-600: #00b53f;
-  --green-700: #009933;
-  --green-800: #065f46;
+  --green-600: #065f46;
+  --green-700: #064e3b;
+  --green-800: #043927;
   --amber: #b45309;
   --red: #b91c1c;
   --ink-2: #374151;
   --ink-3: #6b7280;
-  --line: #e5e7eb;
-  --line-2: #d1d5db;
-  --shadow-lg: 0 10px 25px -5px rgba(17, 24, 39, 0.08),
+  --line: #e4e1d6;
+  --line-2: #d1cec2;
+  --shadow-lg: 0 12px 28px -6px rgba(6, 78, 59, 0.1),
     0 4px 10px -4px rgba(17, 24, 39, 0.05);
 }
 
@@ -56,13 +58,27 @@
   }
 
   :focus-visible {
-    outline: 3px solid #047857;
+    outline: 3px solid #065f46;
     outline-offset: 2px;
   }
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+.finda-canopy {
+  background-color: #053b2c;
+  background-image: radial-gradient(
+      circle at 18% 20%,
+      rgba(16, 185, 129, 0.16) 0%,
+      transparent 48%
+    ),
+    radial-gradient(
+      circle at 88% 85%,
+      rgba(217, 119, 6, 0.14) 0%,
+      transparent 45%
+    );
 }
 
 /* ========================================================================== */
@@ -307,12 +323,12 @@
   border-color: var(--brand-primary-hover);
 }
 .btn-wa {
-  background: #15803d;
-  border-color: #15803d;
+  background: #0f6d3d;
+  border-color: #0f6d3d;
   color: #ffffff;
 }
 .btn-wa:hover:not(:disabled) {
-  background: #166534;
+  background: #0a522e;
 }
 .btn-danger {
   background: #fef2f2;
@@ -362,7 +378,7 @@
 .badge-fresh {
   background: #ecfdf5;
   border-color: #6ee7b7;
-  color: #065f46;
+  color: #064e3b;
 }
 .badge-low,
 .badge-aging {
@@ -402,7 +418,7 @@
   background: #6b7280;
 }
 .dotf-fresh {
-  background: #059669;
+  background: #065f46;
 }
 .dotf-aging {
   background: #d97706;
@@ -523,7 +539,7 @@ textarea {
 .notice-ok {
   background: #ecfdf5;
   border-color: #6ee7b7;
-  color: #065f46;
+  color: #064e3b;
 }
 .notice-warn {
   background: #fffbeb;

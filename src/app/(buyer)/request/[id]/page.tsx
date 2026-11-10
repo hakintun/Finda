@@ -68,7 +68,7 @@ export default async function BuyerConfirmRequestPage({
     request.state === "pending" && elapsedMs >= THIRTY_MINUTES_MS;
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
       <TopBar activeClusterLabel="Availability Check" customer={topCustomer} />
 
       <main className="mx-auto w-full max-w-xl flex-1 px-4 pt-6 space-y-5">
@@ -137,7 +137,7 @@ export default async function BuyerConfirmRequestPage({
               <div>
                 <Link
                   href={`/item/${listing.id}`}
-                  className="text-base font-bold text-[#111827] hover:text-[#00B53F]"
+                  className="text-base font-bold text-[#111827] hover:text-[#064E3B]"
                 >
                   {listing.title_as_listed}
                 </Link>
@@ -181,9 +181,9 @@ export default async function BuyerConfirmRequestPage({
         <div className="text-center">
           <Link
             href={`/search?q=${encodeURIComponent(listing.title_as_listed)}`}
-            className="text-xs font-extrabold text-[#00B53F] hover:underline"
+            className="text-xs font-extrabold text-[#064E3B] hover:underline"
           >
-            ← Compare other Port Harcourt shops for this item
+            ← Compare other Port Harcourt stalls for this item
           </Link>
         </div>
       </main>

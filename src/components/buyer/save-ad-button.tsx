@@ -51,10 +51,10 @@ export function SaveAdButton({
         onClick={toggle}
         aria-label={saved ? "Remove from saved ads" : "Save ad"}
         title={saved ? "Saved" : "Save ad"}
-        className={`inline-flex h-9 w-9 items-center justify-center rounded-full border shadow-xs transition cursor-pointer ${
+        className={`inline-flex h-8 w-8 items-center justify-center rounded-xl border transition cursor-pointer ${
           saved
             ? "border-[#FCA5A5] bg-[#FEF2F2] text-[#DC2626]"
-            : "border-[#E5E7EB] bg-white text-[#4B5563] hover:text-[#00B53F]"
+            : "border-[#E4E1D6] bg-[#FAF9F5] text-[#4B5563] hover:border-[#064E3B] hover:text-[#064E3B]"
         }`}
       >
         {saved ? "♥" : "♡"}

@@ -27,11 +27,11 @@ type SearchParams = Promise<{
   demoted?: string;
 }>;
 
-const PRICE_BRACKETS = [
-  { label: "Under ₦ 10K", min: "", max: "10000" },
-  { label: "₦ 10K – 50K", min: "10000", max: "50000" },
-  { label: "₦ 50K – 250K", min: "50000", max: "250000" },
-  { label: "More than ₦ 250K", min: "250000", max: "" },
+const PRICE_RANGES = [
+  { label: "Under ₦10,000", min: "", max: "10000" },
+  { label: "₦10,000 – ₦50,000", min: "10000", max: "50000" },
+  { label: "₦50,000 – ₦250,000", min: "50000", max: "250000" },
+  { label: "Above ₦250,000", min: "250000", max: "" },
 ];
 
 export default async function BuyerSearchPage({
@@ -85,7 +85,6 @@ export default async function BuyerSearchPage({
         )
       : baseResults;
 
-  // Non-blocking background log — zero disk wait on search load!
   if (q) {
     logSearchQuery(db, q, activeZone?.name || "Port Harcourt", filtered.length);
     saveDBBackground(db);
@@ -114,14 +113,14 @@ export default async function BuyerSearchPage({
     : null;
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
       <TopBar
         activeClusterLabel={activeZone?.name || "Port Harcourt"}
         customer={topCustomer}
       />
 
-      {/* Compact Jiji Green Search Bar Strip */}
-      <div className="bg-[#00B53F] px-4 pb-4 pt-2 shadow-xs">
+      {/* Deep Forest Search Strip */}
+      <div className="finda-canopy px-4 py-4 text-white">
         <form
           action="/search"
           method="get"
@@ -136,12 +135,12 @@ export default async function BuyerSearchPage({
             name="q"
             type="search"
             defaultValue={q}
-            placeholder="Search in Port Harcourt…"
+            placeholder="Search item, brand, or Pidgin slang across Port Harcourt…"
             className="min-h-11 flex-1 rounded-xl border-0 bg-white px-4 text-sm text-[#111827]"
           />
           <button
             type="submit"
-            className="min-h-11 rounded-xl bg-[#111827] px-5 text-xs font-extrabold uppercase tracking-wide text-white hover:bg-black cursor-pointer"
+            className="min-h-11 rounded-xl bg-[#FDE68A] px-5 text-xs font-black uppercase tracking-wide text-[#042F22] hover:bg-[#FCD34D] cursor-pointer"
           >
             Search
           </button>
@@ -150,13 +149,16 @@ export default async function BuyerSearchPage({
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-5 space-y-4">
         {/* Breadcrumbs */}
-        <nav aria-label="Breadcrumb" className="text-xs text-[#6B7280] flex flex-wrap items-center gap-1.5">
-          <Link href="/" className="hover:text-[#00B53F]">
+        <nav
+          aria-label="Breadcrumb"
+          className="text-xs text-[#6B7280] flex flex-wrap items-center gap-1.5"
+        >
+          <Link href="/" className="hover:text-[#064E3B]">
             Home
           </Link>
           <span>/</span>
-          <Link href="/search" className="hover:text-[#00B53F]">
-            Port Harcourt
+          <Link href="/search" className="hover:text-[#064E3B]">
+            Live Stock
           </Link>
           {activeZone ? (
             <>
@@ -176,36 +178,35 @@ export default async function BuyerSearchPage({
 
         {sp.demand === "sent" ? (
           <div className="notice notice-ok">
-            ✓ Request posted! Nearby verified sellers can now source what you
-            need.
+            ✓ Request logged! Nearby verified Port Harcourt stalls can now see
+            what you need.
           </div>
         ) : null}
 
         <div className="grid gap-6 lg:grid-cols-[270px_1fr]">
-          {/* Left Jiji Filter Sidebar */}
+          {/* Left Refine Panel */}
           <aside>
             <form
               action="/search"
               method="get"
-              className="rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-xs space-y-5"
+              className="rounded-2xl border border-[#E4E1D6] bg-white p-4 shadow-2xs space-y-5"
             >
               <input type="hidden" name="q" value={q} />
 
-              {/* Category Filter */}
               <div className="space-y-1.5">
                 <label
                   htmlFor="flt-cat"
                   className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]"
                 >
-                  Category
+                  Department
                 </label>
                 <select
                   id="flt-cat"
                   name="category"
                   defaultValue={category || "all"}
-                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
                 >
-                  <option value="all">All Categories</option>
+                  <option value="all">All Departments</option>
                   {categories.map((c) => (
                     <option key={c} value={c}>
                       {c}
@@ -214,19 +215,18 @@ export default async function BuyerSearchPage({
                 </select>
               </div>
 
-              {/* Location / Market Zone */}
               <div className="space-y-1.5">
                 <label
                   htmlFor="flt-zone"
                   className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]"
                 >
-                  Location (Port Harcourt)
+                  Market Hub
                 </label>
                 <select
                   id="flt-zone"
                   name="zone"
                   defaultValue={zoneId || "all"}
-                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
                 >
                   <option value="all">All Port Harcourt</option>
                   {zones.map((z: any) => (
@@ -237,10 +237,9 @@ export default async function BuyerSearchPage({
                 </select>
               </div>
 
-              {/* Price, ₦ (Jiji Style Min / Max + Quick Brackets) */}
-              <div className="space-y-2 border-t border-[#F2F4F7] pt-4">
+              <div className="space-y-2 border-t border-[#F1EFE7] pt-4">
                 <span className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]">
-                  Price, ₦
+                  Budget (₦)
                 </span>
                 <div className="grid grid-cols-2 gap-2">
                   <input
@@ -248,20 +247,20 @@ export default async function BuyerSearchPage({
                     type="number"
                     min={0}
                     defaultValue={minPriceNaira || ""}
-                    placeholder="Min"
-                    className="min-h-9 rounded-lg border border-[#D1D5DB] px-2.5 text-xs"
+                    placeholder="Min ₦"
+                    className="min-h-9 rounded-lg border border-[#D1CEC2] px-2.5 text-xs"
                   />
                   <input
                     name="maxPrice"
                     type="number"
                     min={0}
                     defaultValue={maxPriceNaira || ""}
-                    placeholder="Max"
-                    className="min-h-9 rounded-lg border border-[#D1D5DB] px-2.5 text-xs"
+                    placeholder="Max ₦"
+                    className="min-h-9 rounded-lg border border-[#D1CEC2] px-2.5 text-xs"
                   />
                 </div>
                 <div className="space-y-1 pt-1">
-                  {PRICE_BRACKETS.map((b) => (
+                  {PRICE_RANGES.map((b) => (
                     <Link
                       key={b.label}
                       href={`/search?q=${encodeURIComponent(q)}&zone=${
@@ -269,7 +268,7 @@ export default async function BuyerSearchPage({
                       }&category=${category || "all"}&minPrice=${
                         b.min
                       }&maxPrice=${b.max}`}
-                      className="block rounded-lg px-2 py-1 text-xs text-[#4B5563] hover:bg-[#ECFDF5] hover:text-[#00B53F]"
+                      className="block rounded-lg px-2 py-1 text-xs text-[#4B5563] hover:bg-[#ECFDF5] hover:text-[#064E3B]"
                     >
                       • {b.label}
                     </Link>
@@ -277,19 +276,18 @@ export default async function BuyerSearchPage({
                 </div>
               </div>
 
-              {/* Verified Sellers & Stock */}
-              <div className="space-y-2 border-t border-[#F2F4F7] pt-4">
+              <div className="space-y-2 border-t border-[#F1EFE7] pt-4">
                 <span className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]">
-                  Verified Sellers & Stock
+                  Trust &amp; Availability
                 </span>
                 <select
                   name="tier"
                   defaultValue={tierFilter}
                   aria-label="Verification tier"
-                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
                 >
-                  <option value="all">All Sellers</option>
-                  <option value="verified_any">✓ Verified Sellers Only</option>
+                  <option value="all">All Stalls</option>
+                  <option value="verified_any">✓ Verified Stalls Only</option>
                   <option value="visit">✓✓✓ Physically Visited Stalls</option>
                 </select>
 
@@ -297,7 +295,7 @@ export default async function BuyerSearchPage({
                   name="stock"
                   defaultValue={stockFilter}
                   aria-label="Stock status"
-                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
                 >
                   <option value="all">Any Stock Status</option>
                   <option value="in_stock">In Stock / Low Stock Only</option>
@@ -307,12 +305,12 @@ export default async function BuyerSearchPage({
                   name="sort"
                   defaultValue={sort}
                   aria-label="Sort order"
-                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
                 >
-                  <option value="best">Sort: Recommended</option>
-                  <option value="cheapest">Sort: Lowest Price</option>
-                  <option value="freshest">Sort: Freshest Confirmed</option>
-                  <option value="nearest">Sort: Nearest Market</option>
+                  <option value="best">Sort: Best Match</option>
+                  <option value="cheapest">Sort: Lowest Price (₦)</option>
+                  <option value="freshest">Sort: Recently Confirmed</option>
+                  <option value="nearest">Sort: Nearest Hub</option>
                 </select>
 
                 <label className="flex items-center gap-2 pt-1 text-xs text-[#4B5563] cursor-pointer">
@@ -329,7 +327,7 @@ export default async function BuyerSearchPage({
               <div className="flex items-center gap-2 pt-1">
                 <button
                   type="submit"
-                  className="min-h-10 flex-1 rounded-xl bg-[#00B53F] px-3 text-xs font-extrabold text-white hover:bg-[#009933] cursor-pointer"
+                  className="min-h-10 flex-1 rounded-xl bg-[#064E3B] px-3 text-xs font-extrabold text-white hover:bg-[#043927] cursor-pointer"
                 >
                   Apply Filters
                 </button>
@@ -337,7 +335,7 @@ export default async function BuyerSearchPage({
                   href="/search"
                   className="text-xs font-bold text-[#6B7280] hover:text-[#111827]"
                 >
-                  Clear
+                  Reset
                 </Link>
               </div>
             </form>
@@ -345,21 +343,21 @@ export default async function BuyerSearchPage({
 
           {/* Right Results Grid */}
           <div className="space-y-4">
-            <div className="flex flex-wrap items-baseline justify-between gap-2 rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 shadow-2xs">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 rounded-2xl border border-[#E4E1D6] bg-white px-4 py-3 shadow-2xs">
               <div>
                 <h1 className="text-base font-extrabold text-[#111827]">
                   {q
-                    ? `${filtered.length} results for “${q}”`
+                    ? `${filtered.length} stalls matched “${q}”`
                     : category
                     ? `${category} in ${activeZone?.name || "Port Harcourt"}`
-                    : `Ads in ${activeZone?.name || "Port Harcourt"}`}{" "}
+                    : `Confirmed Stock in ${activeZone?.name || "Port Harcourt"}`}{" "}
                   <span className="text-xs font-semibold text-[#6B7280]">
-                    ({filtered.length} ads)
+                    ({filtered.length} items)
                   </span>
                 </h1>
                 {q && expanded.length > 1 ? (
                   <p className="text-[11px] text-[#6B7280]">
-                    Also matched:{" "}
+                    Expanded local terms:{" "}
                     <span className="font-semibold">
                       {expanded.slice(0, 5).join(", ")}
                     </span>
@@ -369,7 +367,7 @@ export default async function BuyerSearchPage({
             </div>
 
             {filtered.length > 0 ? (
-              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {filtered.map((row) => {
                   const card = toResultCardListing(row);
                   return (
@@ -386,14 +384,14 @@ export default async function BuyerSearchPage({
               </div>
             ) : (
               <div className="space-y-5">
-                <div className="rounded-2xl border border-[#E5E7EB] bg-white p-6 space-y-3 shadow-xs">
+                <div className="rounded-2xl border border-[#E4E1D6] bg-white p-6 space-y-3 shadow-2xs">
                   <h2 className="text-lg font-extrabold text-[#111827]">
-                    No active ads matched{" "}
+                    No confirmed stall matched{" "}
                     {q ? `“${q}”` : "those exact filters"} right now
                   </h2>
                   <p className="text-sm text-[#4B5563]">
-                    Post what you&apos;re looking for below and verified Port
-                    Harcourt sellers in that category will be notified.
+                    Tell local Port Harcourt traders what you&apos;re looking
+                    for and our market team will notify stalls in that line.
                   </p>
 
                   <form action={postBuyerDemand} className="space-y-2.5 pt-1">
@@ -430,9 +428,9 @@ export default async function BuyerSearchPage({
                     </div>
                     <button
                       type="submit"
-                      className="min-h-11 rounded-xl bg-[#00B53F] px-5 text-xs font-extrabold uppercase text-white hover:bg-[#009933] cursor-pointer"
+                      className="min-h-11 rounded-xl bg-[#064E3B] px-5 text-xs font-extrabold uppercase text-white hover:bg-[#043927] cursor-pointer"
                     >
-                      Post Buyer Request
+                      Notify Nearby Stalls
                     </button>
                   </form>
                 </div>
@@ -440,9 +438,9 @@ export default async function BuyerSearchPage({
                 {fallbackSuggestions.length > 0 ? (
                   <div className="space-y-3">
                     <h3 className="text-sm font-extrabold text-[#374151]">
-                      Other freshly confirmed ads in Port Harcourt
+                      Recently confirmed stock nearby instead
                     </h3>
-                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                       {fallbackSuggestions.map((row) => {
                         const card = toResultCardListing(row);
                         return (

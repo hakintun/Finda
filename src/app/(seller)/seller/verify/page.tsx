@@ -72,7 +72,7 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
         </div>
       </div>
 
-      <div className="card mt16" style={{ borderColor: "#00B53F", background: "#ECFDF5" }}>
+      <div className="card mt16" style={{ borderColor: "#064E3B", background: "#ECFDF5" }}>
         <div className="row-between wrapflex">
           <div>
             <h3 className="card-title" style={{ margin: 0 }}>Verify via Email, Phone SMS, or WhatsApp</h3>

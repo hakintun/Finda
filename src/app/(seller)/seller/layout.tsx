@@ -9,7 +9,11 @@ export default async function SellerLayout({ children }: { children: React.React
   const session = await getSellerSession();
   const db = getDB();
   const pending = session
-    ? (db.confirm_requests || []).filter((r: any) => r.state === "pending").length
+    ? (db.confirm_requests || []).filter((r: any) => {
+        if (r.state !== "pending") return false;
+        const l = db.listings.find((x: any) => x.id === r.listing_id);
+        return l?.seller_id === session.seller.id;
+      }).length
     : 0;
 
   const tabs = [

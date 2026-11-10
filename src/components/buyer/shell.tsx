@@ -16,7 +16,7 @@ export function TopBar({
 }) {
   return (
     <header className="sticky top-0 z-30 border-b border-[#E5E7EB] bg-[#FAF9F5]/95 backdrop-blur-xs">
-      <div className="mx-auto flex max-w-xl items-center justify-between gap-2 px-4 py-2">
+      <div className="mx-auto flex max-w-2xl items-center justify-between gap-2 px-4 py-2">
         <Link
           href="/"
           className="inline-flex min-h-11 items-center gap-2.5 rounded-xl pr-2"
@@ -37,18 +37,33 @@ export function TopBar({
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1.5">
+        <nav
+          aria-label="Primary navigation"
+          className="flex flex-wrap items-center gap-1.5"
+        >
           <Link
-            href="/design-system"
+            href="/search"
             className="inline-flex min-h-11 items-center rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold text-[#374151] hover:bg-[#F3F2EC]"
           >
-            UI Kit
+            Search
+          </Link>
+          <Link
+            href="/seller"
+            className="inline-flex min-h-11 items-center rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold text-[#374151] hover:bg-[#F3F2EC]"
+          >
+            Seller
+          </Link>
+          <Link
+            href="/admin"
+            className="inline-flex min-h-11 items-center rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold text-[#374151] hover:bg-[#F3F2EC]"
+          >
+            Admin
           </Link>
           <Link
             href="/sell"
             className="inline-flex min-h-11 items-center rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] px-3 text-xs font-semibold text-[#065F46] hover:bg-[#D1FAE5]"
           >
-            List your shop
+            List shop
           </Link>
         </nav>
       </div>
@@ -58,15 +73,22 @@ export function TopBar({
 
 /**
  * The 300px Zero-Image Results Card (PRD §9.2 priority order).
+ * Works both as a link-driven SSR card and as an interactive callback card.
  */
 export function ResultCard({
   listing,
   now,
+  confirmHref,
+  directionsHref,
+  sellerHref,
   onConfirm,
   onDirections,
 }: {
   listing: ResultCardListing;
   now?: Date;
+  confirmHref?: string;
+  directionsHref?: string;
+  sellerHref?: string;
   onConfirm?: (listing: ResultCardListing) => void;
   onDirections?: (listing: ResultCardListing) => void;
 }) {
@@ -94,7 +116,11 @@ export function ResultCard({
       {/* 4. Distance + Zone + Landmark */}
       <div className="mt-3 text-xs text-[#374151]">
         <p className="font-semibold text-[#111827]">
-          📍 {formatDistanceKm(listing.distanceKm)} · {listing.zoneName}
+          📍{" "}
+          {listing.distanceKm !== null && Number.isFinite(listing.distanceKm)
+            ? `${formatDistanceKm(listing.distanceKm)} · `
+            : ""}
+          {listing.zoneName}
         </p>
         <p className="mt-0.5 text-[#4B5563]">{listing.landmarkText}</p>
       </div>
@@ -102,31 +128,58 @@ export function ResultCard({
       {/* 5. Seller + Verification tier + Closed warning */}
       <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-[#F3F2EC] pt-2.5">
         <div className="flex flex-wrap items-center gap-1.5 text-xs">
-          <span className="font-semibold text-[#111827]">
-            {listing.sellerName}
-          </span>
+          {sellerHref ? (
+            <Link
+              href={sellerHref}
+              className="font-semibold text-[#065F46] hover:underline"
+            >
+              {listing.sellerName}
+            </Link>
+          ) : (
+            <span className="font-semibold text-[#111827]">
+              {listing.sellerName}
+            </span>
+          )}
           <VerificationBadge tier={listing.verificationTier} />
         </div>
         {listing.isClosedNow ? (
           <span className="rounded bg-[#FEF2F2] px-2 py-0.5 text-[11px] font-semibold text-[#991B1B]">
-            Closed now
-            {listing.opensAtLabel ? ` · opens ${listing.opensAtLabel}` : ""}
+            {listing.opensAtLabel || "Closed now"}
           </span>
         ) : null}
       </div>
 
-      {/* 6. Confirm & Directions (>=44px buttons) */}
+      {/* 6. Confirm & Directions (>=44px actions) */}
       <div className="mt-3.5 grid grid-cols-2 gap-2.5">
-        <Button fullWidth onClick={() => onConfirm?.(listing)}>
-          Confirm
-        </Button>
-        <Button
-          variant="outline"
-          fullWidth
-          onClick={() => onDirections?.(listing)}
-        >
-          Directions
-        </Button>
+        {confirmHref ? (
+          <Link
+            href={confirmHref}
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#065F46] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#064E3B]"
+          >
+            Confirm
+          </Link>
+        ) : (
+          <Button fullWidth onClick={() => onConfirm?.(listing)}>
+            Confirm
+          </Button>
+        )}
+
+        {directionsHref ? (
+          <Link
+            href={directionsHref}
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#9CA3AF] bg-white px-4 py-2.5 text-sm font-semibold text-[#111827] hover:bg-[#F3F4F6]"
+          >
+            Directions
+          </Link>
+        ) : (
+          <Button
+            variant="outline"
+            fullWidth
+            onClick={() => onDirections?.(listing)}
+          >
+            Directions
+          </Button>
+        )}
       </div>
     </article>
   );

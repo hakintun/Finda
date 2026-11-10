@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB, saveDB, nowISO } from "@/lib/db";
+import { setSellerSession } from "@/lib/auth";
 import { getOrCreateDraftForWrite, publishDraft, validateStep } from "@/lib/onboarding";
 import { checkBanned } from "@/lib/moderation";
 import { toE164 } from "@/lib/freshness";
@@ -85,6 +86,7 @@ export async function POST(req: NextRequest) {
     const result = publishDraft(draft);
     if (!result.ok) return NextResponse.json({ ok: false, errors: result.errors }, { status: 400 });
     saveDB(db);
+    await setSellerSession(result.seller.id);
     return NextResponse.json({
       ok: true,
       seller_id: result.seller.id,

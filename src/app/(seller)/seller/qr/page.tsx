@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import QRCode from "qrcode";
 import { getDB } from "@/lib/db";
 import { getSellerSession } from "@/lib/auth";
+import { PrintButton } from "./print-button";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,7 @@ export default async function QrPage() {
           <h1 style={{ margin: 0, fontSize: 24, letterSpacing: "-.03em" }}>Your QR sticker</h1>
           <p className="muted small" style={{ margin: "4px 0 0" }}>Print it, paste it on your stall, and let buyers scan.</p>
         </div>
-        <a className="btn btn-sm" href="javascript:window.print()">Print</a>
+        <PrintButton />
       </div>
 
       <div className="grid grid-2">

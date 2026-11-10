@@ -1,214 +1,274 @@
-"use client";
-
-import * as React from "react";
 import Link from "next/link";
-import {
-  PORT_HARCOURT_CLUSTERS,
-  type ClusterId,
-  type ResultCardListing,
-} from "@/lib/types";
-import { Button, ClusterSelector } from "@/components/ui";
 import { ResultCard, TopBar } from "@/components/buyer/shell";
+import { getDB } from "@/lib/db";
+import { queryBuyerCatalog, toResultCardListing } from "@/lib/buyer-cards";
 
-const DEMO_NOW = new Date("2026-11-06T14:00:00Z");
+export const dynamic = "force-dynamic";
 
-const SAMPLE_LISTINGS: (ResultCardListing & { keywords: string[] })[] = [
-  {
-    id: "demo-1",
-    productSlug: "hisense-1-5hp-split-ac",
-    titleAsListed: "Hisense 1.5HP Split Air Conditioner (Copper Coil)",
-    priceKobo: 28_500_000,
-    priceNegotiable: true,
-    stockStatus: "in_stock",
-    confirmedAt: "2026-11-06T08:00:00Z",
-    distanceKm: 0.85,
-    zoneName: "Mile 1 Market, Line 4",
-    landmarkText: "Beside First Bank, off Ikwerre Road — ask for Tunde",
-    sellerName: "Tunde CoolTech Electronics",
-    sellerSlug: "tunde-cooltech",
-    sellerType: "shop",
-    verificationTier: "visit",
-    keywords: ["ac", "air conditioner", "1.5hp", "hisense"],
-  },
-  {
-    id: "demo-2",
-    productSlug: "tiger-tg950-generator",
-    titleAsListed: "Tiger TG950 Small Generator (I Better Pass My Neighbour)",
-    priceKobo: 9_800_000,
-    priceNegotiable: false,
-    stockStatus: "low_stock",
-    confirmedAt: "2026-11-05T15:00:00Z",
-    distanceKm: 1.2,
-    zoneName: "Mile 1 Market, Engine Line",
-    landmarkText: "Opposite Mile 1 Flyover bridge, Stall B12",
-    sellerName: "Chukwuma Power & Spares",
-    sellerSlug: "chukwuma-power",
-    sellerType: "stall",
-    verificationTier: "phone",
-    keywords: ["gen", "generator", "tiger", "i better pass my neighbour"],
-  },
-  {
-    id: "demo-3",
-    productSlug: "mama-gold-rice-50kg",
-    titleAsListed: "Mama Gold Parboiled Rice — 50kg Bag",
-    priceKobo: 7_950_000,
-    priceNegotiable: false,
-    stockStatus: "in_stock",
-    confirmedAt: "2026-11-02T11:00:00Z",
-    distanceKm: 2.4,
-    zoneName: "Mile 3 Market, Foodstuff Row",
-    landmarkText: "Behind Mile 3 Motor Park gate, 2nd store on left",
-    sellerName: "Mama Ngozi Provisions",
-    sellerSlug: "mama-ngozi",
-    sellerType: "stall",
-    verificationTier: "visit",
-    keywords: ["rice", "50kg", "mama gold", "foodstuff"],
-  },
-];
-
-const QUICK_CHIPS = [
-  "1.5HP air conditioner",
-  "I better pass my neighbour",
-  "50kg rice",
+const QUICK_SEARCH_CHIPS = [
+  { label: "I better pass my neighbour", q: "i better pass my neighbour" },
+  { label: "Generator", q: "generator" },
+  { label: "Dangote Cement", q: "cement" },
+  { label: "50kg Rice", q: "50kg rice" },
+  { label: "Indomine", q: "indomine" },
+  { label: "Solar Battery", q: "inverter battery" },
+  { label: "Cooking Gas", q: "12.5kg gas" },
 ];
 
 export default function BuyerHomePage() {
-  const [cluster, setCluster] = React.useState<ClusterId>("Mile1");
-  const [query, setQuery] = React.useState("");
-  const [notice, setNotice] = React.useState<string | null>(null);
+  const db = getDB();
+  const zones: any[] = db.zones || [];
+  const activeShopsCount = (db.sellers || []).filter(
+    (s: any) => s.status === "active"
+  ).length;
 
-  const activeCluster =
-    PORT_HARCOURT_CLUSTERS.find((c) => c.id === cluster) ??
-    PORT_HARCOURT_CLUSTERS[0];
+  const { results, total } = queryBuyerCatalog(db, {
+    sort: "freshest",
+    limit: 6,
+  });
 
-  const results = React.useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return SAMPLE_LISTINGS;
-    return SAMPLE_LISTINGS.filter(
-      (item) =>
-        item.titleAsListed.toLowerCase().includes(q) ||
-        item.keywords.some((kw) => kw.includes(q) || q.includes(kw))
-    );
-  }, [query]);
+  const categories: string[] = Array.from(
+    new Set<string>(
+      (db.products || []).map((p: any) => String(p.category || ""))
+    )
+  )
+    .filter(Boolean)
+    .sort()
+    .slice(0, 8);
 
   return (
     <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
-      <TopBar activeClusterLabel={`Port Harcourt · ${activeCluster.label}`} />
+      <TopBar activeClusterLabel={`${activeShopsCount} shops · Port Harcourt`} />
 
-      <main className="mx-auto w-full max-w-xl flex-1 px-4 pt-5 pb-14">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[#111827]">
-          Find who has it, near you.
-        </h1>
-        <p className="mt-1 text-sm text-[#4B5563]">
-          Check today&apos;s Naira price, confirmed stock status, and landmark
-          directions before you leave home.
-        </p>
-
-        <form
-          role="search"
-          onSubmit={(e) => e.preventDefault()}
-          className="mt-4"
-        >
-          <div className="flex min-h-12 items-center gap-2 rounded-2xl border-2 border-[#065F46] bg-white px-3.5">
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Try “1.5HP AC”, “gen”, or “rice”…"
-              aria-label="Search for an item in Port Harcourt"
-              className="w-full min-h-12 bg-transparent text-base text-[#111827] placeholder:text-[#6B7280] focus:outline-none"
-            />
-            {query ? (
-              <button
-                type="button"
-                onClick={() => setQuery("")}
-                className="min-h-11 px-2 text-xs font-semibold text-[#4B5563] cursor-pointer"
-              >
-                Clear
-              </button>
-            ) : null}
-          </div>
-        </form>
-
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {QUICK_CHIPS.map((chip) => (
-            <button
-              key={chip}
-              type="button"
-              onClick={() => setQuery(chip)}
-              className="min-h-11 rounded-xl border border-[#D1D5DB] bg-white px-3 py-2 text-xs font-medium text-[#374151] hover:bg-[#F3F2EC] cursor-pointer"
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-16 pt-5 space-y-6">
+        {/* Hero Search Form -> /search */}
+        <section aria-labelledby="hero-heading" className="space-y-3">
+          <div>
+            <h1
+              id="hero-heading"
+              className="text-2xl font-extrabold tracking-tight text-[#111827] sm:text-3xl"
             >
-              {chip}
-            </button>
-          ))}
-        </div>
-
-        <section className="mt-5">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#4B5563]">
-            Your area ({activeCluster.zonesHint})
-          </p>
-          <ClusterSelector selected={cluster} onSelect={setCluster} />
-        </section>
-
-        {notice ? (
-          <div className="mt-4 flex items-center justify-between rounded-xl border border-[#6EE7B7] bg-[#ECFDF5] px-3.5 py-2.5 text-xs font-medium text-[#065F46]">
-            <span>{notice}</span>
-            <button
-              type="button"
-              onClick={() => setNotice(null)}
-              className="ml-2 font-bold underline cursor-pointer"
-            >
-              OK
-            </button>
+              Find who actually has it in stock nearby.
+            </h1>
+            <p className="mt-1 text-sm text-[#4B5563]">
+              Check live Naira prices, stock freshness, and street landmarks
+              across {zones.length} Port Harcourt markets before making the trip.
+            </p>
           </div>
-        ) : null}
 
-        <section className="mt-6 space-y-3">
-          <h2 className="text-sm font-bold text-[#111827]">
-            Nearby confirmed listings ({results.length})
-          </h2>
-          {results.length > 0 ? (
-            results.map((listing) => (
-              <ResultCard
-                key={listing.id}
-                listing={listing}
-                now={DEMO_NOW}
-                onConfirm={(item) =>
-                  setNotice(`Confirm tapped for ${item.sellerName}`)
-                }
-                onDirections={(item) =>
-                  setNotice(`Directions: ${item.landmarkText}`)
-                }
-              />
-            ))
-          ) : (
-            <div className="rounded-2xl border border-[#D1D5DB] bg-white p-5 text-center space-y-2">
-              <p className="text-sm font-bold text-[#111827]">
-                No nearby seller has confirmed &ldquo;{query}&rdquo; yet.
-              </p>
-              <Button variant="secondary" onClick={() => setQuery("")}>
-                Reset sample search
-              </Button>
-            </div>
-          )}
-        </section>
-
-        <section className="mt-8 rounded-2xl border border-[#A7F3D0] bg-[#ECFDF5] p-4">
-          <p className="text-sm font-bold text-[#065F46]">
-            Member 1 · Task 1 Interactive UI Test Bench
-          </p>
-          <p className="mt-1 text-xs text-[#064E3B]">
-            Test Naira kobo math, live freshness sliders, stock badges, +234
-            phone validation, and the 360×640 Android frame.
-          </p>
-          <Link
-            href="/design-system"
-            className="mt-3 inline-flex min-h-11 items-center rounded-xl bg-[#065F46] px-4 py-2.5 text-xs font-semibold text-white"
+          <form
+            action="/search"
+            method="get"
+            role="search"
+            className="space-y-2.5"
           >
-            Open Interactive UI Kit →
-          </Link>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <label htmlFor="home-q" className="sr-only">
+                  Search product, brand, or Nigerian slang
+                </label>
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-[#4B5563]"
+                >
+                  🔍
+                </span>
+                <input
+                  id="home-q"
+                  name="q"
+                  type="search"
+                  placeholder="Try 'generator', 'cement', '50kg rice', 'indomine'…"
+                  className="min-h-12 w-full rounded-xl border border-[#9CA3AF] bg-white pl-10 pr-3 text-base text-[#111827] placeholder:text-[#6B7280]"
+                />
+              </div>
+              <button
+                type="submit"
+                className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-[#065F46] px-5 text-sm font-bold text-white hover:bg-[#064E3B]"
+              >
+                Search
+              </button>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <label
+                htmlFor="home-zone"
+                className="text-xs font-semibold text-[#4B5563]"
+              >
+                Market area:
+              </label>
+              <select
+                id="home-zone"
+                name="zone"
+                defaultValue="all"
+                className="min-h-10 rounded-xl border border-[#D1D5DB] bg-white px-3 py-1.5 text-xs font-semibold text-[#111827]"
+              >
+                <option value="all">
+                  All Port Harcourt ({total} active items)
+                </option>
+                {zones.map((z: any) => (
+                  <option key={z.id} value={z.id}>
+                    {z.name} — {z.area}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </form>
+
+          {/* Local Pidgin / Slang Quick Chips */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+            <span className="text-xs font-semibold text-[#4B5563] mr-0.5">
+              Popular:
+            </span>
+            {QUICK_SEARCH_CHIPS.map((chip) => (
+              <Link
+                key={chip.q}
+                href={`/search?q=${encodeURIComponent(chip.q)}`}
+                className="inline-flex min-h-9 items-center rounded-full border border-[#D1D5DB] bg-white px-3 py-1 text-xs font-semibold text-[#374151] hover:border-[#065F46] hover:text-[#065F46]"
+              >
+                {chip.label}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Browse by Port Harcourt Market Zone */}
+        <section aria-labelledby="zones-heading" className="space-y-2.5">
+          <div className="flex items-baseline justify-between">
+            <h2
+              id="zones-heading"
+              className="text-sm font-bold uppercase tracking-wider text-[#374151]"
+            >
+              Browse by Market Area
+            </h2>
+            <Link
+              href="/market-data"
+              className="text-xs font-semibold text-[#065F46] hover:underline"
+            >
+              View Port Harcourt Price Index →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {zones.map((z: any) => (
+              <Link
+                key={z.id}
+                href={`/search?zone=${encodeURIComponent(z.id)}`}
+                className="rounded-xl border border-[#D1D5DB] bg-white p-3 hover:border-[#065F46]"
+              >
+                <p className="text-sm font-bold text-[#111827]">{z.name}</p>
+                <p className="mt-0.5 text-xs text-[#4B5563] line-clamp-1">
+                  {z.area}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Browse by Category */}
+        <section aria-labelledby="cat-heading" className="space-y-2">
+          <h2
+            id="cat-heading"
+            className="text-sm font-bold uppercase tracking-wider text-[#374151]"
+          >
+            Categories
+          </h2>
+          <div className="flex flex-wrap gap-1.5">
+            {categories.map((cat) => (
+              <Link
+                key={cat}
+                href={`/search?category=${encodeURIComponent(cat)}`}
+                className="inline-flex min-h-10 items-center rounded-xl border border-[#D1D5DB] bg-white px-3.5 text-xs font-semibold text-[#111827] hover:bg-[#F3F2EC]"
+              >
+                {cat}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Freshly Confirmed Nearby */}
+        <section aria-labelledby="fresh-heading" className="space-y-3">
+          <div className="flex items-baseline justify-between gap-2">
+            <h2
+              id="fresh-heading"
+              className="text-base font-bold text-[#111827]"
+            >
+              Freshly confirmed in Port Harcourt
+            </h2>
+            <Link
+              href="/search?sort=freshest"
+              className="text-xs font-semibold text-[#065F46] hover:underline"
+            >
+              See all {total} listings →
+            </Link>
+          </div>
+
+          <div className="space-y-3">
+            {results.map((row) => {
+              const card = toResultCardListing(row);
+              return (
+                <ResultCard
+                  key={card.id}
+                  listing={card}
+                  sellerHref={`/s/${card.sellerSlug}`}
+                  confirmHref={`/s/${card.sellerSlug}?confirm=${encodeURIComponent(
+                    card.id
+                  )}#item-${card.id}`}
+                  directionsHref={`/s/${card.sellerSlug}/map`}
+                />
+              );
+            })}
+          </div>
         </section>
       </main>
+
+      <footer className="border-t border-[#E5E7EB] bg-white px-4 py-5 text-center text-xs text-[#4B5563]">
+        <p className="font-medium">
+          Finda Port Harcourt Pilot · Text-first (&lt;150 KB) for 2G/3G networks
+        </p>
+        <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1">
+          <Link
+            href="/sell"
+            className="font-semibold text-[#065F46] hover:underline"
+          >
+            List your shop
+          </Link>
+          <Link
+            href="/seller"
+            className="font-semibold text-[#065F46] hover:underline"
+          >
+            Seller Console
+          </Link>
+          <Link
+            href="/admin"
+            className="font-semibold text-[#065F46] hover:underline"
+          >
+            Admin Ops
+          </Link>
+          <Link
+            href="/market-data"
+            className="font-semibold text-[#065F46] hover:underline"
+          >
+            Market Data
+          </Link>
+          <Link
+            href="/test-plan"
+            className="font-semibold text-[#065F46] hover:underline"
+          >
+            QA Test Plan
+          </Link>
+          <Link
+            href="/design-system"
+            className="font-semibold text-[#065F46] hover:underline"
+          >
+            UI Kit
+          </Link>
+          <Link
+            href="/privacy"
+            className="font-semibold text-[#065F46] hover:underline"
+          >
+            Privacy
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

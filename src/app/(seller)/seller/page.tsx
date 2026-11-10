@@ -9,13 +9,22 @@ import { dailyTapAll, answerRequest } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function SellerDashboard({ searchParams }: { searchParams: Promise<{ tapped?: string; need?: string; error?: string }> }) {
+export default async function SellerDashboard({ searchParams }: { searchParams: Promise<{ tapped?: string; need?: string; error?: string; shop?: string }> }) {
   const sp = await searchParams;
   const db = getDB();
   const session = await getSellerSession();
 
   /* ------------------------------------------------ not signed in */
   if (!session) {
+    const requestedShop = sp.shop ? db.sellers.find((s: any) => s.id === sp.shop) : null;
+    const recentShops = [...db.sellers]
+      .filter((s: any) => s.status === "active")
+      .sort((a: any, b: any) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
+    const demoList = [
+      ...(requestedShop ? [requestedShop] : []),
+      ...recentShops.filter((s: any) => s.id !== requestedShop?.id),
+    ].slice(0, 14);
+
     return (
       <>
         <div className="row-between wrapflex" style={{ margin: "20px 0 8px" }}>
@@ -36,7 +45,7 @@ export default async function SellerDashboard({ searchParams }: { searchParams: 
           <h3 className="card-title">Demo sign-in</h3>
           <p className="small muted">Choose the shop you want to manage. Nothing is charged and no OTP is needed.</p>
           <div className="grid grid-2 mt16">
-            {db.sellers.slice(0, 12).map((s: any) => {
+            {demoList.map((s: any) => {
               const zone = db.zones.find((z: any) => z.id === s.zone_id);
               const count = db.listings.filter((l: any) => l.seller_id === s.id && l.status !== "delisted").length;
               return (

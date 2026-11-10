@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function SellerItems({
   searchParams,
 }: {
-  searchParams: Promise<{ fast?: string; saved?: string; bulk?: string; blocked?: string; error?: string }>;
+  searchParams: Promise<{ fast?: string; cat?: string; saved?: string; bulk?: string; blocked?: string; error?: string }>;
 }) {
   const sp = await searchParams;
   const session = await getSellerSession();
@@ -25,7 +25,7 @@ export default async function SellerItems({
     .sort((a: any, b: any) => new Date(b.confirmed_at || 0).getTime() - new Date(a.confirmed_at || 0).getTime());
 
   const showFast = sp.fast === "1" || mine.length === 0;
-  const fastCategory = seller.primary_category || "Provisions";
+  const fastCategory = sp.cat || seller.primary_category || "Provisions";
   const common = db.products.filter((p: any) => p.category === fastCategory).slice(0, 10);
 
   return (
@@ -82,12 +82,13 @@ export default async function SellerItems({
               {common.length === 0 ? (
                 <p className="small muted">No template items for this category yet — use “Add one item” below.</p>
               ) : null}
+              <input type="hidden" name="category" value={fastCategory} />
               <button className="btn btn-primary btn-block mt16">Add these items</button>
             </form>
 
             <div className="btn-row mt16" style={{ flexWrap: "wrap" }}>
               {[...new Set(db.products.map((p: any) => p.category))].sort().map((c: any) => (
-                <Link key={c} className={`btn btn-sm ${c === fastCategory ? "btn-primary" : ""}`} href={c === fastCategory ? "/seller/items?fast=1" : "/seller/items?fast=1"}>
+                <Link key={c} className={`btn btn-sm ${c === fastCategory ? "btn-primary" : ""}`} href={`/seller/items?fast=1&cat=${encodeURIComponent(c)}`}>
                   {c}
                 </Link>
               ))}

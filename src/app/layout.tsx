@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { RealtimeRefresh } from "@/components/buyer/realtime-refresh";
 
 export const metadata: Metadata = {
   title: {
-    default: "Finda — Find who has it, near you (Port Harcourt)",
-    template: "%s · Finda PH",
+    default: "Finda.ng — Buy & Sell in Port Harcourt · Live Prices & Verified Stock",
+    template: "%s · Finda Port Harcourt",
   },
   description:
-    "Check which nearby Port Harcourt shop or market stall has what you need right now, today's Naira price, stock status, and landmark directions.",
+    "Buy smarter, sell faster in Port Harcourt. Browse verified local shops, live Naira prices, confirmed stock status, and street landmarks.",
   applicationName: "Finda",
   appleWebApp: {
     capable: true,
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
   },
   openGraph: {
-    title: "Finda — Find who has it, near you",
+    title: "Finda — Buy & Sell Smarter in Port Harcourt",
     description:
-      "Local availability search for Port Harcourt. Today's price, confirmed stock, and landmark directions.",
+      "Local marketplace for Port Harcourt. Today's price, confirmed stock, and street landmark directions.",
     locale: "en_NG",
     type: "website",
   },
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#065F46",
+  themeColor: "#00B53F",
 };
 
 export default function RootLayout({
@@ -36,7 +37,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en-NG">
-      <body className="antialiased selection:bg-[#A7F3D0] selection:text-[#064E3B]">
+      <body className="antialiased selection:bg-[#BBF7D0] selection:text-[#064E3B]">
+        <RealtimeRefresh />
         {children}
       </body>
     </html>

@@ -18,17 +18,16 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
         {sp.error ? <div className="notice notice-err mb16">{sp.error}</div> : null}
         {sp.need ? <div className="notice notice-warn mb16">Sign in to open the admin tools.</div> : null}
         <div className="card narrow" style={{ maxWidth: 460 }}>
-          <h2 className="card-title">Team passcode</h2>
+          <h2 className="card-title">Staff authentication</h2>
           <p className="small muted">
-            These screens change what buyers see, so they are locked behind a passcode. The demo passcode is{" "}
-            <code>finda-admin</code> — production uses Supabase roles + RLS.
+            Marketplace administration is restricted to authorized Finda operations staff.
           </p>
           <form action={login} className="stack mt16">
             <label className="field">
-              <span className="lbl">Passcode</span>
-              <input type="text" name="code" placeholder="finda-admin" autoFocus />
+              <span className="lbl">Staff passcode</span>
+              <input type="password" name="code" placeholder="Enter staff passcode" autoComplete="current-password" autoFocus />
             </label>
-            <button className="btn btn-primary btn-block">Open the control centre</button>
+            <button className="btn btn-primary btn-block">Sign in to Admin</button>
           </form>
         </div>
       </>

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getDB, saveDB, id } from "@/lib/db";
+import { getCustomerSession } from "@/lib/customer-auth";
 import {
   createConfirmRequest,
   submitAccuracyFeedback,
@@ -26,9 +27,16 @@ async function getOrSetBuyerKey(): Promise<string> {
 }
 
 export async function startConfirmForMe(formData: FormData) {
+  const customer = await getCustomerSession();
   const listingId = String(formData.get("listing_id") || "");
-  const buyerName = String(formData.get("buyer_name") || "").trim();
-  const buyerPhone = String(formData.get("buyer_phone") || "").trim();
+  const buyerName =
+    String(formData.get("buyer_name") || "").trim() ||
+    customer?.user?.name ||
+    "";
+  const buyerPhone =
+    String(formData.get("buyer_phone") || "").trim() ||
+    customer?.user?.phone ||
+    "";
 
   const db = getDB();
   const out = createConfirmRequest(db, {
@@ -40,8 +48,11 @@ export async function startConfirmForMe(formData: FormData) {
   if (!out.ok) {
     redirect("/search?error=missing_listing");
   }
+  if (customer?.user?.id) {
+    out.request.buyer_user_id = customer.user.id;
+  }
   saveDB(db);
-  revalidatePath("/seller");
+  revalidatePath("/", "layout");
   redirect(`/request/${out.request.id}`);
 }
 
@@ -58,13 +69,16 @@ export async function postBuyerDemand(formData: FormData) {
     revalidatePath("/admin/freshness");
   }
   redirect(
-    `/search?q=${encodeURIComponent(returnQuery)}&demand=${res.ok ? "sent" : "invalid"}`
+    `/search?q=${encodeURIComponent(returnQuery)}&demand=${
+      res.ok ? "sent" : "invalid"
+    }`
   );
 }
 
 export async function flagListingReport(formData: FormData) {
   const listingId = String(formData.get("listing_id") || "");
   const sellerSlug = String(formData.get("seller_slug") || "");
+  const returnTo = String(formData.get("return_to") || "");
   const reason = String(formData.get("reason") || "other");
   const note = String(formData.get("note") || "");
   const buyerKey = await getOrSetBuyerKey();
@@ -80,6 +94,9 @@ export async function flagListingReport(formData: FormData) {
     saveDB(db);
     revalidatePath("/admin");
     revalidatePath("/admin/reports");
+  }
+  if (returnTo && returnTo.startsWith("/")) {
+    redirect(`${returnTo}?reported=1`);
   }
   redirect(`/s/${sellerSlug}?reported=1`);
 }
@@ -99,8 +116,7 @@ export async function recordTripOutcome(formData: FormData) {
   const res = submitAccuracyFeedback(db, { listingId, verdict, buyerKey });
   if (res.ok) {
     saveDB(db);
-    revalidatePath("/search");
-    revalidatePath("/admin/freshness");
+    revalidatePath("/", "layout");
   }
   const sep = returnTo.includes("?") ? "&" : "?";
   redirect(

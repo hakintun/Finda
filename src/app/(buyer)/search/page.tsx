@@ -1,6 +1,11 @@
 import Link from "next/link";
-import { ResultCard, TopBar } from "@/components/buyer/shell";
-import { getDB, saveDB } from "@/lib/db";
+import {
+  JijiAdCard,
+  MarketplaceFooter,
+  TopBar,
+} from "@/components/buyer/shell";
+import { getDB, saveDBBackground } from "@/lib/db";
+import { getCustomerSession } from "@/lib/customer-auth";
 import { logSearchQuery } from "@/lib/buyer-ops";
 import { queryBuyerCatalog, toResultCardListing } from "@/lib/buyer-cards";
 import { postBuyerDemand } from "../actions";
@@ -13,26 +18,38 @@ type SearchParams = Promise<{
   category?: string;
   stock?: string;
   tier?: string;
+  minPrice?: string;
   maxPrice?: string;
   sort?: string;
   expired?: string;
   demand?: string;
   feedback?: string;
   demoted?: string;
-  error?: string;
 }>;
+
+const PRICE_BRACKETS = [
+  { label: "Under ₦ 10K", min: "", max: "10000" },
+  { label: "₦ 10K – 50K", min: "10000", max: "50000" },
+  { label: "₦ 50K – 250K", min: "50000", max: "250000" },
+  { label: "More than ₦ 250K", min: "250000", max: "" },
+];
 
 export default async function BuyerSearchPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
-  const sp = await searchParams;
+  const [sp, customerSession] = await Promise.all([
+    searchParams,
+    getCustomerSession(),
+  ]);
+
   const q = (sp.q || "").trim();
   const zoneId = sp.zone && sp.zone !== "all" ? sp.zone : undefined;
   const category = sp.category && sp.category !== "all" ? sp.category : undefined;
   const stockFilter = sp.stock || "all";
   const tierFilter = sp.tier || "all";
+  const minPriceNaira = sp.minPrice ? Number(sp.minPrice) : undefined;
   const maxPriceNaira = sp.maxPrice ? Number(sp.maxPrice) : undefined;
   const sort = (sp.sort as any) || "best";
   const includeExpired = sp.expired === "1";
@@ -45,7 +62,7 @@ export default async function BuyerSearchPage({
     ? { lat: activeZone.center_lat, lng: activeZone.center_lng }
     : null;
 
-  const { results: filtered, expanded, total } = queryBuyerCatalog(db, {
+  const { results: baseResults, expanded } = queryBuyerCatalog(db, {
     q,
     zoneId,
     category,
@@ -58,12 +75,20 @@ export default async function BuyerSearchPage({
     includeExpired,
     origin,
     sort,
-    limit: 60,
+    limit: 120,
   });
 
+  const filtered =
+    minPriceNaira && Number.isFinite(minPriceNaira) && minPriceNaira > 0
+      ? baseResults.filter(
+          (r) => r.listing.price_kobo >= Math.round(minPriceNaira * 100)
+        )
+      : baseResults;
+
+  // Non-blocking background log — zero disk wait on search load!
   if (q) {
     logSearchQuery(db, q, activeZone?.name || "Port Harcourt", filtered.length);
-    saveDB(db);
+    saveDBBackground(db);
   }
 
   const fallbackSuggestions =
@@ -79,273 +104,369 @@ export default async function BuyerSearchPage({
     .filter(Boolean)
     .sort();
 
+  const topCustomer = customerSession
+    ? {
+        name: customerSession.user.name,
+        role: customerSession.user.role,
+        isVerified: Boolean(customerSession.user.is_verified),
+        hasShop: Boolean(customerSession.shop),
+      }
+    : null;
+
   return (
-    <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
-      <TopBar activeClusterLabel={activeZone?.name || "Port Harcourt"} />
+    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+      <TopBar
+        activeClusterLabel={activeZone?.name || "Port Harcourt"}
+        customer={topCustomer}
+      />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-16 pt-4 space-y-4">
-        {sp.demand === "sent" ? (
-          <div className="notice notice-ok">
-            ✓ Request sent! Nearby Port Harcourt sellers and market agents can
-            now see what you need.
-          </div>
-        ) : null}
-        {sp.demoted === "1" ? (
-          <div className="notice notice-warn">
-            Thanks — 3 buyers reported this item unavailable, so it has been
-            automatically demoted to <strong>Unconfirmed</strong>.
-          </div>
-        ) : sp.feedback ? (
-          <div className="notice notice-ok">
-            ✓ Thanks for helping keep Port Harcourt stock prices honest!
-          </div>
-        ) : null}
-
-        {/* Search & Filter Form (URL-persisted via GET) */}
+      {/* Compact Jiji Green Search Bar Strip */}
+      <div className="bg-[#00B53F] px-4 pb-4 pt-2 shadow-xs">
         <form
           action="/search"
           method="get"
           role="search"
-          className="rounded-2xl border border-[#D1D5DB] bg-white p-3.5 space-y-3 shadow-xs"
+          className="mx-auto flex max-w-6xl gap-2"
         >
-          <div className="flex gap-2">
-            <input
-              name="q"
-              type="search"
-              defaultValue={q}
-              placeholder="Search item, brand, or Pidgin slang…"
-              className="min-h-11 flex-1 rounded-xl border border-[#9CA3AF] bg-white px-3.5 text-base text-[#111827]"
-            />
-            <button type="submit" className="btn btn-primary">
-              Search
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            <select
-              name="zone"
-              defaultValue={zoneId || "all"}
-              aria-label="Filter by market area"
-              className="min-h-10 rounded-xl border border-[#D1D5DB] bg-white px-2.5 text-xs font-semibold"
-            >
-              <option value="all">All Markets</option>
-              {zones.map((z: any) => (
-                <option key={z.id} value={z.id}>
-                  {z.name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name="category"
-              defaultValue={category || "all"}
-              aria-label="Filter by category"
-              className="min-h-10 rounded-xl border border-[#D1D5DB] bg-white px-2.5 text-xs font-semibold"
-            >
-              <option value="all">All Categories</option>
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name="stock"
-              defaultValue={stockFilter}
-              aria-label="Filter by stock status"
-              className="min-h-10 rounded-xl border border-[#D1D5DB] bg-white px-2.5 text-xs font-semibold"
-            >
-              <option value="all">Any Stock</option>
-              <option value="in_stock">In Stock / Low</option>
-            </select>
-
-            <select
-              name="sort"
-              defaultValue={sort}
-              aria-label="Sort results"
-              className="min-h-10 rounded-xl border border-[#D1D5DB] bg-white px-2.5 text-xs font-semibold"
-            >
-              <option value="best">Sort: Best Match</option>
-              <option value="cheapest">Sort: Cheapest (₦)</option>
-              <option value="freshest">Sort: Freshest</option>
-              <option value="nearest">Sort: Nearest</option>
-            </select>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5 text-xs">
-            <div className="flex flex-wrap items-center gap-3">
-              <select
-                name="tier"
-                defaultValue={tierFilter}
-                aria-label="Filter by verification tier"
-                className="min-h-9 rounded-lg border border-[#D1D5DB] bg-white px-2 text-xs font-semibold"
-              >
-                <option value="all">All Sellers</option>
-                <option value="verified_any">Verified Sellers (✓+)</option>
-                <option value="visit">Physically Verified (✓✓✓)</option>
-              </select>
-
-              <input
-                name="maxPrice"
-                type="number"
-                min={0}
-                step={500}
-                defaultValue={maxPriceNaira || ""}
-                placeholder="Max ₦ price"
-                className="min-h-9 w-32 rounded-lg border border-[#D1D5DB] bg-white px-2.5 text-xs"
-              />
-
-              <label className="inline-flex items-center gap-1.5 text-xs text-[#4B5563] cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="expired"
-                  value="1"
-                  defaultChecked={includeExpired}
-                />
-                Include &gt;14d unconfirmed
-              </label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button type="submit" className="btn btn-sm">
-                Apply filters
-              </button>
-              <Link
-                href="/search"
-                className="text-xs font-semibold text-[#065F46] underline"
-              >
-                Reset
-              </Link>
-            </div>
-          </div>
+          {category ? (
+            <input type="hidden" name="category" value={category} />
+          ) : null}
+          {zoneId ? <input type="hidden" name="zone" value={zoneId} /> : null}
+          <input
+            name="q"
+            type="search"
+            defaultValue={q}
+            placeholder="Search in Port Harcourt…"
+            className="min-h-11 flex-1 rounded-xl border-0 bg-white px-4 text-sm text-[#111827]"
+          />
+          <button
+            type="submit"
+            className="min-h-11 rounded-xl bg-[#111827] px-5 text-xs font-extrabold uppercase tracking-wide text-white hover:bg-black cursor-pointer"
+          >
+            Search
+          </button>
         </form>
+      </div>
 
-        {/* Synonym expansion feedback */}
-        {q && expanded.length > 1 ? (
-          <p className="text-xs text-[#4B5563]">
-            Matched local terms:{" "}
-            <span className="font-semibold text-[#111827]">
-              {expanded.slice(0, 5).join(", ")}
-            </span>
-          </p>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-5 space-y-4">
+        {/* Breadcrumbs */}
+        <nav aria-label="Breadcrumb" className="text-xs text-[#6B7280] flex flex-wrap items-center gap-1.5">
+          <Link href="/" className="hover:text-[#00B53F]">
+            Home
+          </Link>
+          <span>/</span>
+          <Link href="/search" className="hover:text-[#00B53F]">
+            Port Harcourt
+          </Link>
+          {activeZone ? (
+            <>
+              <span>/</span>
+              <span className="font-semibold text-[#111827]">
+                {activeZone.name}
+              </span>
+            </>
+          ) : null}
+          {category ? (
+            <>
+              <span>/</span>
+              <span className="font-semibold text-[#111827]">{category}</span>
+            </>
+          ) : null}
+        </nav>
+
+        {sp.demand === "sent" ? (
+          <div className="notice notice-ok">
+            ✓ Request posted! Nearby verified sellers can now source what you
+            need.
+          </div>
         ) : null}
 
-        {/* Results Header */}
-        <div className="flex items-baseline justify-between">
-          <h1 className="text-base font-bold text-[#111827]">
-            {filtered.length} {filtered.length === 1 ? "listing" : "listings"}{" "}
-            {q ? (
-              <>
-                for <span className="text-[#065F46]">&ldquo;{q}&rdquo;</span>
-              </>
-            ) : (
-              "available"
-            )}
-          </h1>
-          <span className="text-xs text-[#4B5563]">
-            {activeZone ? activeZone.name : "All Port Harcourt"}
-          </span>
-        </div>
+        <div className="grid gap-6 lg:grid-cols-[270px_1fr]">
+          {/* Left Jiji Filter Sidebar */}
+          <aside>
+            <form
+              action="/search"
+              method="get"
+              className="rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-xs space-y-5"
+            >
+              <input type="hidden" name="q" value={q} />
 
-        {/* Results List OR Helpful Zero-Results Fallback (US-1.1) */}
-        {filtered.length > 0 ? (
-          <div className="space-y-3">
-            {filtered.map((row) => {
-              const card = toResultCardListing(row);
-              return (
-                <ResultCard
-                  key={card.id}
-                  listing={card}
-                  sellerHref={`/s/${card.sellerSlug}`}
-                  confirmHref={`/s/${card.sellerSlug}?confirm=${encodeURIComponent(
-                    card.id
-                  )}#item-${card.id}`}
-                  directionsHref={`/s/${card.sellerSlug}/map`}
-                />
-              );
-            })}
-          </div>
-        ) : (
-          <section className="space-y-4">
-            <div className="rounded-2xl border border-[#D1D5DB] bg-white p-5 space-y-3">
-              <h2 className="text-lg font-extrabold text-[#111827]">
-                No confirmed shop matched{" "}
-                {q ? `“${q}”` : "those exact filters"} right now
-              </h2>
-              <p className="text-sm text-[#4B5563]">
-                We never show fake or expired stock as available. Tell local
-                Port Harcourt traders what you need so our market agent can
-                source it — or try broadening your area filter.
-              </p>
+              {/* Category Filter */}
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="flt-cat"
+                  className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]"
+                >
+                  Category
+                </label>
+                <select
+                  id="flt-cat"
+                  name="category"
+                  defaultValue={category || "all"}
+                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                >
+                  <option value="all">All Categories</option>
+                  {categories.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              <form action={postBuyerDemand} className="space-y-2.5 pt-1">
-                <input type="hidden" name="return_q" value={q} />
-                <input
-                  type="hidden"
-                  name="cluster"
-                  value={activeZone?.name || "Port Harcourt"}
-                />
-                <div className="field">
-                  <label className="lbl" htmlFor="demand-text">
-                    Tell sellers what you need
-                  </label>
+              {/* Location / Market Zone */}
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="flt-zone"
+                  className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]"
+                >
+                  Location (Port Harcourt)
+                </label>
+                <select
+                  id="flt-zone"
+                  name="zone"
+                  defaultValue={zoneId || "all"}
+                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                >
+                  <option value="all">All Port Harcourt</option>
+                  {zones.map((z: any) => (
+                    <option key={z.id} value={z.id}>
+                      {z.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price, ₦ (Jiji Style Min / Max + Quick Brackets) */}
+              <div className="space-y-2 border-t border-[#F2F4F7] pt-4">
+                <span className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]">
+                  Price, ₦
+                </span>
+                <div className="grid grid-cols-2 gap-2">
                   <input
-                    id="demand-text"
-                    name="raw_text"
-                    type="text"
-                    required
-                    defaultValue={q}
-                    placeholder="e.g. 200Ah tubular battery around Mile 3"
+                    name="minPrice"
+                    type="number"
+                    min={0}
+                    defaultValue={minPriceNaira || ""}
+                    placeholder="Min"
+                    className="min-h-9 rounded-lg border border-[#D1D5DB] px-2.5 text-xs"
+                  />
+                  <input
+                    name="maxPrice"
+                    type="number"
+                    min={0}
+                    defaultValue={maxPriceNaira || ""}
+                    placeholder="Max"
+                    className="min-h-9 rounded-lg border border-[#D1D5DB] px-2.5 text-xs"
                   />
                 </div>
-                <div className="field">
-                  <label className="lbl" htmlFor="demand-phone">
-                    Optional WhatsApp / phone number (if you want a reply)
-                  </label>
-                  <input
-                    id="demand-phone"
-                    name="buyer_phone"
-                    type="tel"
-                    placeholder="e.g. 0803 123 4567"
-                  />
+                <div className="space-y-1 pt-1">
+                  {PRICE_BRACKETS.map((b) => (
+                    <Link
+                      key={b.label}
+                      href={`/search?q=${encodeURIComponent(q)}&zone=${
+                        zoneId || "all"
+                      }&category=${category || "all"}&minPrice=${
+                        b.min
+                      }&maxPrice=${b.max}`}
+                      className="block rounded-lg px-2 py-1 text-xs text-[#4B5563] hover:bg-[#ECFDF5] hover:text-[#00B53F]"
+                    >
+                      • {b.label}
+                    </Link>
+                  ))}
                 </div>
-                <button type="submit" className="btn btn-primary">
-                  Notify nearby sellers
+              </div>
+
+              {/* Verified Sellers & Stock */}
+              <div className="space-y-2 border-t border-[#F2F4F7] pt-4">
+                <span className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]">
+                  Verified Sellers & Stock
+                </span>
+                <select
+                  name="tier"
+                  defaultValue={tierFilter}
+                  aria-label="Verification tier"
+                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                >
+                  <option value="all">All Sellers</option>
+                  <option value="verified_any">✓ Verified Sellers Only</option>
+                  <option value="visit">✓✓✓ Physically Visited Stalls</option>
+                </select>
+
+                <select
+                  name="stock"
+                  defaultValue={stockFilter}
+                  aria-label="Stock status"
+                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                >
+                  <option value="all">Any Stock Status</option>
+                  <option value="in_stock">In Stock / Low Stock Only</option>
+                </select>
+
+                <select
+                  name="sort"
+                  defaultValue={sort}
+                  aria-label="Sort order"
+                  className="min-h-10 w-full rounded-xl border border-[#D1D5DB] bg-white px-3 text-xs font-semibold"
+                >
+                  <option value="best">Sort: Recommended</option>
+                  <option value="cheapest">Sort: Lowest Price</option>
+                  <option value="freshest">Sort: Freshest Confirmed</option>
+                  <option value="nearest">Sort: Nearest Market</option>
+                </select>
+
+                <label className="flex items-center gap-2 pt-1 text-xs text-[#4B5563] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="expired"
+                    value="1"
+                    defaultChecked={includeExpired}
+                  />
+                  Include &gt;14d unconfirmed
+                </label>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="submit"
+                  className="min-h-10 flex-1 rounded-xl bg-[#00B53F] px-3 text-xs font-extrabold text-white hover:bg-[#009933] cursor-pointer"
+                >
+                  Apply Filters
                 </button>
-              </form>
+                <Link
+                  href="/search"
+                  className="text-xs font-bold text-[#6B7280] hover:text-[#111827]"
+                >
+                  Clear
+                </Link>
+              </div>
+            </form>
+          </aside>
+
+          {/* Right Results Grid */}
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 shadow-2xs">
+              <div>
+                <h1 className="text-base font-extrabold text-[#111827]">
+                  {q
+                    ? `${filtered.length} results for “${q}”`
+                    : category
+                    ? `${category} in ${activeZone?.name || "Port Harcourt"}`
+                    : `Ads in ${activeZone?.name || "Port Harcourt"}`}{" "}
+                  <span className="text-xs font-semibold text-[#6B7280]">
+                    ({filtered.length} ads)
+                  </span>
+                </h1>
+                {q && expanded.length > 1 ? (
+                  <p className="text-[11px] text-[#6B7280]">
+                    Also matched:{" "}
+                    <span className="font-semibold">
+                      {expanded.slice(0, 5).join(", ")}
+                    </span>
+                  </p>
+                ) : null}
+              </div>
             </div>
 
-            {fallbackSuggestions.length > 0 ? (
-              <div className="space-y-2.5">
-                <h3 className="text-sm font-bold text-[#374151]">
-                  Freshly confirmed items nearby instead
-                </h3>
-                {fallbackSuggestions.map((row) => {
+            {filtered.length > 0 ? (
+              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
+                {filtered.map((row) => {
                   const card = toResultCardListing(row);
                   return (
-                    <ResultCard
+                    <JijiAdCard
                       key={card.id}
                       listing={card}
-                      sellerHref={`/s/${card.sellerSlug}`}
-                      confirmHref={`/s/${card.sellerSlug}?confirm=${encodeURIComponent(
-                        card.id
-                      )}#item-${card.id}`}
-                      directionsHref={`/s/${card.sellerSlug}/map`}
+                      category={
+                        row.listing.category || row.seller.primary_category
+                      }
+                      unit={row.listing.pack_size || row.listing.unit}
                     />
                   );
                 })}
               </div>
-            ) : null}
-          </section>
-        )}
+            ) : (
+              <div className="space-y-5">
+                <div className="rounded-2xl border border-[#E5E7EB] bg-white p-6 space-y-3 shadow-xs">
+                  <h2 className="text-lg font-extrabold text-[#111827]">
+                    No active ads matched{" "}
+                    {q ? `“${q}”` : "those exact filters"} right now
+                  </h2>
+                  <p className="text-sm text-[#4B5563]">
+                    Post what you&apos;re looking for below and verified Port
+                    Harcourt sellers in that category will be notified.
+                  </p>
 
-        {total > filtered.length ? (
-          <p className="text-center text-xs text-[#4B5563]">
-            Showing {filtered.length} of {total} matching listings.
-          </p>
-        ) : null}
+                  <form action={postBuyerDemand} className="space-y-2.5 pt-1">
+                    <input type="hidden" name="return_q" value={q} />
+                    <input
+                      type="hidden"
+                      name="cluster"
+                      value={activeZone?.name || "Port Harcourt"}
+                    />
+                    <div className="field">
+                      <label className="lbl" htmlFor="demand-text">
+                        What item do you need?
+                      </label>
+                      <input
+                        id="demand-text"
+                        name="raw_text"
+                        type="text"
+                        required
+                        defaultValue={q}
+                        placeholder="e.g. 200Ah tubular battery around Mile 3"
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="lbl" htmlFor="demand-phone">
+                        Your WhatsApp or Phone (optional)
+                      </label>
+                      <input
+                        id="demand-phone"
+                        name="buyer_phone"
+                        type="tel"
+                        defaultValue={customerSession?.user?.phone || ""}
+                        placeholder="e.g. 0803 123 4567"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="min-h-11 rounded-xl bg-[#00B53F] px-5 text-xs font-extrabold uppercase text-white hover:bg-[#009933] cursor-pointer"
+                    >
+                      Post Buyer Request
+                    </button>
+                  </form>
+                </div>
+
+                {fallbackSuggestions.length > 0 ? (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-extrabold text-[#374151]">
+                      Other freshly confirmed ads in Port Harcourt
+                    </h3>
+                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+                      {fallbackSuggestions.map((row) => {
+                        const card = toResultCardListing(row);
+                        return (
+                          <JijiAdCard
+                            key={card.id}
+                            listing={card}
+                            category={
+                              row.listing.category ||
+                              row.seller.primary_category
+                            }
+                            unit={row.listing.pack_size || row.listing.unit}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            )}
+          </div>
+        </div>
       </main>
+
+      <MarketplaceFooter />
     </div>
   );
 }

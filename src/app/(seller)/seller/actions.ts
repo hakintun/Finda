@@ -7,12 +7,13 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getDB, saveDB } from "@/lib/db";
-import { getSellerSession, setSellerSession, clearSellerSession } from "@/lib/auth";
+import { getAdminSession, getSellerSession, setSellerSession, clearSellerSession } from "@/lib/auth";
+import { destroyCustomerSession } from "@/lib/customer-auth";
 import * as ops from "@/lib/ops";
 
 async function requireShop() {
   const session = await getSellerSession();
-  if (!session) redirect("/seller?need=login");
+  if (!session) redirect("/auth?tab=login&role=seller&next=/seller");
   return session;
 }
 
@@ -20,11 +21,14 @@ function run<T extends { ok: boolean }>(fn: (db: any) => T): T {
   const db = getDB();
   const out = fn(db);
   saveDB(db);
+  revalidatePath("/", "layout");
   return out;
 }
 
-/* ------------------------------ demo sign-in ------------------------------ */
+/* ------------------------------ admin-only impersonation ------------------------------ */
 export async function demoLogin(formData: FormData) {
+  const admin = await getAdminSession();
+  if (!admin) redirect("/restricted");
   const shopId = String(formData.get("shop_id") || "");
   const db = getDB();
   if (!db.sellers.some((s: any) => s.id === shopId)) redirect("/seller?error=noshop");
@@ -35,8 +39,9 @@ export async function demoLogin(formData: FormData) {
 
 export async function logout() {
   await clearSellerSession();
-  revalidatePath("/seller");
-  redirect("/seller");
+  await destroyCustomerSession();
+  revalidatePath("/", "layout");
+  redirect("/");
 }
 
 /* ------------------------------ items ------------------------------------ */

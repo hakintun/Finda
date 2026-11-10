@@ -428,6 +428,45 @@ export function toggleListingStatus(db: any, actorId: string, listingId: string)
   return { ok: true as const, status: l.status };
 }
 
+/**
+ * Delists or restores an entire Seller/Customer account & all of their storefront visibility
+ * immediately across Buyer Home, Search, Shop pages, Item pages, and Market Data.
+ */
+export function toggleSellerStatus(db: any, actorId: string, sellerId: string) {
+  const s = (db.sellers || []).find((x: any) => x.id === sellerId);
+  if (!s) return { ok: false as const };
+  const before = s.status || "active";
+  const next = before === "active" ? "delisted" : "active";
+  s.status = next;
+
+  // Also sync linked customer user status if present
+  if (s.user_id) {
+    const user = (db.users || []).find((u: any) => u.id === s.user_id);
+    if (user) {
+      user.status = next;
+    }
+    if (next !== "active") {
+      db.user_sessions = (db.user_sessions || []).filter(
+        (sess: any) => sess.user_id !== s.user_id
+      );
+    }
+  }
+
+  audit(
+    db,
+    actorId,
+    "seller",
+    s.id,
+    next === "delisted" ? "seller_delisted" : "seller_restored",
+    { status: before },
+    { status: next }
+  );
+  trackEvent(db, next === "delisted" ? "seller_delisted" : "seller_restored", {
+    seller_id: s.id,
+  });
+  return { ok: true as const, status: next };
+}
+
 export function addBannedTerm(db: any, actorId: string, term: string, reason: string) {
   const t = (term || "").trim().toLowerCase();
   if (!t) return { ok: false as const, error: "empty" };

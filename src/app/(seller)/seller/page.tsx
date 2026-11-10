@@ -1,85 +1,67 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getDB } from "@/lib/db";
 import { getSellerSession } from "@/lib/auth";
-import { demoLogin } from "./actions";
+import { getCustomerSession } from "@/lib/customer-auth";
 import { freshnessLabel, freshnessState, hoursSince } from "@/lib/freshness";
 import { Kpi, Price, StockBadge, TierBadge } from "@/lib/member3-ui";
-import { ShopSwitcher } from "./switcher";
 import { dailyTapAll, answerRequest } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function SellerDashboard({ searchParams }: { searchParams: Promise<{ tapped?: string; need?: string; error?: string; shop?: string }> }) {
+export default async function SellerDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ tapped?: string; need?: string; error?: string }>;
+}) {
   const sp = await searchParams;
   const db = getDB();
   const session = await getSellerSession();
 
-  /* ------------------------------------------------ not signed in */
+  /* Never expose already-registered shops! Require seller login or shop creation */
   if (!session) {
-    const requestedShop = sp.shop ? db.sellers.find((s: any) => s.id === sp.shop) : null;
-    const recentShops = [...db.sellers]
-      .filter((s: any) => s.status === "active")
-      .sort((a: any, b: any) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
-    const demoList = [
-      ...(requestedShop ? [requestedShop] : []),
-      ...recentShops.filter((s: any) => s.id !== requestedShop?.id),
-    ].slice(0, 14);
+    const customer = await getCustomerSession();
+    if (!customer) {
+      redirect("/auth?tab=login&role=seller&next=/seller");
+    }
 
     return (
-      <>
-        <div className="row-between wrapflex" style={{ margin: "20px 0 8px" }}>
-          <div>
-            <h1 style={{ margin: 0, fontSize: 26, letterSpacing: "-.03em" }}>Seller console</h1>
-            <p className="muted small" style={{ margin: "4px 0 0" }}>
-              In production you sign in with a phone code. In this demo build, pick any sample shop.
-            </p>
-          </div>
-          <Link className="btn btn-primary" href="/seller/onboard">New shop sign-up</Link>
+      <div className="card" style={{ marginTop: 24, textAlign: "center", padding: "32px 20px" }}>
+        <div style={{ fontSize: 36, marginBottom: 8 }}>🏪</div>
+        <h1 style={{ margin: 0, fontSize: 22, letterSpacing: "-.02em" }}>
+          Welcome, {customer.user.name}! Set up your shop to start selling
+        </h1>
+        <p className="small muted" style={{ maxWidth: 460, margin: "8px auto 18px" }}>
+          Add your Port Harcourt market area, street landmark, and your first
+          items with Naira prices in under 5 minutes.
+        </p>
+        <div className="row" style={{ justifyContent: "center", gap: 10 }}>
+          <Link className="btn btn-primary" href="/seller/onboard">
+            Create my shop now →
+          </Link>
+          <Link className="btn" href="/account">
+            Verify Email / Phone / WhatsApp
+          </Link>
         </div>
-
-        {sp.need ? (
-          <div className="notice notice-warn mb16">Please sign in to a shop first.</div>
-        ) : null}
-
-        <div className="card">
-          <h3 className="card-title">Demo sign-in</h3>
-          <p className="small muted">Choose the shop you want to manage. Nothing is charged and no OTP is needed.</p>
-          <div className="grid grid-2 mt16">
-            {demoList.map((s: any) => {
-              const zone = db.zones.find((z: any) => z.id === s.zone_id);
-              const count = db.listings.filter((l: any) => l.seller_id === s.id && l.status !== "delisted").length;
-              return (
-                <form action={demoLogin} key={s.id}>
-                  <input type="hidden" name="shop_id" value={s.id} />
-                  <button className="btn btn-block" style={{ justifyContent: "space-between", textAlign: "left", height: "auto", padding: "12px 14px" }}>
-                    <span>
-                      <span className="b" style={{ display: "block" }}>{s.business_name}</span>
-                      <span className="tiny muted">{zone?.name} · {count} items</span>
-                    </span>
-                    <span className="tiny muted">Open →</span>
-                  </button>
-                </form>
-              );
-            })}
-          </div>
-          <p className="tiny muted mt16 mb0">
-            Showing 12 of {db.sellers.length}. After signing in you can switch shops from the dashboard header.
-          </p>
-        </div>
-      </>
+      </div>
     );
   }
 
   /* ------------------------------------------------ signed in */
   const seller = session.seller;
   const zone = db.zones.find((z: any) => z.id === seller.zone_id);
-  const mine = db.listings.filter((l: any) => l.seller_id === seller.id && l.status !== "delisted");
+  const mine = db.listings.filter(
+    (l: any) => l.seller_id === seller.id && l.status !== "delisted"
+  );
   const now = Date.now();
-  const states = mine.reduce((acc: any, l: any) => {
-    const s = freshnessState(l.confirmed_at, now);
-    acc[s] = (acc[s] || 0) + 1;
-    return acc;
-  }, { fresh: 0, aging: 0, stale: 0, expired: 0 });
+  const states = mine.reduce(
+    (acc: any, l: any) => {
+      const s = freshnessState(l.confirmed_at, now);
+      acc[s] = (acc[s] || 0) + 1;
+      return acc;
+    },
+    { fresh: 0, aging: 0, stale: 0, expired: 0 }
+  );
 
   const myRequests = (db.confirm_requests || []).filter((r: any) => {
     const l = db.listings.find((x: any) => x.id === r.listing_id);
@@ -107,88 +89,110 @@ export default async function SellerDashboard({ searchParams }: { searchParams: 
 
       <div className="row-between wrapflex" style={{ margin: "6px 0 14px" }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: 24, letterSpacing: "-.03em" }}>Today at your shop</h1>
+          <h1 style={{ margin: 0, fontSize: 24, letterSpacing: "-.03em" }}>
+            Today at your shop
+          </h1>
           <p className="muted small" style={{ margin: "4px 0 0" }}>
             {zone?.name} · {seller.landmark_text}
           </p>
         </div>
         <div className="row" style={{ gap: 6 }}>
           <TierBadge tier={seller.verification_tier} />
-          <ShopSwitcher shops={db.sellers.map((s: any) => ({ id: s.id, name: s.business_name }))} current={seller.id} />
         </div>
       </div>
 
-      {/* ---------------- the Daily Tap promise, kept prominent */}
       {needsTap ? (
-        <div className="card" style={{ borderColor: "var(--green-600)", background: "var(--green-50)", marginBottom: 16 }}>
+        <div
+          className="card"
+          style={{
+            borderColor: "var(--green-600)",
+            background: "var(--green-50)",
+            marginBottom: 16,
+          }}
+        >
           <div className="row-between wrapflex">
             <div>
-              <h3 className="card-title" style={{ margin: 0 }}>One tap keeps your shop visible</h3>
+              <h3 className="card-title" style={{ margin: 0 }}>
+                One tap keeps your shop visible
+              </h3>
               <p className="small muted mb0">
-                It has been {Math.floor(hoursSince(seller.last_nudge_at))} hours since you last confirmed.
-                Buyers see “{freshnessLabel(top5[0]?.confirmed_at ?? seller.last_nudge_at)}”.
+                It has been {Math.floor(hoursSince(seller.last_nudge_at))} hours
+                since you last confirmed. Buyers see “
+                {freshnessLabel(top5[0]?.confirmed_at ?? seller.last_nudge_at)}
+                ”.
               </p>
             </div>
             <form action={dailyTapAll}>
-              <button className="btn btn-primary" style={{ minHeight: 46 }}>
-                ✓ Yes, all still available
+              <button className="btn btn-primary">
+                ✓ Still accurate ({Math.min(5, mine.length)} items)
               </button>
             </form>
           </div>
-          <p className="tiny muted mt8 mb0">
-            Refreshes your top 5 items in one request. Items not confirmed within 14 days are hidden from search.
-          </p>
         </div>
       ) : null}
 
       <div className="grid grid-4">
-        <Kpi n={mine.length} label="Items listed" detail={`${states.fresh} fresh · ${states.aging} aging`} />
-        <Kpi n={views} label="People looked at your items this week" detail={`${directions} tapped Directions`} />
-        <Kpi n={pending.length} label="Buyers asking right now" tone={pending.length ? "warn" : "good"} detail={pending.length ? "Answer in one tap below" : "All answered"} />
-        <Kpi n={gotIt} label="Confirmed finds" detail="buyers you said “yes” to" tone="good" />
+        <Kpi
+          n={mine.length}
+          label="Items listed"
+          detail={`${states.fresh} fresh · ${states.stale + states.expired} stale`}
+          tone={states.fresh >= mine.length / 2 ? "good" : "warn"}
+        />
+        <Kpi n={views} label="Views (7 days)" detail="from buyer searches" />
+        <Kpi
+          n={directions}
+          label="Directions tapped"
+          detail="buyers heading over"
+        />
+        <Kpi
+          n={gotIt}
+          label="Confirmed 'Yes'"
+          detail={`${pending.length} waiting now`}
+          tone="good"
+        />
       </div>
 
-      {/* ---------------- waiting buyers */}
       <div className="section-h">
         <h2>Buyers waiting for an answer</h2>
-        <p>Answer Yes/No — no typing</p>
+        <p>Reply in 1 tap so they don&apos;t waste transport fare</p>
       </div>
-
       {pending.length === 0 ? (
         <div className="card">
           <p className="small muted mb0">
-            No questions waiting. To create one and test this screen, open a buyer confirmation request from
-            the <Link href="/test-plan">test plan</Link> “Simulate a buyer” step.
+            No pending buyer questions right now. When a buyer taps{" "}
+            <strong>Confirm availability</strong> on your items, it appears here
+            instantly.
           </p>
         </div>
       ) : (
         <div className="stack">
           {pending.map((r: any) => {
-            const l = db.listings.find((x: any) => x.id === r.listing_id);
+            const item = db.listings.find((l: any) => l.id === r.listing_id);
             return (
-              <div className="card" key={r.id}>
-                <div className="row-between wrapflex">
-                  <div>
-                    <div className="b">{l?.title_as_listed}</div>
-                    <div className="tiny muted">
-                      {r.buyer_name || "A buyer"} asked {freshnessLabel(r.created_at)} · price on record {l ? <Price kobo={l.price_kobo} /> : "—"}
-                    </div>
-                  </div>
-                  <div className="row" style={{ gap: 8 }}>
-                    <form action={answerRequest}>
-                      <input type="hidden" name="request_id" value={r.id} />
-                      <input type="hidden" name="answer" value="yes" />
-                      <button className="btn btn-primary btn-sm">✓ Yes, I have it</button>
-                    </form>
-                    <form action={answerRequest}>
-                      <input type="hidden" name="request_id" value={r.id} />
-                      <input type="hidden" name="answer" value="no" />
-                      <button className="btn btn-sm">✗ No</button>
-                    </form>
+              <div className="card row-between wrapflex" key={r.id}>
+                <div>
+                  <div className="b">{item?.title_as_listed || "Item"}</div>
+                  <div className="small muted">
+                    Asked by <strong>{r.buyer_name}</strong> ·{" "}
+                    {freshnessLabel(r.created_at)} · Listed at{" "}
+                    <Price kobo={item?.price_kobo || 0} />
                   </div>
                 </div>
-                <div className="tiny muted mt8">
-                  If you do not answer within 30 minutes the buyer is told plainly and offered your number instead.
+                <div className="row" style={{ gap: 8 }}>
+                  <form action={answerRequest}>
+                    <input type="hidden" name="request_id" value={r.id} />
+                    <input type="hidden" name="answer" value="yes" />
+                    <button className="btn btn-primary btn-sm">
+                      ✓ Yes, I have it
+                    </button>
+                  </form>
+                  <form action={answerRequest}>
+                    <input type="hidden" name="request_id" value={r.id} />
+                    <input type="hidden" name="answer" value="no" />
+                    <button className="btn btn-danger btn-sm">
+                      ✗ Out of stock
+                    </button>
+                  </form>
                 </div>
               </div>
             );
@@ -196,15 +200,12 @@ export default async function SellerDashboard({ searchParams }: { searchParams: 
         </div>
       )}
 
-      {/* ---------------- top items */}
       <div className="section-h">
         <h2>Your top items</h2>
-        <div className="row" style={{ gap: 12 }}>
-          <Link className="small" href="/seller/items">See all {mine.length} →</Link>
-          <Link className="small" href="/seller/items?fast=1">10 common items shortcut</Link>
-        </div>
+        <Link className="small" href="/seller/items">
+          Manage all {mine.length} items →
+        </Link>
       </div>
-
       <div className="card card-pad0">
         <div className="tbl-scroll">
           <table className="tbl">
@@ -213,56 +214,34 @@ export default async function SellerDashboard({ searchParams }: { searchParams: 
                 <th>Item</th>
                 <th>Price</th>
                 <th>Stock</th>
-                <th>Freshness</th>
-                <th>Views 7d</th>
+                <th>Last confirmed</th>
               </tr>
             </thead>
             <tbody>
-              {top5.map((l: any) => {
-                const st = freshnessState(l.confirmed_at);
-                return (
-                  <tr key={l.id}>
-                    <td className="b">{l.title_as_listed}</td>
-                    <td><Price kobo={l.price_kobo} negotiable={l.price_negotiable} /></td>
-                    <td><StockBadge status={l.stock_status} /></td>
-                    <td>
-                      <span className={`badge badge-${st === "fresh" ? "fresh" : st === "aging" ? "aging" : "stale"}`}>
-                        {freshnessLabel(l.confirmed_at)}
-                      </span>
-                    </td>
-                    <td className="muted">{l.views_7d ?? 0}</td>
-                  </tr>
-                );
-              })}
+              {top5.map((l: any) => (
+                <tr key={l.id}>
+                  <td className="b">{l.title_as_listed}</td>
+                  <td>
+                    <Price kobo={l.price_kobo} />
+                  </td>
+                  <td>
+                    <StockBadge status={l.stock_status} />
+                  </td>
+                  <td className="tiny muted">
+                    {freshnessLabel(l.confirmed_at)}
+                  </td>
+                </tr>
+              ))}
               {top5.length === 0 ? (
-                <tr><td colSpan={5} className="muted">No items yet. <Link href="/seller/items">Add your first item →</Link></td></tr>
+                <tr>
+                  <td colSpan={4} className="muted">
+                    No items yet —{" "}
+                    <Link href="/seller/items?fast=1">add your first items</Link>.
+                  </td>
+                </tr>
               ) : null}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      <div className="section-h"><h2>Quick actions</h2></div>
-      <div className="grid grid-3">
-        <Link className="card card-link" href="/seller/items"><h3 className="card-title">Edit prices &amp; stock</h3><p className="small muted mb0">One tap to flip stock, inline price edit.</p></Link>
-        <Link className="card card-link" href="/seller/qr"><h3 className="card-title">Print QR sticker</h3><p className="small muted mb0">Paste on your stall so buyers scan instead of asking.</p></Link>
-        <Link className="card card-link" href="/seller/verify"><h3 className="card-title">Get verified</h3><p className="small muted mb0">Upload ID or request a stall visit for a badge.</p></Link>
-      </div>
-
-      <div className="card mt24">
-        <h3 className="card-title">Why freshness matters</h3>
-        <div className="grid grid-2 small mt8">
-          <div>
-            <div className="stat-line"><span><span className="dotf dotf-fresh" /> Fresh (&lt;48h)</span><span className="v">{states.fresh}</span></div>
-            <div className="stat-line"><span><span className="dotf dotf-aging" /> Aging (3–7 days)</span><span className="v">{states.aging}</span></div>
-            <div className="stat-line"><span><span className="dotf dotf-stale" /> Stale (7–14 days)</span><span className="v">{states.stale}</span></div>
-            <div className="stat-line"><span><span className="dotf dotf-expired" /> Hidden (&gt;14 days)</span><span className="v">{states.expired}</span></div>
-          </div>
-          <p className="muted mb0">
-            Fresh items rank higher and show “Confirmed today”. Stale items carry a warning. Items not confirmed
-            within 14 days drop out of search so buyers are never tricked by old prices. The Daily Tap resets all five
-            in one press.
-          </p>
         </div>
       </div>
     </>

@@ -1,274 +1,327 @@
 import Link from "next/link";
-import { ResultCard, TopBar } from "@/components/buyer/shell";
+import {
+  JijiAdCard,
+  MarketplaceFooter,
+  TopBar,
+} from "@/components/buyer/shell";
 import { getDB } from "@/lib/db";
+import { getCustomerSession } from "@/lib/customer-auth";
 import { queryBuyerCatalog, toResultCardListing } from "@/lib/buyer-cards";
+import { getCategoryVisual } from "@/lib/category-visuals";
 
 export const dynamic = "force-dynamic";
 
-const QUICK_SEARCH_CHIPS = [
+const TRENDING_CHIPS = [
   { label: "I better pass my neighbour", q: "i better pass my neighbour" },
   { label: "Generator", q: "generator" },
-  { label: "Dangote Cement", q: "cement" },
+  { label: "Cement", q: "cement" },
   { label: "50kg Rice", q: "50kg rice" },
   { label: "Indomine", q: "indomine" },
-  { label: "Solar Battery", q: "inverter battery" },
-  { label: "Cooking Gas", q: "12.5kg gas" },
+  { label: "Inverter Battery", q: "inverter battery" },
+  { label: "12.5kg Gas", q: "12.5kg gas" },
 ];
 
-export default function BuyerHomePage() {
-  const db = getDB();
-  const zones: any[] = db.zones || [];
-  const activeShopsCount = (db.sellers || []).filter(
-    (s: any) => s.status === "active"
-  ).length;
+export default async function BuyerHomePage() {
+  const [db, customerSession] = await Promise.all([
+    Promise.resolve(getDB()),
+    getCustomerSession(),
+  ]);
 
-  const { results, total } = queryBuyerCatalog(db, {
+  const zones: any[] = db.zones || [];
+
+  // Pull all live listings once to compute accurate per-category ad counts & trending feed
+  const { results: allLive, total } = queryBuyerCatalog(db, {
     sort: "freshest",
-    limit: 6,
+    limit: 200,
   });
 
-  const categories: string[] = Array.from(
-    new Set<string>(
-      (db.products || []).map((p: any) => String(p.category || ""))
-    )
-  )
-    .filter(Boolean)
-    .sort()
-    .slice(0, 8);
+  const catCounts = new Map<string, number>();
+  for (const p of db.products || []) {
+    if (p.category && !catCounts.has(p.category)) {
+      catCounts.set(p.category, 0);
+    }
+  }
+  for (const hit of allLive) {
+    const c = hit.listing.category || hit.seller.primary_category || "Other";
+    catCounts.set(c, (catCounts.get(c) || 0) + 1);
+  }
+
+  const categoryList = Array.from(catCounts.entries())
+    .map(([name, count]) => ({
+      name,
+      count,
+      visual: getCategoryVisual(name),
+    }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
+  const trendingAds = allLive.slice(0, 18);
+
+  const topCustomer = customerSession
+    ? {
+        name: customerSession.user.name,
+        role: customerSession.user.role,
+        isVerified: Boolean(customerSession.user.is_verified),
+        hasShop: Boolean(customerSession.shop),
+      }
+    : null;
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
-      <TopBar activeClusterLabel={`${activeShopsCount} shops · Port Harcourt`} />
+    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+      <TopBar activeClusterLabel="Port Harcourt" customer={topCustomer} />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-16 pt-5 space-y-6">
-        {/* Hero Search Form -> /search */}
-        <section aria-labelledby="hero-heading" className="space-y-3">
-          <div>
-            <h1
-              id="hero-heading"
-              className="text-2xl font-extrabold tracking-tight text-[#111827] sm:text-3xl"
-            >
-              Find who actually has it in stock nearby.
-            </h1>
-            <p className="mt-1 text-sm text-[#4B5563]">
-              Check live Naira prices, stock freshness, and street landmarks
-              across {zones.length} Port Harcourt markets before making the trip.
-            </p>
-          </div>
+      {/* Jiji Signature Green Hero Search Banner */}
+      <section className="bg-gradient-to-b from-[#00B53F] to-[#009933] px-4 pb-9 pt-6 text-white">
+        <div className="mx-auto max-w-4xl text-center space-y-4">
+          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
+            What are you looking for in Port Harcourt?
+          </h1>
 
           <form
             action="/search"
             method="get"
             role="search"
-            className="space-y-2.5"
+            className="mx-auto flex max-w-3xl flex-col gap-2 sm:flex-row"
           >
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <label htmlFor="home-q" className="sr-only">
-                  Search product, brand, or Nigerian slang
-                </label>
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-[#4B5563]"
-                >
-                  🔍
-                </span>
-                <input
-                  id="home-q"
-                  name="q"
-                  type="search"
-                  placeholder="Try 'generator', 'cement', '50kg rice', 'indomine'…"
-                  className="min-h-12 w-full rounded-xl border border-[#9CA3AF] bg-white pl-10 pr-3 text-base text-[#111827] placeholder:text-[#6B7280]"
-                />
-              </div>
+            {/* Market Area Selector */}
+            <select
+              name="zone"
+              defaultValue="all"
+              aria-label="Select Port Harcourt market area"
+              className="min-h-13 rounded-xl border-0 bg-white px-4 text-sm font-bold text-[#111827] shadow-sm sm:w-52"
+            >
+              <option value="all">📍 All Port Harcourt</option>
+              {zones.map((z: any) => (
+                <option key={z.id} value={z.id}>
+                  📍 {z.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Main Search Input */}
+            <div className="relative flex flex-1">
+              <input
+                name="q"
+                type="search"
+                placeholder="I am looking for… (e.g. generator, cement, 50kg rice)"
+                className="min-h-13 w-full rounded-xl border-0 bg-white pl-4 pr-28 text-base text-[#111827] shadow-sm placeholder:text-[#6B7280]"
+              />
               <button
                 type="submit"
-                className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-[#065F46] px-5 text-sm font-bold text-white hover:bg-[#064E3B]"
+                className="absolute right-1.5 top-1.5 bottom-1.5 rounded-lg bg-[#00B53F] px-5 text-sm font-extrabold text-white hover:bg-[#009933] cursor-pointer"
               >
                 Search
               </button>
             </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <label
-                htmlFor="home-zone"
-                className="text-xs font-semibold text-[#4B5563]"
-              >
-                Market area:
-              </label>
-              <select
-                id="home-zone"
-                name="zone"
-                defaultValue="all"
-                className="min-h-10 rounded-xl border border-[#D1D5DB] bg-white px-3 py-1.5 text-xs font-semibold text-[#111827]"
-              >
-                <option value="all">
-                  All Port Harcourt ({total} active items)
-                </option>
-                {zones.map((z: any) => (
-                  <option key={z.id} value={z.id}>
-                    {z.name} — {z.area}
-                  </option>
-                ))}
-              </select>
-            </div>
           </form>
 
-          {/* Local Pidgin / Slang Quick Chips */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-            <span className="text-xs font-semibold text-[#4B5563] mr-0.5">
+          {/* Popular Search Chips */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
+            <span className="text-xs font-semibold text-white/85">
               Popular:
             </span>
-            {QUICK_SEARCH_CHIPS.map((chip) => (
+            {TRENDING_CHIPS.map((chip) => (
               <Link
                 key={chip.q}
                 href={`/search?q=${encodeURIComponent(chip.q)}`}
-                className="inline-flex min-h-9 items-center rounded-full border border-[#D1D5DB] bg-white px-3 py-1 text-xs font-semibold text-[#374151] hover:border-[#065F46] hover:text-[#065F46]"
+                className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white hover:bg-white/25"
               >
                 {chip.label}
               </Link>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Browse by Port Harcourt Market Zone */}
-        <section aria-labelledby="zones-heading" className="space-y-2.5">
-          <div className="flex items-baseline justify-between">
-            <h2
-              id="zones-heading"
-              className="text-sm font-bold uppercase tracking-wider text-[#374151]"
-            >
-              Browse by Market Area
-            </h2>
+      {/* Main Jiji 2-Column Marketplace Body */}
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-6">
+        {/* Mobile Category Icon Grid (Jiji Mobile Style) */}
+        <section aria-label="Categories" className="mb-6 lg:hidden">
+          <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4">
             <Link
-              href="/market-data"
-              className="text-xs font-semibold text-[#065F46] hover:underline"
+              href="/sell"
+              className="flex flex-col items-center justify-center rounded-2xl border border-[#FDBA74] bg-[#FFF7ED] p-3 text-center shadow-2xs"
             >
-              View Port Harcourt Price Index →
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FF8900] text-xl font-black text-white">
+                +
+              </span>
+              <span className="mt-1.5 text-xs font-extrabold text-[#9A3412]">
+                Post Ad
+              </span>
+              <span className="text-[10px] text-[#C2410C]">Free</span>
             </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {zones.map((z: any) => (
+
+            {categoryList.map((cat) => (
               <Link
-                key={z.id}
-                href={`/search?zone=${encodeURIComponent(z.id)}`}
-                className="rounded-xl border border-[#D1D5DB] bg-white p-3 hover:border-[#065F46]"
+                key={cat.name}
+                href={`/search?category=${encodeURIComponent(cat.name)}`}
+                className="flex flex-col items-center justify-center rounded-2xl border border-[#E5E7EB] bg-white p-3 text-center shadow-2xs hover:border-[#00B53F]"
               >
-                <p className="text-sm font-bold text-[#111827]">{z.name}</p>
-                <p className="mt-0.5 text-xs text-[#4B5563] line-clamp-1">
-                  {z.area}
-                </p>
+                <span
+                  className="flex h-11 w-11 items-center justify-center rounded-full text-2xl"
+                  style={{ backgroundColor: cat.visual.bg }}
+                >
+                  {cat.visual.emoji}
+                </span>
+                <span className="mt-1.5 text-xs font-bold text-[#111827] line-clamp-1">
+                  {cat.name}
+                </span>
+                <span className="text-[10px] font-medium text-[#6B7280]">
+                  {cat.count} ads
+                </span>
               </Link>
             ))}
           </div>
         </section>
 
-        {/* Browse by Category */}
-        <section aria-labelledby="cat-heading" className="space-y-2">
-          <h2
-            id="cat-heading"
-            className="text-sm font-bold uppercase tracking-wider text-[#374151]"
-          >
-            Categories
-          </h2>
-          <div className="flex flex-wrap gap-1.5">
-            {categories.map((cat) => (
+        <div className="grid gap-6 lg:grid-cols-[270px_1fr]">
+          {/* Left Sticky Category Sidebar (Jiji Desktop Style) */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-20 overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-xs">
+              <div className="border-b border-[#F2F4F7] px-4 py-3 text-xs font-extrabold uppercase tracking-wider text-[#6B7280]">
+                Categories ({total} ads)
+              </div>
+              <ul className="divide-y divide-[#F2F4F7]">
+                {categoryList.map((cat) => (
+                  <li key={cat.name}>
+                    <Link
+                      href={`/search?category=${encodeURIComponent(cat.name)}`}
+                      className="flex items-center justify-between gap-2 px-4 py-3 text-sm hover:bg-[#ECFDF5] group"
+                    >
+                      <span className="flex items-center gap-2.5 min-w-0">
+                        <span
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-lg"
+                          style={{ backgroundColor: cat.visual.bg }}
+                        >
+                          {cat.visual.emoji}
+                        </span>
+                        <span className="truncate font-semibold text-[#111827] group-hover:text-[#00B53F]">
+                          {cat.name}
+                        </span>
+                      </span>
+                      <span className="flex items-center gap-1 text-xs text-[#6B7280] shrink-0">
+                        <span>{cat.count}</span>
+                        <span aria-hidden="true">›</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+
+          {/* Right Main Feed */}
+          <div className="space-y-6">
+            {/* Jiji-style Action Banners */}
+            <div className="grid gap-3 sm:grid-cols-3">
               <Link
-                key={cat}
-                href={`/search?category=${encodeURIComponent(cat)}`}
-                className="inline-flex min-h-10 items-center rounded-xl border border-[#D1D5DB] bg-white px-3.5 text-xs font-semibold text-[#111827] hover:bg-[#F3F2EC]"
+                href="/sell"
+                className="flex items-center gap-3 rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-xs hover:border-[#FF8900]"
               >
-                {cat}
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFF7ED] text-2xl">
+                  🚀
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold text-[#111827]">
+                    Got a shop? Sell for free
+                  </p>
+                  <p className="text-xs text-[#6B7280]">
+                    List your items in 5 mins →
+                  </p>
+                </div>
               </Link>
-            ))}
-          </div>
-        </section>
 
-        {/* Freshly Confirmed Nearby */}
-        <section aria-labelledby="fresh-heading" className="space-y-3">
-          <div className="flex items-baseline justify-between gap-2">
-            <h2
-              id="fresh-heading"
-              className="text-base font-bold text-[#111827]"
-            >
-              Freshly confirmed in Port Harcourt
-            </h2>
-            <Link
-              href="/search?sort=freshest"
-              className="text-xs font-semibold text-[#065F46] hover:underline"
-            >
-              See all {total} listings →
-            </Link>
-          </div>
+              <Link
+                href="/auth?tab=register"
+                className="flex items-center gap-3 rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-xs hover:border-[#00B53F]"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#ECFDF5] text-2xl">
+                  ✅
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold text-[#111827]">
+                    Verify Account
+                  </p>
+                  <p className="text-xs text-[#6B7280]">
+                    Email · Phone SMS · WhatsApp
+                  </p>
+                </div>
+              </Link>
 
-          <div className="space-y-3">
-            {results.map((row) => {
-              const card = toResultCardListing(row);
-              return (
-                <ResultCard
-                  key={card.id}
-                  listing={card}
-                  sellerHref={`/s/${card.sellerSlug}`}
-                  confirmHref={`/s/${card.sellerSlug}?confirm=${encodeURIComponent(
-                    card.id
-                  )}#item-${card.id}`}
-                  directionsHref={`/s/${card.sellerSlug}/map`}
-                />
-              );
-            })}
+              <Link
+                href="/market-data"
+                className="flex items-center gap-3 rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-xs hover:border-[#00B53F]"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EFF6FF] text-2xl">
+                  📊
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold text-[#111827]">
+                    PH Market Price Index
+                  </p>
+                  <p className="text-xs text-[#6B7280]">
+                    Compare Mile 1 vs Mile 3 →
+                  </p>
+                </div>
+              </Link>
+            </div>
+
+            {/* Market Area Quick Filter Bar */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+              <Link
+                href="/search"
+                className="shrink-0 rounded-full bg-[#00B53F] px-3.5 py-1.5 text-xs font-extrabold text-white"
+              >
+                🔥 All Port Harcourt
+              </Link>
+              {zones.map((z: any) => (
+                <Link
+                  key={z.id}
+                  href={`/search?zone=${encodeURIComponent(z.id)}`}
+                  className="shrink-0 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-xs font-bold text-[#374151] hover:border-[#00B53F] hover:text-[#00B53F]"
+                >
+                  📍 {z.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* Trending Ads Grid */}
+            <section aria-labelledby="trending-heading" className="space-y-3.5">
+              <div className="flex items-baseline justify-between">
+                <h2
+                  id="trending-heading"
+                  className="text-lg font-extrabold text-[#111827]"
+                >
+                  Trending Ads in Port Harcourt
+                </h2>
+                <Link
+                  href="/search?sort=freshest"
+                  className="text-xs font-extrabold text-[#00B53F] hover:underline"
+                >
+                  Show all {total} ads →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
+                {trendingAds.map((row) => {
+                  const card = toResultCardListing(row);
+                  return (
+                    <JijiAdCard
+                      key={card.id}
+                      listing={card}
+                      category={
+                        row.listing.category || row.seller.primary_category
+                      }
+                      unit={row.listing.pack_size || row.listing.unit}
+                    />
+                  );
+                })}
+              </div>
+            </section>
           </div>
-        </section>
+        </div>
       </main>
 
-      <footer className="border-t border-[#E5E7EB] bg-white px-4 py-5 text-center text-xs text-[#4B5563]">
-        <p className="font-medium">
-          Finda Port Harcourt Pilot · Text-first (&lt;150 KB) for 2G/3G networks
-        </p>
-        <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1">
-          <Link
-            href="/sell"
-            className="font-semibold text-[#065F46] hover:underline"
-          >
-            List your shop
-          </Link>
-          <Link
-            href="/seller"
-            className="font-semibold text-[#065F46] hover:underline"
-          >
-            Seller Console
-          </Link>
-          <Link
-            href="/admin"
-            className="font-semibold text-[#065F46] hover:underline"
-          >
-            Admin Ops
-          </Link>
-          <Link
-            href="/market-data"
-            className="font-semibold text-[#065F46] hover:underline"
-          >
-            Market Data
-          </Link>
-          <Link
-            href="/test-plan"
-            className="font-semibold text-[#065F46] hover:underline"
-          >
-            QA Test Plan
-          </Link>
-          <Link
-            href="/design-system"
-            className="font-semibold text-[#065F46] hover:underline"
-          >
-            UI Kit
-          </Link>
-          <Link
-            href="/privacy"
-            className="font-semibold text-[#065F46] hover:underline"
-          >
-            Privacy
-          </Link>
-        </div>
-      </footer>
+      <MarketplaceFooter />
     </div>
   );
 }

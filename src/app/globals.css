@@ -8,16 +8,16 @@
   --ink-primary: #111827;
   --ink-secondary: #374151;
   --ink-muted: #4b5563;
-  --brand-primary: #065f46;
-  --brand-primary-hover: #064e3b;
+  --brand-primary: #00b53f;
+  --brand-primary-hover: #009933;
   --brand-tint: #ecfdf5;
-  --border-default: #d1d5db;
+  --border-default: #e5e7eb;
   --border-strong: #9ca3af;
 
   /* Semantic aliases used across Seller, Admin, Market-Data & Test-Plan */
   --green-50: #ecfdf5;
-  --green-600: #059669;
-  --green-700: #047857;
+  --green-600: #00b53f;
+  --green-700: #009933;
   --green-800: #065f46;
   --amber: #b45309;
   --red: #b91c1c;

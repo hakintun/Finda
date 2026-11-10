@@ -20,6 +20,7 @@ function run<T extends { ok: boolean }>(fn: (db: any) => T): T {
   const db = getDB();
   const out = fn(db);
   saveDB(db);
+  revalidatePath("/", "layout");
   return out;
 }
 
@@ -122,12 +123,16 @@ export async function createSellerManually(formData: FormData) {
   redirect("/admin/sellers?created=1");
 }
 
-/* ------------------------ listing moderation ----------------------- */
+/* ------------------------ listing & customer moderation ----------------------- */
 export async function toggleListingStatus(formData: FormData) {
   const session = await requireAdmin();
   run((db) => ops.toggleListingStatus(db, session.actor_id, String(formData.get("listing_id") || "")));
-  revalidatePath("/admin/listings");
-  revalidatePath("/admin/sellers");
+}
+
+export async function toggleSellerStatus(formData: FormData) {
+  const session = await requireAdmin();
+  const sellerId = String(formData.get("seller_id") || "");
+  run((db) => ops.toggleSellerStatus(db, session.actor_id, sellerId));
 }
 
 export async function addBannedTerm(formData: FormData) {

@@ -33,7 +33,7 @@ export async function getSellerSession() {
   if (!shopId) return null;
   const db = getDB();
   const seller = db.sellers.find((s: any) => s.id === shopId);
-  if (!seller) return null;
+  if (!seller || seller.status !== "active") return null;
   return { shopId, seller };
 }
 

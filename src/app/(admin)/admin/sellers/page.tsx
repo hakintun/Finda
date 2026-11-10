@@ -4,6 +4,7 @@ import { getAdminSession } from "@/lib/auth";
 import { getDB } from "@/lib/db";
 import { freshnessLabel, freshnessState } from "@/lib/freshness";
 import { TierBadge } from "@/lib/member3-ui";
+import { toggleSellerStatus } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -60,7 +61,7 @@ export default async function SellersPage({ searchParams }: { searchParams: Prom
           <table className="tbl">
             <thead>
               <tr>
-                <th>Shop</th><th>Market</th><th>Tier</th><th>Items</th><th>Fresh</th><th>Last confirmed</th><th>Source</th><th></th>
+                <th>Shop</th><th>Market</th><th>Status</th><th>Tier</th><th>Items</th><th>Fresh</th><th>Last confirmed</th><th></th>
               </tr>
             </thead>
             <tbody>
@@ -71,6 +72,11 @@ export default async function SellersPage({ searchParams }: { searchParams: Prom
                     <div className="tiny muted">{seller.landmark_text}</div>
                   </td>
                   <td className="muted small">{db.zones.find((z: any) => z.id === seller.zone_id)?.name}</td>
+                  <td>
+                    <span className={`badge ${seller.status === "active" ? "badge-in" : "badge-out"}`}>
+                      {seller.status || "active"}
+                    </span>
+                  </td>
                   <td><TierBadge tier={seller.verification_tier} /></td>
                   <td>{items}</td>
                   <td>
@@ -79,8 +85,17 @@ export default async function SellersPage({ searchParams }: { searchParams: Prom
                     </span>
                   </td>
                   <td className="tiny muted">{newest ? freshnessLabel(new Date(newest).toISOString()) : "never"}</td>
-                  <td className="tiny muted">{seller.created_via === "field_agent" ? "field agent" : "self sign-up"}</td>
-                  <td><Link className="btn btn-sm" href={`/admin/sellers/${seller.id}`}>Open</Link></td>
+                  <td>
+                    <div className="row" style={{ gap: 6 }}>
+                      <Link className="btn btn-sm" href={`/admin/sellers/${seller.id}`}>Open</Link>
+                      <form action={toggleSellerStatus}>
+                        <input type="hidden" name="seller_id" value={seller.id} />
+                        <button className={`btn btn-sm ${seller.status === "active" ? "btn-danger" : "btn-primary"}`}>
+                          {seller.status === "active" ? "Delist" : "Restore"}
+                        </button>
+                      </form>
+                    </div>
+                  </td>
                 </tr>
               ))}
               {rows.length === 0 ? <tr><td colSpan={8} className="muted">No shops match that filter.</td></tr> : null}

@@ -1,87 +1,117 @@
 import Link from "next/link";
-import { TopBar } from "@/components/buyer/shell";
+import { MarketplaceFooter, TopBar } from "@/components/buyer/shell";
 import { getDB } from "@/lib/db";
+import { getCustomerSession } from "@/lib/customer-auth";
 
 export const dynamic = "force-dynamic";
 
-export default function SellLandingPage() {
-  const db = getDB();
-  const activeShops = db.sellers.filter((s: any) => s.status === "active").length;
-  const zones = db.zones;
+export default async function SellLandingPage() {
+  const [db, customerSession] = await Promise.all([
+    Promise.resolve(getDB()),
+    getCustomerSession(),
+  ]);
+
+  const activeShops = (db.sellers || []).filter(
+    (s: any) => s.status === "active"
+  ).length;
+  const zones = db.zones || [];
+
+  const topCustomer = customerSession
+    ? {
+        name: customerSession.user.name,
+        role: customerSession.user.role,
+        isVerified: Boolean(customerSession.user.is_verified),
+        hasShop: Boolean(customerSession.shop),
+      }
+    : null;
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
-      <TopBar activeClusterLabel="For Port Harcourt Traders" />
+    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+      <TopBar activeClusterLabel="Sell on Finda" customer={topCustomer} />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8 space-y-6">
-        <section className="rounded-2xl border border-[#D1D5DB] bg-white p-6 space-y-4 shadow-xs">
-          <span className="inline-flex items-center rounded-full bg-[#ECFDF5] border border-[#6EE7B7] px-3 py-1 text-xs font-bold text-[#065F46]">
-            Free for Port Harcourt shops · Works on 2G/3G
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 pt-8 space-y-6">
+        <section className="rounded-3xl bg-gradient-to-br from-[#00B53F] to-[#008A30] p-8 text-white shadow-md space-y-4">
+          <span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold uppercase tracking-wider">
+            100% Free for Port Harcourt Sellers
           </span>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[#111827]">
-            Put your shop on Finda in under 15 minutes
+          <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
+            Sell faster to buyers already searching near your stall
           </h1>
-          <p className="text-sm text-[#374151]">
-            Join <strong>{activeShops} active Port Harcourt shops</strong> across{" "}
-            {zones.map((z: any) => z.name).join(", ")}. Buyers check your current
-            Naira prices, stock status, and street landmark before making the
-            trip — no photos required.
+          <p className="max-w-2xl text-sm text-white/90 leading-relaxed">
+            Join {activeShops}+ verified Port Harcourt traders across{" "}
+            {zones.map((z: any) => z.name).join(", ")}. Verify your account via
+            Email, Phone SMS, or WhatsApp and publish your prices in minutes.
           </p>
 
-          <div className="grid gap-3 sm:grid-cols-2 pt-1">
-            <Link
-              href="/seller/onboard"
-              className="btn btn-primary btn-block"
-            >
-              Start shop sign-up →
-            </Link>
-            <Link href="/seller" className="btn btn-block">
-              Open Seller Console →
-            </Link>
+          <div className="flex flex-wrap gap-3 pt-2">
+            {customerSession?.shop ? (
+              <Link
+                href="/seller"
+                className="inline-flex min-h-12 items-center rounded-xl bg-[#FF8900] px-6 text-sm font-black uppercase text-white shadow-sm hover:bg-[#EA7B00]"
+              >
+                Open My Shop Dashboard →
+              </Link>
+            ) : customerSession ? (
+              <Link
+                href="/seller/onboard"
+                className="inline-flex min-h-12 items-center rounded-xl bg-[#FF8900] px-6 text-sm font-black uppercase text-white shadow-sm hover:bg-[#EA7B00]"
+              >
+                Set Up My Shop Profile →
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/auth?tab=register&role=seller&next=/seller/onboard"
+                  className="inline-flex min-h-12 items-center rounded-xl bg-[#FF8900] px-6 text-sm font-black uppercase text-white shadow-sm hover:bg-[#EA7B00]"
+                >
+                  Register as Seller (Free) →
+                </Link>
+                <Link
+                  href="/auth?tab=login&role=seller&next=/seller"
+                  className="inline-flex min-h-12 items-center rounded-xl bg-white px-6 text-sm font-extrabold text-[#00B53F] hover:bg-white/90"
+                >
+                  Sign In to Existing Shop
+                </Link>
+              </>
+            )}
           </div>
         </section>
 
-        <section className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl border border-[#D1D5DB] bg-white p-4">
-            <p className="text-sm font-bold text-[#111827]">
-              1. Pick your market & landmark
-            </p>
-            <p className="mt-1 text-xs text-[#4B5563]">
-              Describe how buyers actually find you — e.g. &ldquo;Opposite St
-              Paul&apos;s Junction, Line 3&rdquo;.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-[#D1D5DB] bg-white p-4">
-            <p className="text-sm font-bold text-[#111827]">
-              2. Tick 5–10 items & Naira prices
-            </p>
-            <p className="mt-1 text-xs text-[#4B5563]">
-              No camera or product photoshoot needed. Update prices in seconds
-              anytime FX moves.
+        <section className="grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs space-y-1.5">
+            <div className="text-2xl">✅</div>
+            <h2 className="text-sm font-extrabold text-[#111827]">
+              1. Verify via Email, SMS or WhatsApp
+            </h2>
+            <p className="text-xs text-[#4B5563]">
+              Choose whichever verification channel works best for you to earn
+              your Verified Seller badge.
             </p>
           </div>
-          <div className="rounded-2xl border border-[#D1D5DB] bg-white p-4">
-            <p className="text-sm font-bold text-[#111827]">
-              3. Answer &ldquo;Still in stock?&rdquo; in 1 tap
+          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs space-y-1.5">
+            <div className="text-2xl">📍</div>
+            <h2 className="text-sm font-extrabold text-[#111827]">
+              2. Add Your Street Landmark & Items
+            </h2>
+            <p className="text-xs text-[#4B5563]">
+              Tick common items in your category and enter today&apos;s Naira
+              prices — no studio photos required.
             </p>
-            <p className="mt-1 text-xs text-[#4B5563]">
-              Reply Yes or No to serious buyers and print a free QR sticker for
-              your stall front.
+          </div>
+          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs space-y-1.5">
+            <div className="text-2xl">💬</div>
+            <h2 className="text-sm font-extrabold text-[#111827]">
+              3. Receive Serious Ready-to-Buy Customers
+            </h2>
+            <p className="text-xs text-[#4B5563]">
+              Buyers check your price & stock first, then call, WhatsApp, or
+              walk straight to your stall.
             </p>
           </div>
         </section>
-
-        <p className="text-center text-xs text-[#4B5563]">
-          Read our plain-English{" "}
-          <Link href="/privacy" className="font-semibold text-[#065F46] underline">
-            Seller Privacy & Data Notice (NDPA)
-          </Link>{" "}
-          ·{" "}
-          <Link href="/" className="font-semibold text-[#065F46] underline">
-            ← Back to Buyer Search
-          </Link>
-        </p>
       </main>
+
+      <MarketplaceFooter />
     </div>
   );
 }

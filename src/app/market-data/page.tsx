@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDB } from "@/lib/db";
+import { getAdminSession } from "@/lib/auth";
 import { dictionaryByCategory } from "@/lib/products";
 import { formatNaira, freshnessLabel, freshnessState } from "@/lib/freshness";
 import { Kpi } from "@/lib/member3-ui";
@@ -13,6 +14,7 @@ export const dynamic = "force-dynamic";
  */
 export default async function MarketData({ searchParams }: { searchParams: Promise<{ cat?: string }> }) {
   const sp = await searchParams;
+  const adminSession = await getAdminSession();
   const db = getDB();
   const now = Date.now();
 
@@ -20,8 +22,9 @@ export default async function MarketData({ searchParams }: { searchParams: Promi
   const activeCat = sp.cat || dict[0]?.category;
   const catItems = dict.find((d) => d.category === activeCat)?.items || [];
 
+  const activeSellers = db.sellers.filter((s: any) => s.status === "active");
   const zoneRows = db.zones.map((z: any) => {
-    const shops = db.sellers.filter((s: any) => s.zone_id === z.id);
+    const shops = activeSellers.filter((s: any) => s.zone_id === z.id);
     const listings = db.listings.filter((l: any) => shops.some((s: any) => s.id === l.seller_id) && l.status !== "delisted");
     const fresh = listings.filter((l: any) => freshnessState(l.confirmed_at, now) === "fresh").length;
     return { zone: z, shops: shops.length, listings: listings.length, fresh, pct: listings.length ? Math.round((fresh / listings.length) * 100) : 0 };
@@ -35,18 +38,23 @@ export default async function MarketData({ searchParams }: { searchParams: Promi
         <div>
           <h1 style={{ margin: 0, fontSize: 26, letterSpacing: "-.03em" }}>Port Harcourt market data</h1>
           <p className="muted small" style={{ margin: "4px 0 0" }}>
-            Market areas, the product dictionary, search synonyms and the sample shops that make search work from day 1.
+            Market areas, the product dictionary, search synonyms and active verified shops.
           </p>
         </div>
         <div className="row" style={{ gap: 8 }}>
-          <Link className="btn btn-sm" href="/admin/add-shop">Add a shop</Link>
-          <Link className="btn btn-sm" href="/api/export">Export JSON</Link>
+          <Link className="btn btn-sm" href="/">← Marketplace</Link>
+          {adminSession ? (
+            <>
+              <Link className="btn btn-sm" href="/admin/add-shop">Add a shop</Link>
+              <Link className="btn btn-sm" href="/api/export">Export JSON</Link>
+            </>
+          ) : null}
         </div>
       </div>
 
       <div className="grid grid-4">
         <Kpi n={db.zones.length} label="Market areas mapped" detail="Mile 1 → Choba" />
-        <Kpi n={db.sellers.length} label="Sample shops loaded" detail="target: 30 realistic" />
+        <Kpi n={activeSellers.length} label="Active shops live" detail="verified supply" />
         <Kpi n={db.products.length} label="Products in the dictionary" detail="canonical names + aliases" />
         <Kpi n={syn.length} label="Search synonyms" detail="Pidgin, slang, misspellings" />
       </div>

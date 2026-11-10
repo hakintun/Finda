@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { TopBar } from "@/components/buyer/shell";
+import { MarketplaceFooter, TopBar } from "@/components/buyer/shell";
 import { RevealPhoneButton } from "@/components/buyer/reveal-phone-button";
 import { VerificationBadge } from "@/components/ui";
 import { getDB } from "@/lib/db";
+import { getCustomerSession } from "@/lib/customer-auth";
 import { haversineKm, shopOpenState } from "@/lib/freshness";
 import { mapDbTierToUi } from "@/lib/buyer-ops";
 
@@ -13,26 +14,38 @@ export default async function ShopDirectionsMapPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  const [{ slug }, customerSession] = await Promise.all([
+    params,
+    getCustomerSession(),
+  ]);
+
   const db = getDB();
+  const topCustomer = customerSession
+    ? {
+        name: customerSession.user.name,
+        role: customerSession.user.role,
+        isVerified: Boolean(customerSession.user.is_verified),
+        hasShop: Boolean(customerSession.shop),
+      }
+    : null;
 
   const seller = (db.sellers || []).find(
-    (s: any) =>
-      s.slug === slug && s.status !== "suspended" && s.status !== "banned"
+    (s: any) => s.slug === slug && s.status === "active"
   );
 
   if (!seller) {
     return (
-      <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
-        <TopBar />
-        <main className="mx-auto w-full max-w-xl flex-1 px-4 py-12 text-center space-y-4">
+      <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+        <TopBar customer={topCustomer} />
+        <main className="mx-auto w-full max-w-xl flex-1 px-4 py-14 text-center space-y-4">
           <h1 className="text-xl font-extrabold text-[#111827]">
-            Shop directions not found
+            Shop directions unavailable
           </h1>
           <Link href="/search" className="btn btn-primary">
-            Back to Search
+            Back to Marketplace
           </Link>
         </main>
+        <MarketplaceFooter />
       </div>
     );
   }
@@ -70,22 +83,24 @@ export default async function ShopDirectionsMapPage({
   );
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
-      <TopBar activeClusterLabel={zone?.name || "Directions"} />
+    <div className="min-h-dvh flex flex-col bg-[#F2F4F7]">
+      <TopBar
+        activeClusterLabel={zone?.name || "Directions"}
+        customer={topCustomer}
+      />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-16 pt-5 space-y-5">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-6 space-y-5">
         <div className="flex items-center justify-between">
           <Link
             href={`/s/${seller.slug}`}
-            className="text-xs font-bold text-[#065F46] hover:underline"
+            className="text-xs font-extrabold text-[#00B53F] hover:underline"
           >
             ← Back to {seller.business_name}
           </Link>
           <VerificationBadge tier={mapDbTierToUi(seller.verification_tier)} />
         </div>
 
-        {/* 1. Landmark-First "Get There" Card (Never blocked by GPS permissions — US-5.1) */}
-        <section className="rounded-2xl border-2 border-[#065F46] bg-white p-5 space-y-3 shadow-xs">
+        <section className="rounded-2xl border-2 border-[#00B53F] bg-white p-5 space-y-3 shadow-xs">
           <span className="inline-flex rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#065F46]">
             STEP 1 · TELL KEKE / BOLT DRIVER THIS LANDMARK
           </span>
@@ -95,7 +110,7 @@ export default async function ShopDirectionsMapPage({
           </h1>
 
           {askFor ? (
-            <p className="rounded-xl bg-[#FAF9F5] border border-[#E5E7EB] p-3 text-sm text-[#111827]">
+            <p className="rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] p-3 text-sm text-[#111827]">
               🗣️ Once inside the line/plaza, ask for: <strong>{askFor}</strong>{" "}
               ({seller.business_name})
             </p>
@@ -106,7 +121,7 @@ export default async function ShopDirectionsMapPage({
               🕒{" "}
               <strong
                 className={
-                  openState.open === false ? "text-[#991B1B]" : "text-[#065F46]"
+                  openState.open === false ? "text-[#991B1B]" : "text-[#00B53F]"
                 }
               >
                 {openState.label}
@@ -121,8 +136,7 @@ export default async function ShopDirectionsMapPage({
           </div>
         </section>
 
-        {/* 2. Ultra-lightweight Zero-Tile Market Zone Pin Diagram (<4 KB, instant on 2G) */}
-        <section className="rounded-2xl border border-[#D1D5DB] bg-white p-4 space-y-3 shadow-xs">
+        <section className="rounded-2xl border border-[#E5E7EB] bg-white p-4 space-y-3 shadow-xs">
           <div className="flex items-baseline justify-between">
             <h2 className="text-sm font-bold text-[#111827]">
               Market Zone Pin ({zone?.name || "Port Harcourt"})
@@ -136,9 +150,7 @@ export default async function ShopDirectionsMapPage({
             <svg
               viewBox="0 0 100 62"
               role="img"
-              aria-label={`Map pin for ${seller.business_name} inside ${
-                zone?.name || "Port Harcourt"
-              }`}
+              aria-label={`Map pin for ${seller.business_name}`}
               className="w-full h-52 block"
             >
               <rect width="100" height="62" fill="#F3F2EC" />
@@ -166,7 +178,7 @@ export default async function ShopDirectionsMapPage({
                 rx="4"
                 fill="#ECFDF5"
                 fillOpacity="0.65"
-                stroke="#059669"
+                stroke="#00B53F"
                 strokeWidth="0.7"
                 strokeDasharray="2 1.5"
               />
@@ -184,14 +196,14 @@ export default async function ShopDirectionsMapPage({
                 cx={px}
                 cy={(py * 62) / 100}
                 r="6"
-                fill="#065F46"
-                fillOpacity="0.18"
+                fill="#00B53F"
+                fillOpacity="0.2"
               />
               <circle
                 cx={px}
                 cy={(py * 62) / 100}
                 r="2.8"
-                fill="#065F46"
+                fill="#00B53F"
                 stroke="#FFFFFF"
                 strokeWidth="1"
               />
@@ -223,6 +235,8 @@ export default async function ShopDirectionsMapPage({
           </div>
         </section>
       </main>
+
+      <MarketplaceFooter />
     </div>
   );
 }

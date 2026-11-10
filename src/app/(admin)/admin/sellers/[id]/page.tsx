@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/auth";
 import { getDB } from "@/lib/db";
-import { impersonate, toggleListingStatus } from "../../actions";
+import { impersonate, toggleListingStatus, toggleSellerStatus } from "../../actions";
 import { freshnessLabel, freshnessState, formatNaira } from "@/lib/freshness";
 import { Price, StockBadge, TierBadge } from "@/lib/member3-ui";
 import { validatePin } from "@/lib/geo";
@@ -33,9 +33,18 @@ export default async function SellerDetail({ params }: { params: Promise<{ id: s
           <h2 style={{ margin: "6px 0 0", fontSize: 20 }}>{seller.business_name}</h2>
           <div className="tiny muted">{zone?.name} · {seller.landmark_text}</div>
         </div>
-        <div className="row" style={{ gap: 8 }}>
+        <div className="row wrapflex" style={{ gap: 8 }}>
+          <span className={`badge ${seller.status === "active" ? "badge-in" : "badge-out"}`}>
+            {seller.status || "active"}
+          </span>
           <TierBadge tier={seller.verification_tier} />
           <Link className="btn btn-sm" href={`/s/${seller.slug}`}>Buyer view</Link>
+          <form action={toggleSellerStatus}>
+            <input type="hidden" name="seller_id" value={seller.id} />
+            <button className={`btn btn-sm ${seller.status === "active" ? "btn-danger" : "btn-primary"}`}>
+              {seller.status === "active" ? "Delist customer" : "Restore customer"}
+            </button>
+          </form>
           <form action={impersonate}>
             <input type="hidden" name="shop_id" value={seller.id} />
             <button className="btn btn-sm btn-primary">Work on this shop as seller</button>

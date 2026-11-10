@@ -72,6 +72,20 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
         </div>
       </div>
 
+      <div className="card mt16" style={{ borderColor: "#00B53F", background: "#ECFDF5" }}>
+        <div className="row-between wrapflex">
+          <div>
+            <h3 className="card-title" style={{ margin: 0 }}>Verify via Email, Phone SMS, or WhatsApp</h3>
+            <p className="small muted mb0">
+              Confirm a 6-digit code on your preferred contact channel to activate instant contact verification.
+            </p>
+          </div>
+          <Link className="btn btn-primary btn-sm" href="/account">
+            Verify contact now →
+          </Link>
+        </div>
+      </div>
+
       {!pending ? (
         <div className="grid grid-2 mt24">
           <div className="card">
@@ -126,9 +140,9 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
       <div className="card mt24">
         <h3 className="card-title">Reported listings</h3>
         <p className="small muted mb0">
-          Buyers can report a listing in two taps from your shop page. Reports go to the{" "}
-          <Link href="/admin/reports">admin queue</Link> — you will be asked to re-confirm the item rather than being
-          punished for one bad report. Three separate buyers saying “not available” demotes the listing automatically.
+          Buyers can report a listing in two taps from your shop page. Reports are reviewed by Finda&apos;s market
+          operations team — you will be asked to re-confirm the item rather than being punished for one bad report.
+          Three separate buyers saying “not available” demotes the listing automatically.
         </p>
       </div>
 

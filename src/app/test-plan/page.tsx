@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getDB } from "@/lib/db";
+import { getAdminSession } from "@/lib/auth";
 import { freshnessState } from "@/lib/freshness";
 
 export const dynamic = "force-dynamic";
@@ -205,6 +207,8 @@ const CHECKLIST = [
 ];
 
 export default async function TestPlan() {
+  const admin = await getAdminSession();
+  if (!admin) redirect("/restricted");
   const db = getDB();
   const now = Date.now();
   const live = db.listings.filter((l: any) => l.status !== "delisted");

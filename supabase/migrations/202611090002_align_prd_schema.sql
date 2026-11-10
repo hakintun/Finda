@@ -41,7 +41,7 @@ create table if not exists public.sellers (
   accuracy_score numeric(4,2) not null default 0.85
     check (accuracy_score >= 0 and accuracy_score <= 1),
   status text not null default 'active'
-    check (status in ('active', 'suspended', 'pending')),
+    check (status in ('active', 'delisted', 'banned', 'suspended', 'pending')),
   consent_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -185,6 +185,19 @@ create table if not exists public.events (
   id text primary key,
   name text not null,
   payload jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+-- 9. Multi-Channel Customer Verification OTPs (Email, Phone SMS, WhatsApp)
+create table if not exists public.otp_codes (
+  id text primary key,
+  user_id uuid references auth.users(id) on delete cascade,
+  channel text not null check (channel in ('email', 'phone', 'whatsapp')),
+  target text not null,
+  code_hash text not null,
+  attempts integer not null default 0,
+  used_at timestamptz,
+  expires_at timestamptz not null,
   created_at timestamptz not null default now()
 );
 

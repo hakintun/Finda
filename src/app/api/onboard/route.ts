@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB, saveDB, nowISO } from "@/lib/db";
 import { setSellerSession } from "@/lib/auth";
+import { getCustomerSession } from "@/lib/customer-auth";
 import { getOrCreateDraftForWrite, publishDraft, validateStep } from "@/lib/onboarding";
 import { checkBanned } from "@/lib/moderation";
 import { toE164 } from "@/lib/freshness";
@@ -85,6 +86,14 @@ export async function POST(req: NextRequest) {
   if (action === "publish") {
     const result = publishDraft(draft);
     if (!result.ok) return NextResponse.json({ ok: false, errors: result.errors }, { status: 400 });
+    const customer = await getCustomerSession();
+    if (customer?.user) {
+      result.seller.user_id = customer.user.id;
+      customer.user.role = "seller";
+      if (customer.user.is_verified && (!result.seller.verification_tier || result.seller.verification_tier === "none")) {
+        result.seller.verification_tier = "phone";
+      }
+    }
     saveDB(db);
     await setSellerSession(result.seller.id);
     return NextResponse.json({

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Finda icon">
+  <rect width="128" height="128" rx="28" fill="#065F46"/>
+  <path d="M64 20c-20.987 0-38 16.565-38 37 0 25.9 32.3 48.2 35.95 50.65a3.7 3.7 0 0 0 4.1 0C69.7 105.2 102 82.9 102 57c0-20.435-17.013-37-38-37Z" fill="#ECFDF5"/>
+  <circle cx="64" cy="56" r="20" fill="#065F46"/>
+  <path d="M55.5 56.5l5.5 5.5 12-12" fill="none" stroke="#ECFDF5" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

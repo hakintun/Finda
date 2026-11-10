@@ -1,0 +1,6723 @@
+{
+  "meta": {
+    "version": 1,
+    "generated_at_client": "2026-11-09T09:23:09.982Z",
+    "note": "Demo dataset for Member 3. Timestamps are relative offsets (hours ago) and are materialised on first run.",
+    "city": "Port Harcourt, Rivers State"
+  },
+  "zones": [
+    {
+      "id": "mile1",
+      "name": "Mile 1 Market",
+      "cluster": "Mile 1",
+      "lat": 4.8098,
+      "lng": 6.9901,
+      "radiusKm": 0.9,
+      "landmarks": [
+        "Beside First Bank, Aggrey Road",
+        "Opposite Mile 1 Police Station",
+        "Line 4, near the water stand",
+        "By Ojoto Street junction"
+      ],
+      "boundary": [
+        {
+          "lat": 4.8179374321880655,
+          "lng": 6.981933810839965
+        },
+        {
+          "lat": 4.8179374321880655,
+          "lng": 6.998266189160035
+        },
+        {
+          "lat": 4.801662567811935,
+          "lng": 6.998266189160035
+        },
+        {
+          "lat": 4.801662567811935,
+          "lng": 6.981933810839965
+        }
+      ]
+    },
+    {
+      "id": "mile3",
+      "name": "Mile 3 Market",
+      "cluster": "Mile 3",
+      "lat": 4.8352,
+      "lng": 6.9951,
+      "radiusKm": 1.1,
+      "landmarks": [
+        "Km 3 Ikwerre Road",
+        "Beside Mile 3 Post Office",
+        "Opposite Slaughter Market",
+        "By Rumuokwurusi junction"
+      ],
+      "boundary": [
+        {
+          "lat": 4.84514575045208,
+          "lng": 6.985118728831115
+        },
+        {
+          "lat": 4.84514575045208,
+          "lng": 7.005081271168884
+        },
+        {
+          "lat": 4.825254249547921,
+          "lng": 7.005081271168884
+        },
+        {
+          "lat": 4.825254249547921,
+          "lng": 6.985118728831115
+        }
+      ]
+    },
+    {
+      "id": "creek-road",
+      "name": "Creek Road",
+      "cluster": "Creek Road",
+      "lat": 4.8078,
+      "lng": 7.0022,
+      "radiusKm": 0.8,
+      "landmarks": [
+        "Beside First Bank, Creek Road",
+        "Opposite Creek Road Market gate",
+        "By Bonny Street junction",
+        "Near the waterfront jetty"
+      ],
+      "boundary": [
+        {
+          "lat": 4.815033273056058,
+          "lng": 6.994941186507249
+        },
+        {
+          "lat": 4.815033273056058,
+          "lng": 7.009458813492752
+        },
+        {
+          "lat": 4.800566726943942,
+          "lng": 7.009458813492752
+        },
+        {
+          "lat": 4.800566726943942,
+          "lng": 6.994941186507249
+        }
+      ]
+    },
+    {
+      "id": "ada-george",
+      "name": "Ada George",
+      "cluster": "Ada George",
+      "lat": 4.8581,
+      "lng": 6.9762,
+      "radiusKm": 1.4,
+      "landmarks": [
+        "No. 15 Ada George Road, by Iwofe junction",
+        "Opposite Ada George Police Post",
+        "Beside NNPC filling station, Ada George",
+        "By Redeemed Church, Ada George"
+      ],
+      "boundary": [
+        {
+          "lat": 4.870758227848102,
+          "lng": 6.9634961334422085
+        },
+        {
+          "lat": 4.870758227848102,
+          "lng": 6.988903866557792
+        },
+        {
+          "lat": 4.845441772151899,
+          "lng": 6.988903866557792
+        },
+        {
+          "lat": 4.845441772151899,
+          "lng": 6.9634961334422085
+        }
+      ]
+    },
+    {
+      "id": "rumuokoro",
+      "name": "Rumuokoro",
+      "cluster": "Rumuokoro",
+      "lat": 4.8752,
+      "lng": 6.9351,
+      "radiusKm": 1.5,
+      "landmarks": [
+        "Rumuokoro Market, line 2",
+        "Beside Rumuokoro Park",
+        "Opposite Air Force base gate",
+        "By Igwuruta junction"
+      ],
+      "boundary": [
+        {
+          "lat": 4.888762386980109,
+          "lng": 6.921488368517297
+        },
+        {
+          "lat": 4.888762386980109,
+          "lng": 6.948711631482704
+        },
+        {
+          "lat": 4.861637613019892,
+          "lng": 6.948711631482704
+        },
+        {
+          "lat": 4.861637613019892,
+          "lng": 6.921488368517297
+        }
+      ]
+    },
+    {
+      "id": "choba",
+      "name": "Choba / Uniport",
+      "cluster": "Choba",
+      "lat": 4.8979,
+      "lng": 6.9081,
+      "radiusKm": 1.2,
+      "landmarks": [
+        "Uniport main gate, Choba",
+        "Beside Choba market square",
+        "Opposite Choba Police Station",
+        "By Alakahia junction"
+      ],
+      "boundary": [
+        {
+          "lat": 4.9087499095840865,
+          "lng": 6.897210325967694
+        },
+        {
+          "lat": 4.9087499095840865,
+          "lng": 6.918989674032306
+        },
+        {
+          "lat": 4.887050090415913,
+          "lng": 6.918989674032306
+        },
+        {
+          "lat": 4.887050090415913,
+          "lng": 6.897210325967694
+        }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "gen-1kva",
+      "canonical_name": "1KVA Generator",
+      "category": "Generators",
+      "unit": "each",
+      "typical_price_kobo": 18500000,
+      "aliases": [
+        "gen",
+        "jennerator",
+        "small generator",
+        "i better pass my neighbour",
+        "1kva gen"
+      ]
+    },
+    {
+      "id": "gen-75kva",
+      "canonical_name": "7.5KVA Generator",
+      "category": "Generators",
+      "unit": "each",
+      "typical_price_kobo": 62000000,
+      "aliases": [
+        "big gen",
+        "7.5 kva",
+        "generator set",
+        "gen 7.5"
+      ]
+    },
+    {
+      "id": "gen-35kva",
+      "canonical_name": "3.5KVA Generator",
+      "category": "Generators",
+      "unit": "each",
+      "typical_price_kobo": 38500000,
+      "aliases": [
+        "3.5 gen",
+        "medium gen"
+      ]
+    },
+    {
+      "id": "gen-oil",
+      "canonical_name": "Generator Engine Oil 1L",
+      "category": "Generators",
+      "unit": "each",
+      "typical_price_kobo": 420000,
+      "aliases": [
+        "gen oil",
+        "engine oil small"
+      ]
+    },
+    {
+      "id": "gen-plug",
+      "canonical_name": "Generator Spark Plug",
+      "category": "Generators",
+      "unit": "each",
+      "typical_price_kobo": 250000,
+      "aliases": [
+        "plug",
+        "sparkplug"
+      ]
+    },
+    {
+      "id": "gen-fuel-pipe",
+      "canonical_name": "Generator Fuel Pipe",
+      "category": "Generators",
+      "unit": "each",
+      "typical_price_kobo": 180000,
+      "aliases": [
+        "fuel hose",
+        "gen hose"
+      ]
+    },
+    {
+      "id": "ph-usbc",
+      "canonical_name": "USB-C Charging Cable",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 150000,
+      "aliases": [
+        "usb c",
+        "type c cable",
+        "charger cord"
+      ]
+    },
+    {
+      "id": "ph-tecno-charger",
+      "canonical_name": "Tecno Phone Charger",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 250000,
+      "aliases": [
+        "tecno charger",
+        "tecno charge"
+      ]
+    },
+    {
+      "id": "ph-iphone-screen",
+      "canonical_name": "iPhone 13 Screen Replacement",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 5800000,
+      "aliases": [
+        "iphone screen",
+        "iphone 13 glass"
+      ]
+    },
+    {
+      "id": "ph-powerbank",
+      "canonical_name": "Power Bank 20000mAh",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 1250000,
+      "aliases": [
+        "power bank",
+        "powerbank",
+        "pawa bank"
+      ]
+    },
+    {
+      "id": "ph-earpiece",
+      "canonical_name": "Wired Earpiece",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 200000,
+      "aliases": [
+        "earpiece",
+        "earphones",
+        "headset"
+      ]
+    },
+    {
+      "id": "ph-case",
+      "canonical_name": "Phone Pouch",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 180000,
+      "aliases": [
+        "pouch",
+        "phone case",
+        "cover"
+      ]
+    },
+    {
+      "id": "ph-screen-guard",
+      "canonical_name": "Screen Protector",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 100000,
+      "aliases": [
+        "tempered glass",
+        "screen guard"
+      ]
+    },
+    {
+      "id": "ph-memory-card",
+      "canonical_name": "Memory Card 32GB",
+      "category": "Phone Accessories",
+      "unit": "each",
+      "typical_price_kobo": 650000,
+      "aliases": [
+        "memory card",
+        "sd card"
+      ]
+    },
+    {
+      "id": "el-tv42",
+      "canonical_name": "42\" Smart TV",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 24500000,
+      "aliases": [
+        "tv",
+        "television",
+        "flat screen",
+        "smart tv"
+      ]
+    },
+    {
+      "id": "el-tv32",
+      "canonical_name": "32\" LED TV",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 13500000,
+      "aliases": [
+        "small tv",
+        "led tv"
+      ]
+    },
+    {
+      "id": "el-freezer",
+      "canonical_name": "Deep Freezer 200L",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 28500000,
+      "aliases": [
+        "deep freezer",
+        "freezer",
+        "chest freezer"
+      ]
+    },
+    {
+      "id": "el-fridge",
+      "canonical_name": "Double Door Fridge",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 34000000,
+      "aliases": [
+        "fridge",
+        "refrigerator",
+        "frij"
+      ]
+    },
+    {
+      "id": "el-ac15",
+      "canonical_name": "1.5HP Air Conditioner",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 38500000,
+      "aliases": [
+        "ac",
+        "air con",
+        "air conditioner",
+        "split ac",
+        "1.5hp ac"
+      ]
+    },
+    {
+      "id": "el-fan-rechargeable",
+      "canonical_name": "Rechargeable Standing Fan",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 2850000,
+      "aliases": [
+        "standing fan",
+        "fan",
+        "rechargeable fan"
+      ]
+    },
+    {
+      "id": "el-blender",
+      "canonical_name": "Blender",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 1850000,
+      "aliases": [
+        "blender",
+        "blenda",
+        "liquidizer"
+      ]
+    },
+    {
+      "id": "el-kettle",
+      "canonical_name": "Electric Kettle",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 950000,
+      "aliases": [
+        "kettle",
+        "electric kettle"
+      ]
+    },
+    {
+      "id": "el-iron",
+      "canonical_name": "Pressing Iron",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 850000,
+      "aliases": [
+        "iron",
+        "pressing iron"
+      ]
+    },
+    {
+      "id": "el-home-theatre",
+      "canonical_name": "Home Theatre System",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 7800000,
+      "aliases": [
+        "home theatre",
+        "sound system",
+        "speaker"
+      ]
+    },
+    {
+      "id": "el-microwave",
+      "canonical_name": "Microwave Oven",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 6500000,
+      "aliases": [
+        "microwave",
+        "oven"
+      ]
+    },
+    {
+      "id": "el-dvd",
+      "canonical_name": "DVD Player",
+      "category": "Electronics",
+      "unit": "each",
+      "typical_price_kobo": 2200000,
+      "aliases": [
+        "dvd"
+      ]
+    },
+    {
+      "id": "fd-rice50",
+      "canonical_name": "50kg Bag of Rice",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 9200000,
+      "aliases": [
+        "rice",
+        "bag of rice",
+        "50kg rice",
+        "long grain"
+      ]
+    },
+    {
+      "id": "fd-rice25",
+      "canonical_name": "25kg Bag of Rice",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 4700000,
+      "aliases": [
+        "half bag rice",
+        "25kg rice"
+      ]
+    },
+    {
+      "id": "fd-beans",
+      "canonical_name": "Beans 5kg",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 950000,
+      "aliases": [
+        "beans",
+        "bean",
+        "bins"
+      ]
+    },
+    {
+      "id": "fd-garri",
+      "canonical_name": "Garri 5kg",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 450000,
+      "aliases": [
+        "garri",
+        "gari",
+        "cassava flakes"
+      ]
+    },
+    {
+      "id": "fd-palm-oil",
+      "canonical_name": "Palm Oil 5L",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 780000,
+      "aliases": [
+        "palm oil",
+        "palm oyel",
+        "red oil"
+      ]
+    },
+    {
+      "id": "fd-groundnut-oil",
+      "canonical_name": "Groundnut Oil 5L",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 1250000,
+      "aliases": [
+        "groundnut oil",
+        "vegetable oil",
+        "oil"
+      ]
+    },
+    {
+      "id": "fd-indomie",
+      "canonical_name": "Indomie Carton (40 packs)",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 980000,
+      "aliases": [
+        "indomie",
+        "indomine",
+        "noodles",
+        "indomie carton"
+      ]
+    },
+    {
+      "id": "fd-tomato",
+      "canonical_name": "Tomato Paste Carton",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 1450000,
+      "aliases": [
+        "tomato paste",
+        "tomatos",
+        "tin tomato"
+      ]
+    },
+    {
+      "id": "fd-onion",
+      "canonical_name": "Onions 10kg Bag",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 1250000,
+      "aliases": [
+        "onion",
+        "onions",
+        "alubosa"
+      ]
+    },
+    {
+      "id": "fd-crayfish",
+      "canonical_name": "Crayfish 1kg",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 880000,
+      "aliases": [
+        "crayfish",
+        "crafish"
+      ]
+    },
+    {
+      "id": "fd-pepper",
+      "canonical_name": "Dry Pepper 1kg",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 650000,
+      "aliases": [
+        "pepper",
+        "dry pepper",
+        "shombo"
+      ]
+    },
+    {
+      "id": "fd-yam",
+      "canonical_name": "Yam Tubers (5 pieces)",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 1100000,
+      "aliases": [
+        "yam",
+        "ji"
+      ]
+    },
+    {
+      "id": "fd-eggs",
+      "canonical_name": "Crate of Eggs",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 520000,
+      "aliases": [
+        "egg",
+        "eggs",
+        "crate of egg"
+      ]
+    },
+    {
+      "id": "fd-chicken",
+      "canonical_name": "Frozen Chicken 1kg",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 620000,
+      "aliases": [
+        "chicken",
+        "frozen chicken"
+      ]
+    },
+    {
+      "id": "fd-fish",
+      "canonical_name": "Titus Fish (carton)",
+      "category": "Foodstuff",
+      "unit": "each",
+      "typical_price_kobo": 4200000,
+      "aliases": [
+        "fish",
+        "titus",
+        "mackerel"
+      ]
+    },
+    {
+      "id": "pv-peak",
+      "canonical_name": "Peak Milk Carton (24 tins)",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 2650000,
+      "aliases": [
+        "peak milk",
+        "milk",
+        "peak"
+      ]
+    },
+    {
+      "id": "pv-milo",
+      "canonical_name": "Milo Refill 500g",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 520000,
+      "aliases": [
+        "milo",
+        "milo refill"
+      ]
+    },
+    {
+      "id": "pv-sugar",
+      "canonical_name": "Sugar 50kg Bag",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 6800000,
+      "aliases": [
+        "sugar",
+        "sugar bag"
+      ]
+    },
+    {
+      "id": "pv-detergent",
+      "canonical_name": "Detergent 10kg",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 1450000,
+      "aliases": [
+        "detergent",
+        "omo",
+        "washing soap"
+      ]
+    },
+    {
+      "id": "pv-tissue",
+      "canonical_name": "Tissue Paper Carton",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 1850000,
+      "aliases": [
+        "tissue",
+        "toilet roll",
+        "tissue carton"
+      ]
+    },
+    {
+      "id": "pv-water",
+      "canonical_name": "Bottled Water Pack (12)",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 240000,
+      "aliases": [
+        "water",
+        "bottle water",
+        "eva water"
+      ]
+    },
+    {
+      "id": "pv-malt",
+      "canonical_name": "Malt Drink Crate",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 820000,
+      "aliases": [
+        "malt",
+        "maltina",
+        "malt drink"
+      ]
+    },
+    {
+      "id": "pv-bournvita",
+      "canonical_name": "Bournvita Refill 500g",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 480000,
+      "aliases": [
+        "bournvita",
+        "bornvita",
+        "bov"
+      ]
+    },
+    {
+      "id": "pv-golden-morn",
+      "canonical_name": "Golden Morn 1kg",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 360000,
+      "aliases": [
+        "golden morn",
+        "goldenmorn"
+      ]
+    },
+    {
+      "id": "pv-seasoning",
+      "canonical_name": "Knorr Seasoning Cube Carton",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 980000,
+      "aliases": [
+        "knorr",
+        "maggi",
+        "seasoning"
+      ]
+    },
+    {
+      "id": "pv-toothpaste",
+      "canonical_name": "Toothpaste Carton",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 1250000,
+      "aliases": [
+        "toothpaste",
+        "colgate",
+        "close up"
+      ]
+    },
+    {
+      "id": "pv-soap",
+      "canonical_name": "Bar Soap Carton",
+      "category": "Provisions",
+      "unit": "each",
+      "typical_price_kobo": 1650000,
+      "aliases": [
+        "soap",
+        "bar soap",
+        "lux"
+      ]
+    },
+    {
+      "id": "gas-125",
+      "canonical_name": "12.5kg Cooking Gas Refill",
+      "category": "Gas",
+      "unit": "each",
+      "typical_price_kobo": 1450000,
+      "aliases": [
+        "gas",
+        "cooking gas",
+        "gas refill",
+        "12.5kg gas"
+      ]
+    },
+    {
+      "id": "gas-6",
+      "canonical_name": "6kg Cooking Gas Refill",
+      "category": "Gas",
+      "unit": "each",
+      "typical_price_kobo": 820000,
+      "aliases": [
+        "small gas",
+        "6kg gas"
+      ]
+    },
+    {
+      "id": "gas-cyl-125",
+      "canonical_name": "12.5kg Gas Cylinder (new)",
+      "category": "Gas",
+      "unit": "each",
+      "typical_price_kobo": 3200000,
+      "aliases": [
+        "cylinder",
+        "gas cylinder"
+      ]
+    },
+    {
+      "id": "gas-cyl-50",
+      "canonical_name": "50kg Gas Cylinder",
+      "category": "Gas",
+      "unit": "each",
+      "typical_price_kobo": 7800000,
+      "aliases": [
+        "big cylinder",
+        "50kg cylinder"
+      ]
+    },
+    {
+      "id": "gas-hose",
+      "canonical_name": "Gas Hose & Regulator Set",
+      "category": "Gas",
+      "unit": "each",
+      "typical_price_kobo": 650000,
+      "aliases": [
+        "hose",
+        "regulator",
+        "gas head"
+      ]
+    },
+    {
+      "id": "gas-burner",
+      "canonical_name": "Two-Burner Gas Cooker",
+      "category": "Gas",
+      "unit": "each",
+      "typical_price_kobo": 2850000,
+      "aliases": [
+        "gas cooker",
+        "burner",
+        "cooker"
+      ]
+    },
+    {
+      "id": "car-brake",
+      "canonical_name": "Toyota Corolla Brake Pad",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 1450000,
+      "aliases": [
+        "brake pad",
+        "break pad",
+        "brake"
+      ]
+    },
+    {
+      "id": "car-headlamp",
+      "canonical_name": "Camry Headlamp",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 3200000,
+      "aliases": [
+        "headlamp",
+        "head light",
+        "headlight"
+      ]
+    },
+    {
+      "id": "car-battery",
+      "canonical_name": "Car Battery 75Ah",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 8500000,
+      "aliases": [
+        "battery",
+        "car battery",
+        "batery"
+      ]
+    },
+    {
+      "id": "car-tyre",
+      "canonical_name": "Tyre 205/55 R16",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 6200000,
+      "aliases": [
+        "tyre",
+        "tire",
+        "taya"
+      ]
+    },
+    {
+      "id": "car-oil",
+      "canonical_name": "Engine Oil 5L",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 1850000,
+      "aliases": [
+        "engine oil",
+        "mobil oil",
+        "oil 5l"
+      ]
+    },
+    {
+      "id": "car-wiper",
+      "canonical_name": "Windscreen Wiper Pair",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 650000,
+      "aliases": [
+        "wiper",
+        "wiper blade"
+      ]
+    },
+    {
+      "id": "car-alternator",
+      "canonical_name": "Alternator (Corolla)",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 6800000,
+      "aliases": [
+        "alternator",
+        "alternata"
+      ]
+    },
+    {
+      "id": "car-fuel-pump",
+      "canonical_name": "Fuel Pump",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 4200000,
+      "aliases": [
+        "fuel pump",
+        "pump"
+      ]
+    },
+    {
+      "id": "car-side-mirror",
+      "canonical_name": "Side Mirror",
+      "category": "Car Parts",
+      "unit": "each",
+      "typical_price_kobo": 1650000,
+      "aliases": [
+        "side mirror",
+        "mirror"
+      ]
+    },
+    {
+      "id": "bm-cement",
+      "canonical_name": "50kg Dangote Cement",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 1150000,
+      "aliases": [
+        "cement",
+        "dangote",
+        "simiti"
+      ]
+    },
+    {
+      "id": "bm-iron12",
+      "canonical_name": "Iron Rod 12mm",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 980000,
+      "aliases": [
+        "iron rod",
+        "12mm rod",
+        "rods"
+      ]
+    },
+    {
+      "id": "bm-roofing",
+      "canonical_name": "Roofing Sheet (per metre)",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 420000,
+      "aliases": [
+        "roofing sheet",
+        "zinc",
+        "roof sheet"
+      ]
+    },
+    {
+      "id": "bm-paint",
+      "canonical_name": "Emulsion Paint 20L",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 3850000,
+      "aliases": [
+        "paint",
+        "emulsion",
+        "pent"
+      ]
+    },
+    {
+      "id": "bm-pvc",
+      "canonical_name": "PVC Pipe 4 inch",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 550000,
+      "aliases": [
+        "pvc",
+        "pipe",
+        "pipes"
+      ]
+    },
+    {
+      "id": "bm-ceiling",
+      "canonical_name": "Ceiling Board (per piece)",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 380000,
+      "aliases": [
+        "ceiling board",
+        "ceiling",
+        "pop"
+      ]
+    },
+    {
+      "id": "bm-tiles",
+      "canonical_name": "Floor Tiles (per carton)",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 1250000,
+      "aliases": [
+        "tiles",
+        "tile",
+        "floor tiles"
+      ]
+    },
+    {
+      "id": "bm-nails",
+      "canonical_name": "Nails 2 inch (carton)",
+      "category": "Building Materials",
+      "unit": "each",
+      "typical_price_kobo": 850000,
+      "aliases": [
+        "nails",
+        "nail"
+      ]
+    },
+    {
+      "id": "sv-tailor",
+      "canonical_name": "Tailoring (per outfit)",
+      "category": "Services",
+      "unit": "each",
+      "typical_price_kobo": 1200000,
+      "aliases": [
+        "tailor",
+        "sewing",
+        "tailoring"
+      ]
+    },
+    {
+      "id": "sv-phone-repair",
+      "canonical_name": "Phone Screen Repair",
+      "category": "Services",
+      "unit": "each",
+      "typical_price_kobo": 1500000,
+      "aliases": [
+        "phone repair",
+        "screen repair",
+        "fix phone"
+      ]
+    },
+    {
+      "id": "sv-vulcanizer",
+      "canonical_name": "Vulcanizing (per tyre)",
+      "category": "Services",
+      "unit": "each",
+      "typical_price_kobo": 150000,
+      "aliases": [
+        "vulcanizer",
+        "vulcaniser",
+        "tyre repair"
+      ]
+    },
+    {
+      "id": "sv-fridge-repair",
+      "canonical_name": "Fridge Repair",
+      "category": "Services",
+      "unit": "each",
+      "typical_price_kobo": 1800000,
+      "aliases": [
+        "fridge repair",
+        "fix fridge",
+        "freezer repair"
+      ]
+    },
+    {
+      "id": "sv-gen-repair",
+      "canonical_name": "Generator Repair",
+      "category": "Services",
+      "unit": "each",
+      "typical_price_kobo": 1500000,
+      "aliases": [
+        "gen repair",
+        "repair generator",
+        "fix gen"
+      ]
+    },
+    {
+      "id": "sv-barbing",
+      "canonical_name": "Barbing (haircut)",
+      "category": "Services",
+      "unit": "each",
+      "typical_price_kobo": 300000,
+      "aliases": [
+        "barbing",
+        "haircut",
+        "barb"
+      ]
+    }
+  ],
+  "synonyms": [
+    {
+      "term": "gen",
+      "maps_to": "gen-1kva",
+      "weight": 1
+    },
+    {
+      "term": "jennerator",
+      "maps_to": "gen-1kva",
+      "weight": 1
+    },
+    {
+      "term": "small generator",
+      "maps_to": "gen-1kva",
+      "weight": 1
+    },
+    {
+      "term": "i better pass my neighbour",
+      "maps_to": "gen-1kva",
+      "weight": 1
+    },
+    {
+      "term": "1kva gen",
+      "maps_to": "gen-1kva",
+      "weight": 1
+    },
+    {
+      "term": "big gen",
+      "maps_to": "gen-75kva",
+      "weight": 1
+    },
+    {
+      "term": "7.5 kva",
+      "maps_to": "gen-75kva",
+      "weight": 1
+    },
+    {
+      "term": "generator set",
+      "maps_to": "gen-75kva",
+      "weight": 1
+    },
+    {
+      "term": "gen 7.5",
+      "maps_to": "gen-75kva",
+      "weight": 1
+    },
+    {
+      "term": "3.5 gen",
+      "maps_to": "gen-35kva",
+      "weight": 1
+    },
+    {
+      "term": "medium gen",
+      "maps_to": "gen-35kva",
+      "weight": 1
+    },
+    {
+      "term": "gen oil",
+      "maps_to": "gen-oil",
+      "weight": 1
+    },
+    {
+      "term": "engine oil small",
+      "maps_to": "gen-oil",
+      "weight": 1
+    },
+    {
+      "term": "plug",
+      "maps_to": "gen-plug",
+      "weight": 1
+    },
+    {
+      "term": "sparkplug",
+      "maps_to": "gen-plug",
+      "weight": 1
+    },
+    {
+      "term": "fuel hose",
+      "maps_to": "gen-fuel-pipe",
+      "weight": 1
+    },
+    {
+      "term": "gen hose",
+      "maps_to": "gen-fuel-pipe",
+      "weight": 1
+    },
+    {
+      "term": "usb c",
+      "maps_to": "ph-usbc",
+      "weight": 1
+    },
+    {
+      "term": "type c cable",
+      "maps_to": "ph-usbc",
+      "weight": 1
+    },
+    {
+      "term": "charger cord",
+      "maps_to": "ph-usbc",
+      "weight": 1
+    },
+    {
+      "term": "tecno charger",
+      "maps_to": "ph-tecno-charger",
+      "weight": 1
+    },
+    {
+      "term": "tecno charge",
+      "maps_to": "ph-tecno-charger",
+      "weight": 1
+    },
+    {
+      "term": "iphone screen",
+      "maps_to": "ph-iphone-screen",
+      "weight": 1
+    },
+    {
+      "term": "iphone 13 glass",
+      "maps_to": "ph-iphone-screen",
+      "weight": 1
+    },
+    {
+      "term": "power bank",
+      "maps_to": "ph-powerbank",
+      "weight": 1
+    },
+    {
+      "term": "powerbank",
+      "maps_to": "ph-powerbank",
+      "weight": 1
+    },
+    {
+      "term": "pawa bank",
+      "maps_to": "ph-powerbank",
+      "weight": 1
+    },
+    {
+      "term": "earpiece",
+      "maps_to": "ph-earpiece",
+      "weight": 1
+    },
+    {
+      "term": "earphones",
+      "maps_to": "ph-earpiece",
+      "weight": 1
+    },
+    {
+      "term": "headset",
+      "maps_to": "ph-earpiece",
+      "weight": 1
+    },
+    {
+      "term": "pouch",
+      "maps_to": "ph-case",
+      "weight": 1
+    },
+    {
+      "term": "phone case",
+      "maps_to": "ph-case",
+      "weight": 1
+    },
+    {
+      "term": "cover",
+      "maps_to": "ph-case",
+      "weight": 1
+    },
+    {
+      "term": "tempered glass",
+      "maps_to": "ph-screen-guard",
+      "weight": 1
+    },
+    {
+      "term": "screen guard",
+      "maps_to": "ph-screen-guard",
+      "weight": 1
+    },
+    {
+      "term": "memory card",
+      "maps_to": "ph-memory-card",
+      "weight": 1
+    },
+    {
+      "term": "sd card",
+      "maps_to": "ph-memory-card",
+      "weight": 1
+    },
+    {
+      "term": "tv",
+      "maps_to": "el-tv42",
+      "weight": 1
+    },
+    {
+      "term": "television",
+      "maps_to": "el-tv42",
+      "weight": 1
+    },
+    {
+      "term": "flat screen",
+      "maps_to": "el-tv42",
+      "weight": 1
+    },
+    {
+      "term": "smart tv",
+      "maps_to": "el-tv42",
+      "weight": 1
+    },
+    {
+      "term": "small tv",
+      "maps_to": "el-tv32",
+      "weight": 1
+    },
+    {
+      "term": "led tv",
+      "maps_to": "el-tv32",
+      "weight": 1
+    },
+    {
+      "term": "deep freezer",
+      "maps_to": "el-freezer",
+      "weight": 1
+    },
+    {
+      "term": "freezer",
+      "maps_to": "el-freezer",
+      "weight": 1
+    },
+    {
+      "term": "chest freezer",
+      "maps_to": "el-freezer",
+      "weight": 1
+    },
+    {
+      "term": "fridge",
+      "maps_to": "el-fridge",
+      "weight": 1
+    },
+    {
+      "term": "refrigerator",
+      "maps_to": "el-fridge",
+      "weight": 1
+    },
+    {
+      "term": "frij",
+      "maps_to": "el-fridge",
+      "weight": 1
+    },
+    {
+      "term": "ac",
+      "maps_to": "el-ac15",
+      "weight": 1
+    },
+    {
+      "term": "air con",
+      "maps_to": "el-ac15",
+      "weight": 1
+    },
+    {
+      "term": "air conditioner",
+      "maps_to": "el-ac15",
+      "weight": 1
+    },
+    {
+      "term": "split ac",
+      "maps_to": "el-ac15",
+      "weight": 1
+    },
+    {
+      "term": "1.5hp ac",
+      "maps_to": "el-ac15",
+      "weight": 1
+    },
+    {
+      "term": "standing fan",
+      "maps_to": "el-fan-rechargeable",
+      "weight": 1
+    },
+    {
+      "term": "fan",
+      "maps_to": "el-fan-rechargeable",
+      "weight": 1
+    },
+    {
+      "term": "rechargeable fan",
+      "maps_to": "el-fan-rechargeable",
+      "weight": 1
+    },
+    {
+      "term": "blender",
+      "maps_to": "el-blender",
+      "weight": 1
+    },
+    {
+      "term": "blenda",
+      "maps_to": "el-blender",
+      "weight": 1
+    },
+    {
+      "term": "liquidizer",
+      "maps_to": "el-blender",
+      "weight": 1
+    },
+    {
+      "term": "kettle",
+      "maps_to": "el-kettle",
+      "weight": 1
+    },
+    {
+      "term": "electric kettle",
+      "maps_to": "el-kettle",
+      "weight": 1
+    },
+    {
+      "term": "iron",
+      "maps_to": "el-iron",
+      "weight": 1
+    },
+    {
+      "term": "pressing iron",
+      "maps_to": "el-iron",
+      "weight": 1
+    },
+    {
+      "term": "home theatre",
+      "maps_to": "el-home-theatre",
+      "weight": 1
+    },
+    {
+      "term": "sound system",
+      "maps_to": "el-home-theatre",
+      "weight": 1
+    },
+    {
+      "term": "speaker",
+      "maps_to": "el-home-theatre",
+      "weight": 1
+    },
+    {
+      "term": "microwave",
+      "maps_to": "el-microwave",
+      "weight": 1
+    },
+    {
+      "term": "oven",
+      "maps_to": "el-microwave",
+      "weight": 1
+    },
+    {
+      "term": "dvd",
+      "maps_to": "el-dvd",
+      "weight": 1
+    },
+    {
+      "term": "rice",
+      "maps_to": "fd-rice50",
+      "weight": 1
+    },
+    {
+      "term": "bag of rice",
+      "maps_to": "fd-rice50",
+      "weight": 1
+    },
+    {
+      "term": "50kg rice",
+      "maps_to": "fd-rice50",
+      "weight": 1
+    },
+    {
+      "term": "long grain",
+      "maps_to": "fd-rice50",
+      "weight": 1
+    },
+    {
+      "term": "half bag rice",
+      "maps_to": "fd-rice25",
+      "weight": 1
+    },
+    {
+      "term": "25kg rice",
+      "maps_to": "fd-rice25",
+      "weight": 1
+    },
+    {
+      "term": "beans",
+      "maps_to": "fd-beans",
+      "weight": 1
+    },
+    {
+      "term": "bean",
+      "maps_to": "fd-beans",
+      "weight": 1
+    },
+    {
+      "term": "bins",
+      "maps_to": "fd-beans",
+      "weight": 1
+    },
+    {
+      "term": "garri",
+      "maps_to": "fd-garri",
+      "weight": 1
+    },
+    {
+      "term": "gari",
+      "maps_to": "fd-garri",
+      "weight": 1
+    },
+    {
+      "term": "cassava flakes",
+      "maps_to": "fd-garri",
+      "weight": 1
+    },
+    {
+      "term": "palm oil",
+      "maps_to": "fd-palm-oil",
+      "weight": 1
+    },
+    {
+      "term": "palm oyel",
+      "maps_to": "fd-palm-oil",
+      "weight": 1
+    },
+    {
+      "term": "red oil",
+      "maps_to": "fd-palm-oil",
+      "weight": 1
+    },
+    {
+      "term": "groundnut oil",
+      "maps_to": "fd-groundnut-oil",
+      "weight": 1
+    },
+    {
+      "term": "vegetable oil",
+      "maps_to": "fd-groundnut-oil",
+      "weight": 1
+    },
+    {
+      "term": "oil",
+      "maps_to": "fd-groundnut-oil",
+      "weight": 1
+    },
+    {
+      "term": "indomie",
+      "maps_to": "fd-indomie",
+      "weight": 1
+    },
+    {
+      "term": "indomine",
+      "maps_to": "fd-indomie",
+      "weight": 1
+    },
+    {
+      "term": "noodles",
+      "maps_to": "fd-indomie",
+      "weight": 1
+    },
+    {
+      "term": "indomie carton",
+      "maps_to": "fd-indomie",
+      "weight": 1
+    },
+    {
+      "term": "tomato paste",
+      "maps_to": "fd-tomato",
+      "weight": 1
+    },
+    {
+      "term": "tomatos",
+      "maps_to": "fd-tomato",
+      "weight": 1
+    },
+    {
+      "term": "tin tomato",
+      "maps_to": "fd-tomato",
+      "weight": 1
+    },
+    {
+      "term": "onion",
+      "maps_to": "fd-onion",
+      "weight": 1
+    },
+    {
+      "term": "onions",
+      "maps_to": "fd-onion",
+      "weight": 1
+    },
+    {
+      "term": "alubosa",
+      "maps_to": "fd-onion",
+      "weight": 1
+    },
+    {
+      "term": "crayfish",
+      "maps_to": "fd-crayfish",
+      "weight": 1
+    },
+    {
+      "term": "crafish",
+      "maps_to": "fd-crayfish",
+      "weight": 1
+    },
+    {
+      "term": "pepper",
+      "maps_to": "fd-pepper",
+      "weight": 1
+    },
+    {
+      "term": "dry pepper",
+      "maps_to": "fd-pepper",
+      "weight": 1
+    },
+    {
+      "term": "shombo",
+      "maps_to": "fd-pepper",
+      "weight": 1
+    },
+    {
+      "term": "yam",
+      "maps_to": "fd-yam",
+      "weight": 1
+    },
+    {
+      "term": "ji",
+      "maps_to": "fd-yam",
+      "weight": 1
+    },
+    {
+      "term": "egg",
+      "maps_to": "fd-eggs",
+      "weight": 1
+    },
+    {
+      "term": "eggs",
+      "maps_to": "fd-eggs",
+      "weight": 1
+    },
+    {
+      "term": "crate of egg",
+      "maps_to": "fd-eggs",
+      "weight": 1
+    },
+    {
+      "term": "chicken",
+      "maps_to": "fd-chicken",
+      "weight": 1
+    },
+    {
+      "term": "frozen chicken",
+      "maps_to": "fd-chicken",
+      "weight": 1
+    },
+    {
+      "term": "fish",
+      "maps_to": "fd-fish",
+      "weight": 1
+    },
+    {
+      "term": "titus",
+      "maps_to": "fd-fish",
+      "weight": 1
+    },
+    {
+      "term": "mackerel",
+      "maps_to": "fd-fish",
+      "weight": 1
+    },
+    {
+      "term": "peak milk",
+      "maps_to": "pv-peak",
+      "weight": 1
+    },
+    {
+      "term": "milk",
+      "maps_to": "pv-peak",
+      "weight": 1
+    },
+    {
+      "term": "peak",
+      "maps_to": "pv-peak",
+      "weight": 1
+    },
+    {
+      "term": "milo",
+      "maps_to": "pv-milo",
+      "weight": 1
+    },
+    {
+      "term": "milo refill",
+      "maps_to": "pv-milo",
+      "weight": 1
+    },
+    {
+      "term": "sugar",
+      "maps_to": "pv-sugar",
+      "weight": 1
+    },
+    {
+      "term": "sugar bag",
+      "maps_to": "pv-sugar",
+      "weight": 1
+    },
+    {
+      "term": "detergent",
+      "maps_to": "pv-detergent",
+      "weight": 1
+    },
+    {
+      "term": "omo",
+      "maps_to": "pv-detergent",
+      "weight": 1
+    },
+    {
+      "term": "washing soap",
+      "maps_to": "pv-detergent",
+      "weight": 1
+    },
+    {
+      "term": "tissue",
+      "maps_to": "pv-tissue",
+      "weight": 1
+    },
+    {
+      "term": "toilet roll",
+      "maps_to": "pv-tissue",
+      "weight": 1
+    },
+    {
+      "term": "tissue carton",
+      "maps_to": "pv-tissue",
+      "weight": 1
+    },
+    {
+      "term": "water",
+      "maps_to": "pv-water",
+      "weight": 1
+    },
+    {
+      "term": "bottle water",
+      "maps_to": "pv-water",
+      "weight": 1
+    },
+    {
+      "term": "eva water",
+      "maps_to": "pv-water",
+      "weight": 1
+    },
+    {
+      "term": "malt",
+      "maps_to": "pv-malt",
+      "weight": 1
+    },
+    {
+      "term": "maltina",
+      "maps_to": "pv-malt",
+      "weight": 1
+    },
+    {
+      "term": "malt drink",
+      "maps_to": "pv-malt",
+      "weight": 1
+    },
+    {
+      "term": "bournvita",
+      "maps_to": "pv-bournvita",
+      "weight": 1
+    },
+    {
+      "term": "bornvita",
+      "maps_to": "pv-bournvita",
+      "weight": 1
+    },
+    {
+      "term": "bov",
+      "maps_to": "pv-bournvita",
+      "weight": 1
+    },
+    {
+      "term": "golden morn",
+      "maps_to": "pv-golden-morn",
+      "weight": 1
+    },
+    {
+      "term": "goldenmorn",
+      "maps_to": "pv-golden-morn",
+      "weight": 1
+    },
+    {
+      "term": "knorr",
+      "maps_to": "pv-seasoning",
+      "weight": 1
+    },
+    {
+      "term": "maggi",
+      "maps_to": "pv-seasoning",
+      "weight": 1
+    },
+    {
+      "term": "seasoning",
+      "maps_to": "pv-seasoning",
+      "weight": 1
+    },
+    {
+      "term": "toothpaste",
+      "maps_to": "pv-toothpaste",
+      "weight": 1
+    },
+    {
+      "term": "colgate",
+      "maps_to": "pv-toothpaste",
+      "weight": 1
+    },
+    {
+      "term": "close up",
+      "maps_to": "pv-toothpaste",
+      "weight": 1
+    },
+    {
+      "term": "soap",
+      "maps_to": "pv-soap",
+      "weight": 1
+    },
+    {
+      "term": "bar soap",
+      "maps_to": "pv-soap",
+      "weight": 1
+    },
+    {
+      "term": "lux",
+      "maps_to": "pv-soap",
+      "weight": 1
+    },
+    {
+      "term": "gas",
+      "maps_to": "gas-125",
+      "weight": 1
+    },
+    {
+      "term": "cooking gas",
+      "maps_to": "gas-125",
+      "weight": 1
+    },
+    {
+      "term": "gas refill",
+      "maps_to": "gas-125",
+      "weight": 1
+    },
+    {
+      "term": "12.5kg gas",
+      "maps_to": "gas-125",
+      "weight": 1
+    },
+    {
+      "term": "small gas",
+      "maps_to": "gas-6",
+      "weight": 1
+    },
+    {
+      "term": "6kg gas",
+      "maps_to": "gas-6",
+      "weight": 1
+    },
+    {
+      "term": "cylinder",
+      "maps_to": "gas-cyl-125",
+      "weight": 1
+    },
+    {
+      "term": "gas cylinder",
+      "maps_to": "gas-cyl-125",
+      "weight": 1
+    },
+    {
+      "term": "big cylinder",
+      "maps_to": "gas-cyl-50",
+      "weight": 1
+    },
+    {
+      "term": "50kg cylinder",
+      "maps_to": "gas-cyl-50",
+      "weight": 1
+    },
+    {
+      "term": "hose",
+      "maps_to": "gas-hose",
+      "weight": 1
+    },
+    {
+      "term": "regulator",
+      "maps_to": "gas-hose",
+      "weight": 1
+    },
+    {
+      "term": "gas head",
+      "maps_to": "gas-hose",
+      "weight": 1
+    },
+    {
+      "term": "gas cooker",
+      "maps_to": "gas-burner",
+      "weight": 1
+    },
+    {
+      "term": "burner",
+      "maps_to": "gas-burner",
+      "weight": 1
+    },
+    {
+      "term": "cooker",
+      "maps_to": "gas-burner",
+      "weight": 1
+    },
+    {
+      "term": "brake pad",
+      "maps_to": "car-brake",
+      "weight": 1
+    },
+    {
+      "term": "break pad",
+      "maps_to": "car-brake",
+      "weight": 1
+    },
+    {
+      "term": "brake",
+      "maps_to": "car-brake",
+      "weight": 1
+    },
+    {
+      "term": "headlamp",
+      "maps_to": "car-headlamp",
+      "weight": 1
+    },
+    {
+      "term": "head light",
+      "maps_to": "car-headlamp",
+      "weight": 1
+    },
+    {
+      "term": "headlight",
+      "maps_to": "car-headlamp",
+      "weight": 1
+    },
+    {
+      "term": "battery",
+      "maps_to": "car-battery",
+      "weight": 1
+    },
+    {
+      "term": "car battery",
+      "maps_to": "car-battery",
+      "weight": 1
+    },
+    {
+      "term": "batery",
+      "maps_to": "car-battery",
+      "weight": 1
+    },
+    {
+      "term": "tyre",
+      "maps_to": "car-tyre",
+      "weight": 1
+    },
+    {
+      "term": "tire",
+      "maps_to": "car-tyre",
+      "weight": 1
+    },
+    {
+      "term": "taya",
+      "maps_to": "car-tyre",
+      "weight": 1
+    },
+    {
+      "term": "engine oil",
+      "maps_to": "car-oil",
+      "weight": 1
+    },
+    {
+      "term": "mobil oil",
+      "maps_to": "car-oil",
+      "weight": 1
+    },
+    {
+      "term": "oil 5l",
+      "maps_to": "car-oil",
+      "weight": 1
+    },
+    {
+      "term": "wiper",
+      "maps_to": "car-wiper",
+      "weight": 1
+    },
+    {
+      "term": "wiper blade",
+      "maps_to": "car-wiper",
+      "weight": 1
+    },
+    {
+      "term": "alternator",
+      "maps_to": "car-alternator",
+      "weight": 1
+    },
+    {
+      "term": "alternata",
+      "maps_to": "car-alternator",
+      "weight": 1
+    },
+    {
+      "term": "fuel pump",
+      "maps_to": "car-fuel-pump",
+      "weight": 1
+    },
+    {
+      "term": "pump",
+      "maps_to": "car-fuel-pump",
+      "weight": 1
+    },
+    {
+      "term": "side mirror",
+      "maps_to": "car-side-mirror",
+      "weight": 1
+    },
+    {
+      "term": "mirror",
+      "maps_to": "car-side-mirror",
+      "weight": 1
+    },
+    {
+      "term": "cement",
+      "maps_to": "bm-cement",
+      "weight": 1
+    },
+    {
+      "term": "dangote",
+      "maps_to": "bm-cement",
+      "weight": 1
+    },
+    {
+      "term": "simiti",
+      "maps_to": "bm-cement",
+      "weight": 1
+    },
+    {
+      "term": "iron rod",
+      "maps_to": "bm-iron12",
+      "weight": 1
+    },
+    {
+      "term": "12mm rod",
+      "maps_to": "bm-iron12",
+      "weight": 1
+    },
+    {
+      "term": "rods",
+      "maps_to": "bm-iron12",
+      "weight": 1
+    },
+    {
+      "term": "roofing sheet",
+      "maps_to": "bm-roofing",
+      "weight": 1
+    },
+    {
+      "term": "zinc",
+      "maps_to": "bm-roofing",
+      "weight": 1
+    },
+    {
+      "term": "roof sheet",
+      "maps_to": "bm-roofing",
+      "weight": 1
+    },
+    {
+      "term": "paint",
+      "maps_to": "bm-paint",
+      "weight": 1
+    },
+    {
+      "term": "emulsion",
+      "maps_to": "bm-paint",
+      "weight": 1
+    },
+    {
+      "term": "pent",
+      "maps_to": "bm-paint",
+      "weight": 1
+    },
+    {
+      "term": "pvc",
+      "maps_to": "bm-pvc",
+      "weight": 1
+    },
+    {
+      "term": "pipe",
+      "maps_to": "bm-pvc",
+      "weight": 1
+    },
+    {
+      "term": "pipes",
+      "maps_to": "bm-pvc",
+      "weight": 1
+    },
+    {
+      "term": "ceiling board",
+      "maps_to": "bm-ceiling",
+      "weight": 1
+    },
+    {
+      "term": "ceiling",
+      "maps_to": "bm-ceiling",
+      "weight": 1
+    },
+    {
+      "term": "pop",
+      "maps_to": "bm-ceiling",
+      "weight": 1
+    },
+    {
+      "term": "tiles",
+      "maps_to": "bm-tiles",
+      "weight": 1
+    },
+    {
+      "term": "tile",
+      "maps_to": "bm-tiles",
+      "weight": 1
+    },
+    {
+      "term": "floor tiles",
+      "maps_to": "bm-tiles",
+      "weight": 1
+    },
+    {
+      "term": "nails",
+      "maps_to": "bm-nails",
+      "weight": 1
+    },
+    {
+      "term": "nail",
+      "maps_to": "bm-nails",
+      "weight": 1
+    },
+    {
+      "term": "tailor",
+      "maps_to": "sv-tailor",
+      "weight": 1
+    },
+    {
+      "term": "sewing",
+      "maps_to": "sv-tailor",
+      "weight": 1
+    },
+    {
+      "term": "tailoring",
+      "maps_to": "sv-tailor",
+      "weight": 1
+    },
+    {
+      "term": "phone repair",
+      "maps_to": "sv-phone-repair",
+      "weight": 1
+    },
+    {
+      "term": "screen repair",
+      "maps_to": "sv-phone-repair",
+      "weight": 1
+    },
+    {
+      "term": "fix phone",
+      "maps_to": "sv-phone-repair",
+      "weight": 1
+    },
+    {
+      "term": "vulcanizer",
+      "maps_to": "sv-vulcanizer",
+      "weight": 1
+    },
+    {
+      "term": "vulcaniser",
+      "maps_to": "sv-vulcanizer",
+      "weight": 1
+    },
+    {
+      "term": "tyre repair",
+      "maps_to": "sv-vulcanizer",
+      "weight": 1
+    },
+    {
+      "term": "fridge repair",
+      "maps_to": "sv-fridge-repair",
+      "weight": 1
+    },
+    {
+      "term": "fix fridge",
+      "maps_to": "sv-fridge-repair",
+      "weight": 1
+    },
+    {
+      "term": "freezer repair",
+      "maps_to": "sv-fridge-repair",
+      "weight": 1
+    },
+    {
+      "term": "gen repair",
+      "maps_to": "sv-gen-repair",
+      "weight": 1
+    },
+    {
+      "term": "repair generator",
+      "maps_to": "sv-gen-repair",
+      "weight": 1
+    },
+    {
+      "term": "fix gen",
+      "maps_to": "sv-gen-repair",
+      "weight": 1
+    },
+    {
+      "term": "barbing",
+      "maps_to": "sv-barbing",
+      "weight": 1
+    },
+    {
+      "term": "haircut",
+      "maps_to": "sv-barbing",
+      "weight": 1
+    },
+    {
+      "term": "barb",
+      "maps_to": "sv-barbing",
+      "weight": 1
+    },
+    {
+      "term": "gen",
+      "maps_to": "gen-1kva",
+      "weight": 1.2
+    },
+    {
+      "term": "generator",
+      "maps_to": "gen-1kva",
+      "weight": 1.2
+    },
+    {
+      "term": "jennerator",
+      "maps_to": "gen-1kva",
+      "weight": 1.2
+    },
+    {
+      "term": "i better pass my neighbour",
+      "maps_to": "gen-1kva",
+      "weight": 1.2
+    },
+    {
+      "term": "indomine",
+      "maps_to": "fd-indomie",
+      "weight": 1.2
+    },
+    {
+      "term": "noddles",
+      "maps_to": "fd-indomie",
+      "weight": 1.2
+    },
+    {
+      "term": "rice",
+      "maps_to": "fd-rice50",
+      "weight": 1.2
+    },
+    {
+      "term": "simiti",
+      "maps_to": "bm-cement",
+      "weight": 1.2
+    },
+    {
+      "term": "taya",
+      "maps_to": "car-tyre",
+      "weight": 1.2
+    },
+    {
+      "term": "pent",
+      "maps_to": "bm-paint",
+      "weight": 1.2
+    },
+    {
+      "term": "frij",
+      "maps_to": "el-fridge",
+      "weight": 1.2
+    },
+    {
+      "term": "air con",
+      "maps_to": "el-ac15",
+      "weight": 1.2
+    },
+    {
+      "term": "ac",
+      "maps_to": "el-ac15",
+      "weight": 1.2
+    },
+    {
+      "term": "gas",
+      "maps_to": "gas-125",
+      "weight": 1.2
+    },
+    {
+      "term": "cooking gas",
+      "maps_to": "gas-125",
+      "weight": 1.2
+    },
+    {
+      "term": "bubble",
+      "maps_to": "gas-125",
+      "weight": 1.2
+    }
+  ],
+  "banned_terms": [
+    {
+      "term": "tramadol",
+      "reason": "prescription_drugs",
+      "label": "Prescription drugs"
+    },
+    {
+      "term": "codeine",
+      "reason": "prescription_drugs",
+      "label": "Prescription drugs"
+    },
+    {
+      "term": "morphine",
+      "reason": "prescription_drugs",
+      "label": "Prescription drugs"
+    },
+    {
+      "term": "gun",
+      "reason": "weapons",
+      "label": "Weapons"
+    },
+    {
+      "term": "pistol",
+      "reason": "weapons",
+      "label": "Weapons"
+    },
+    {
+      "term": "rifle",
+      "reason": "weapons",
+      "label": "Weapons"
+    },
+    {
+      "term": "ammunition",
+      "reason": "weapons",
+      "label": "Weapons"
+    },
+    {
+      "term": "replica",
+      "reason": "counterfeit",
+      "label": "Counterfeit branded goods"
+    },
+    {
+      "term": "fake rolex",
+      "reason": "counterfeit",
+      "label": "Counterfeit branded goods"
+    },
+    {
+      "term": "ivory",
+      "reason": "wildlife",
+      "label": "Ivory / protected wildlife"
+    },
+    {
+      "term": "bushmeat",
+      "reason": "wildlife",
+      "label": "Ivory / protected wildlife"
+    },
+    {
+      "term": "sex",
+      "reason": "sexual_services",
+      "label": "Sexual services"
+    },
+    {
+      "term": "escort",
+      "reason": "sexual_services",
+      "label": "Sexual services"
+    }
+  ],
+  "users": [
+    {
+      "id": "usr_seller_01",
+      "phone": "09061079190",
+      "role": "seller",
+      "name": "Ngozi Okafor",
+      "created_at_hours_ago": 697
+    },
+    {
+      "id": "usr_seller_02",
+      "phone": "08161087109",
+      "role": "seller",
+      "name": "Emeka Nwosu",
+      "created_at_hours_ago": 471
+    },
+    {
+      "id": "usr_seller_03",
+      "phone": "08031095028",
+      "role": "seller",
+      "name": "Blessing Etim",
+      "created_at_hours_ago": 554
+    },
+    {
+      "id": "usr_seller_04",
+      "phone": "08061102947",
+      "role": "seller",
+      "name": "Musa Alhaji",
+      "created_at_hours_ago": 599
+    },
+    {
+      "id": "usr_seller_05",
+      "phone": "08131110866",
+      "role": "seller",
+      "name": "Chukwudi Eze",
+      "created_at_hours_ago": 483
+    },
+    {
+      "id": "usr_seller_06",
+      "phone": "07031118785",
+      "role": "seller",
+      "name": "Chioma Amadi",
+      "created_at_hours_ago": 628
+    },
+    {
+      "id": "usr_seller_07",
+      "phone": "09061126704",
+      "role": "seller",
+      "name": "Sunday Okoro",
+      "created_at_hours_ago": 463
+    },
+    {
+      "id": "usr_seller_08",
+      "phone": "08161134623",
+      "role": "seller",
+      "name": "Godwin Okafor",
+      "created_at_hours_ago": 509
+    },
+    {
+      "id": "usr_seller_09",
+      "phone": "08031142542",
+      "role": "seller",
+      "name": "Ifeoma Nwankwo",
+      "created_at_hours_ago": 347
+    },
+    {
+      "id": "usr_seller_10",
+      "phone": "08061150461",
+      "role": "seller",
+      "name": "Tunde Bakare",
+      "created_at_hours_ago": 721
+    },
+    {
+      "id": "usr_seller_11",
+      "phone": "08131158380",
+      "role": "seller",
+      "name": "Hassan Bello",
+      "created_at_hours_ago": 424
+    },
+    {
+      "id": "usr_seller_12",
+      "phone": "07031166299",
+      "role": "seller",
+      "name": "Uche Anyanwu",
+      "created_at_hours_ago": 730
+    },
+    {
+      "id": "usr_seller_13",
+      "phone": "09061174218",
+      "role": "seller",
+      "name": "Chinedu Obi",
+      "created_at_hours_ago": 350
+    },
+    {
+      "id": "usr_seller_14",
+      "phone": "08161182137",
+      "role": "seller",
+      "name": "Ibrahim Sule",
+      "created_at_hours_ago": 590
+    },
+    {
+      "id": "usr_seller_15",
+      "phone": "08031190056",
+      "role": "seller",
+      "name": "Rose Adeyemi",
+      "created_at_hours_ago": 273
+    },
+    {
+      "id": "usr_seller_16",
+      "phone": "08061197975",
+      "role": "seller",
+      "name": "Victor Amadi",
+      "created_at_hours_ago": 675
+    },
+    {
+      "id": "usr_seller_17",
+      "phone": "08131205894",
+      "role": "seller",
+      "name": "Bright Osas",
+      "created_at_hours_ago": 800
+    },
+    {
+      "id": "usr_seller_18",
+      "phone": "07031213813",
+      "role": "seller",
+      "name": "Peter Okoro",
+      "created_at_hours_ago": 430
+    },
+    {
+      "id": "usr_seller_19",
+      "phone": "09061221732",
+      "role": "seller",
+      "name": "Ekaette Bassey",
+      "created_at_hours_ago": 301
+    },
+    {
+      "id": "usr_seller_20",
+      "phone": "08161229651",
+      "role": "seller",
+      "name": "Grace Nwosu",
+      "created_at_hours_ago": 331
+    },
+    {
+      "id": "usr_seller_21",
+      "phone": "08031237570",
+      "role": "seller",
+      "name": "Kelvin Udom",
+      "created_at_hours_ago": 623
+    },
+    {
+      "id": "usr_seller_22",
+      "phone": "08061245489",
+      "role": "seller",
+      "name": "Nkem Eze",
+      "created_at_hours_ago": 762
+    },
+    {
+      "id": "usr_seller_23",
+      "phone": "08131253408",
+      "role": "seller",
+      "name": "Grace Ogbonna",
+      "created_at_hours_ago": 420
+    },
+    {
+      "id": "usr_seller_24",
+      "phone": "07031261327",
+      "role": "seller",
+      "name": "Samuel Nwosu",
+      "created_at_hours_ago": 551
+    },
+    {
+      "id": "usr_seller_25",
+      "phone": "09061269246",
+      "role": "seller",
+      "name": "Emmanuella John",
+      "created_at_hours_ago": 776
+    },
+    {
+      "id": "usr_seller_26",
+      "phone": "08161277165",
+      "role": "seller",
+      "name": "Ikechukwu Umeh",
+      "created_at_hours_ago": 258
+    },
+    {
+      "id": "usr_seller_27",
+      "phone": "08031285084",
+      "role": "seller",
+      "name": "Chuks Nnamdi",
+      "created_at_hours_ago": 650
+    },
+    {
+      "id": "usr_seller_28",
+      "phone": "08061293003",
+      "role": "seller",
+      "name": "Victoria Bassey",
+      "created_at_hours_ago": 801
+    },
+    {
+      "id": "usr_seller_29",
+      "phone": "08131300922",
+      "role": "seller",
+      "name": "Ovie Oghenekaro",
+      "created_at_hours_ago": 336
+    },
+    {
+      "id": "usr_seller_30",
+      "phone": "07031308841",
+      "role": "seller",
+      "name": "Suleiman Yakubu",
+      "created_at_hours_ago": 369
+    },
+    {
+      "id": "usr_seller_31",
+      "phone": "09061316760",
+      "role": "seller",
+      "name": "Ada Nwankwo",
+      "created_at_hours_ago": 203
+    },
+    {
+      "id": "usr_seller_32",
+      "phone": "08161324679",
+      "role": "seller",
+      "name": "Boma Wike",
+      "created_at_hours_ago": 711
+    },
+    {
+      "id": "usr_seller_33",
+      "phone": "08031332598",
+      "role": "seller",
+      "name": "Ijeoma Okwu",
+      "created_at_hours_ago": 409
+    },
+    {
+      "id": "usr_admin_demo",
+      "phone": "08000000000",
+      "role": "admin",
+      "name": "Member 3 (Admin)",
+      "created_at_hours_ago": 900
+    },
+    {
+      "id": "usr_buyer_demo",
+      "phone": "08111111111",
+      "role": "buyer",
+      "name": "Chinedu (demo buyer)",
+      "created_at_hours_ago": 400
+    }
+  ],
+  "sellers": [
+    {
+      "id": "shop_01",
+      "user_id": "usr_seller_01",
+      "business_name": "Ngozi Provisions",
+      "slug": "ngozi-provisions",
+      "seller_type": "stall",
+      "primary_category": "Provisions",
+      "zone_id": "mile1",
+      "lat": 4.806237,
+      "lng": 6.992955,
+      "landmark_text": "Beside First Bank, Aggrey Road — ask for Ngozi",
+      "whatsapp_number": "09061079190",
+      "phone": "09061079190",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.94,
+      "response_rate": 0.9000399056822062,
+      "view_count_30d": 311,
+      "status": "active",
+      "created_at_hours_ago": 508,
+      "last_nudge_hours_ago": 5,
+      "owner_name": "Ngozi Okafor"
+    },
+    {
+      "id": "shop_02",
+      "user_id": "usr_seller_02",
+      "business_name": "Emeka Electronics",
+      "slug": "emeka-electronics",
+      "seller_type": "shop",
+      "primary_category": "Electronics",
+      "zone_id": "mile1",
+      "lat": 4.812674,
+      "lng": 6.987195,
+      "landmark_text": "By Ojoto Street junction — ask for Emeka",
+      "whatsapp_number": "08161087109",
+      "phone": "08161087109",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.97,
+      "response_rate": 0.9349485184997322,
+      "view_count_30d": 518,
+      "status": "active",
+      "created_at_hours_ago": 740,
+      "last_nudge_hours_ago": 29,
+      "owner_name": "Emeka Nwosu"
+    },
+    {
+      "id": "shop_03",
+      "user_id": "usr_seller_03",
+      "business_name": "Blessing Phone Accessories",
+      "slug": "blessing-phone-accessories",
+      "seller_type": "stall",
+      "primary_category": "Phone Accessories",
+      "zone_id": "mile1",
+      "lat": 4.812355,
+      "lng": 6.988551,
+      "landmark_text": "Beside First Bank, Aggrey Road — ask for Blessing",
+      "whatsapp_number": "08031095028",
+      "phone": "08031095028",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "id",
+      "accuracy_score": 0.91,
+      "response_rate": 0.7377680546604097,
+      "view_count_30d": 381,
+      "status": "active",
+      "created_at_hours_ago": 341,
+      "last_nudge_hours_ago": 11,
+      "owner_name": "Blessing Etim"
+    },
+    {
+      "id": "shop_04",
+      "user_id": "usr_seller_04",
+      "business_name": "Alhaji Gas Point",
+      "slug": "alhaji-gas-point",
+      "seller_type": "shop",
+      "primary_category": "Gas",
+      "zone_id": "mile1",
+      "lat": 4.808597,
+      "lng": 6.989614,
+      "landmark_text": "Line 4, near the water stand — ask for Musa",
+      "whatsapp_number": "08061102947",
+      "phone": "08061102947",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.88,
+      "response_rate": 0.9349937257356942,
+      "view_count_30d": 640,
+      "status": "active",
+      "created_at_hours_ago": 241,
+      "last_nudge_hours_ago": 36,
+      "owner_name": "Musa Alhaji"
+    },
+    {
+      "id": "shop_05",
+      "user_id": "usr_seller_05",
+      "business_name": "Chukwudi Generators",
+      "slug": "chukwudi-generators",
+      "seller_type": "stall",
+      "primary_category": "Generators",
+      "zone_id": "mile1",
+      "lat": 4.806354,
+      "lng": 6.99015,
+      "landmark_text": "By Ojoto Street junction — ask for Chukwudi",
+      "whatsapp_number": "08131110866",
+      "phone": "08131110866",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.96,
+      "response_rate": 0.9488407832570375,
+      "view_count_30d": 315,
+      "status": "active",
+      "created_at_hours_ago": 584,
+      "last_nudge_hours_ago": 21,
+      "owner_name": "Chukwudi Eze"
+    },
+    {
+      "id": "shop_06",
+      "user_id": "usr_seller_06",
+      "business_name": "Mama Chioma Foodstuff",
+      "slug": "mama-chioma-foodstuff",
+      "seller_type": "stall",
+      "primary_category": "Foodstuff",
+      "zone_id": "mile1",
+      "lat": 4.809028,
+      "lng": 6.99213,
+      "landmark_text": "Opposite Mile 1 Police Station — ask for Chioma",
+      "whatsapp_number": "07031118785",
+      "phone": "07031118785",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.9,
+      "response_rate": 0.9493586968630553,
+      "view_count_30d": 33,
+      "status": "active",
+      "created_at_hours_ago": 283,
+      "last_nudge_hours_ago": 28,
+      "owner_name": "Chioma Amadi"
+    },
+    {
+      "id": "shop_07",
+      "user_id": "usr_seller_07",
+      "business_name": "Sunny Auto Parts",
+      "slug": "sunny-auto-parts",
+      "seller_type": "shop",
+      "primary_category": "Car Parts",
+      "zone_id": "mile1",
+      "lat": 4.813435,
+      "lng": 6.98986,
+      "landmark_text": "By Ojoto Street junction — ask for Sunday",
+      "whatsapp_number": "09061126704",
+      "phone": "09061126704",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.85,
+      "response_rate": 0.8348557008430362,
+      "view_count_30d": 730,
+      "status": "active",
+      "created_at_hours_ago": 700,
+      "last_nudge_hours_ago": 24,
+      "owner_name": "Sunday Okoro"
+    },
+    {
+      "id": "shop_08",
+      "user_id": "usr_seller_08",
+      "business_name": "Godwin Building Materials",
+      "slug": "godwin-building-materials",
+      "seller_type": "shop",
+      "primary_category": "Building Materials",
+      "zone_id": "mile3",
+      "lat": 4.836882,
+      "lng": 6.994581,
+      "landmark_text": "Opposite Slaughter Market — ask for Godwin",
+      "whatsapp_number": "08161134623",
+      "phone": "08161134623",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.93,
+      "response_rate": 0.9129432771354915,
+      "view_count_30d": 86,
+      "status": "active",
+      "created_at_hours_ago": 375,
+      "last_nudge_hours_ago": 36,
+      "owner_name": "Godwin Okafor"
+    },
+    {
+      "id": "shop_09",
+      "user_id": "usr_seller_09",
+      "business_name": "Ify Fabrics & Tailoring",
+      "slug": "ify-fabrics-tailoring",
+      "seller_type": "service",
+      "primary_category": "Services",
+      "zone_id": "mile3",
+      "lat": 4.837517,
+      "lng": 6.994254,
+      "landmark_text": "By Rumuokwurusi junction — ask for Ifeoma",
+      "whatsapp_number": "08031142542",
+      "phone": "08031142542",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "id",
+      "accuracy_score": 0.95,
+      "response_rate": 0.8210500002838672,
+      "view_count_30d": 230,
+      "status": "active",
+      "created_at_hours_ago": 415,
+      "last_nudge_hours_ago": 21,
+      "owner_name": "Ifeoma Nwankwo"
+    },
+    {
+      "id": "shop_10",
+      "user_id": "usr_seller_10",
+      "business_name": "Trust Computer & Phones",
+      "slug": "trust-computer-phones",
+      "seller_type": "shop",
+      "primary_category": "Phone Accessories",
+      "zone_id": "mile3",
+      "lat": 4.836808,
+      "lng": 6.993924,
+      "landmark_text": "Km 3 Ikwerre Road — ask for Tunde",
+      "whatsapp_number": "08061150461",
+      "phone": "08061150461",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.87,
+      "response_rate": 0.5530430538579822,
+      "view_count_30d": 768,
+      "status": "active",
+      "created_at_hours_ago": 451,
+      "last_nudge_hours_ago": 9,
+      "owner_name": "Tunde Bakare"
+    },
+    {
+      "id": "shop_11",
+      "user_id": "usr_seller_11",
+      "business_name": "Mile 3 Cement Depot",
+      "slug": "mile-3-cement-depot",
+      "seller_type": "shop",
+      "primary_category": "Building Materials",
+      "zone_id": "mile3",
+      "lat": 4.837485,
+      "lng": 6.99278,
+      "landmark_text": "Km 3 Ikwerre Road — ask for Hassan",
+      "whatsapp_number": "08131158380",
+      "phone": "08131158380",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.92,
+      "response_rate": 0.9091045694425703,
+      "view_count_30d": 792,
+      "status": "active",
+      "created_at_hours_ago": 487,
+      "last_nudge_hours_ago": 12,
+      "owner_name": "Hassan Bello"
+    },
+    {
+      "id": "shop_12",
+      "user_id": "usr_seller_12",
+      "business_name": "Uche Fridge Repairs",
+      "slug": "uche-fridge-repairs",
+      "seller_type": "service",
+      "primary_category": "Services",
+      "zone_id": "mile3",
+      "lat": 4.838996,
+      "lng": 6.993786,
+      "landmark_text": "Km 3 Ikwerre Road — ask for Uche",
+      "whatsapp_number": "07031166299",
+      "phone": "07031166299",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.89,
+      "response_rate": 0.8451239666901529,
+      "view_count_30d": 454,
+      "status": "active",
+      "created_at_hours_ago": 857,
+      "last_nudge_hours_ago": 21,
+      "owner_name": "Uche Anyanwu"
+    },
+    {
+      "id": "shop_13",
+      "user_id": "usr_seller_13",
+      "business_name": "De Young Electronics",
+      "slug": "de-young-electronics",
+      "seller_type": "shop",
+      "primary_category": "Electronics",
+      "zone_id": "mile3",
+      "lat": 4.831442,
+      "lng": 6.996661,
+      "landmark_text": "By Rumuokwurusi junction — ask for Chinedu",
+      "whatsapp_number": "09061174218",
+      "phone": "09061174218",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.98,
+      "response_rate": 0.8314839952625335,
+      "view_count_30d": 64,
+      "status": "active",
+      "created_at_hours_ago": 439,
+      "last_nudge_hours_ago": 38,
+      "owner_name": "Chinedu Obi"
+    },
+    {
+      "id": "shop_14",
+      "user_id": "usr_seller_14",
+      "business_name": "Creek Road Phone Hub",
+      "slug": "creek-road-phone-hub",
+      "seller_type": "stall",
+      "primary_category": "Phone Accessories",
+      "zone_id": "creek-road",
+      "lat": 4.80576,
+      "lng": 6.999283,
+      "landmark_text": "Opposite Creek Road Market gate — ask for Ibrahim",
+      "whatsapp_number": "08161182137",
+      "phone": "08161182137",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.96,
+      "response_rate": 0.8482245938852431,
+      "view_count_30d": 409,
+      "status": "active",
+      "created_at_hours_ago": 495,
+      "last_nudge_hours_ago": 17,
+      "owner_name": "Ibrahim Sule"
+    },
+    {
+      "id": "shop_15",
+      "user_id": "usr_seller_15",
+      "business_name": "Aunty Rose Provisions",
+      "slug": "aunty-rose-provisions",
+      "seller_type": "stall",
+      "primary_category": "Provisions",
+      "zone_id": "creek-road",
+      "lat": 4.809444,
+      "lng": 6.998947,
+      "landmark_text": "By Bonny Street junction — ask for Rose",
+      "whatsapp_number": "08031190056",
+      "phone": "08031190056",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.91,
+      "response_rate": 0.9008250046521427,
+      "view_count_30d": 508,
+      "status": "active",
+      "created_at_hours_ago": 845,
+      "last_nudge_hours_ago": 26,
+      "owner_name": "Rose Adeyemi"
+    },
+    {
+      "id": "shop_16",
+      "user_id": "usr_seller_16",
+      "business_name": "Port Gas & Cylinder",
+      "slug": "port-gas-cylinder",
+      "seller_type": "shop",
+      "primary_category": "Gas",
+      "zone_id": "creek-road",
+      "lat": 4.809194,
+      "lng": 7.002595,
+      "landmark_text": "Beside First Bank, Creek Road — ask for Victor",
+      "whatsapp_number": "08061197975",
+      "phone": "08061197975",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.86,
+      "response_rate": 0.5550025415606797,
+      "view_count_30d": 308,
+      "status": "active",
+      "created_at_hours_ago": 460,
+      "last_nudge_hours_ago": 19,
+      "owner_name": "Victor Amadi"
+    },
+    {
+      "id": "shop_17",
+      "user_id": "usr_seller_17",
+      "business_name": "Bright Electronics Creek",
+      "slug": "bright-electronics-creek",
+      "seller_type": "shop",
+      "primary_category": "Electronics",
+      "zone_id": "creek-road",
+      "lat": 4.806006,
+      "lng": 7.000273,
+      "landmark_text": "Opposite Creek Road Market gate — ask for Bright",
+      "whatsapp_number": "08131205894",
+      "phone": "08131205894",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.83,
+      "response_rate": 0.6041186331771314,
+      "view_count_30d": 411,
+      "status": "active",
+      "created_at_hours_ago": 533,
+      "last_nudge_hours_ago": 36,
+      "owner_name": "Bright Osas"
+    },
+    {
+      "id": "shop_18",
+      "user_id": "usr_seller_18",
+      "business_name": "Okoro Car Parts",
+      "slug": "okoro-car-parts",
+      "seller_type": "shop",
+      "primary_category": "Car Parts",
+      "zone_id": "creek-road",
+      "lat": 4.810879,
+      "lng": 6.999192,
+      "landmark_text": "Near the waterfront jetty — ask for Peter",
+      "whatsapp_number": "07031213813",
+      "phone": "07031213813",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "id",
+      "accuracy_score": 0.94,
+      "response_rate": 0.8844059302471579,
+      "view_count_30d": 407,
+      "status": "active",
+      "created_at_hours_ago": 738,
+      "last_nudge_hours_ago": 13,
+      "owner_name": "Peter Okoro"
+    },
+    {
+      "id": "shop_19",
+      "user_id": "usr_seller_19",
+      "business_name": "Mama Eka Soup Market",
+      "slug": "mama-eka-soup-market",
+      "seller_type": "stall",
+      "primary_category": "Foodstuff",
+      "zone_id": "creek-road",
+      "lat": 4.805382,
+      "lng": 7.001319,
+      "landmark_text": "By Bonny Street junction — ask for Ekaette",
+      "whatsapp_number": "09061221732",
+      "phone": "09061221732",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.9,
+      "response_rate": 0.8442860960960389,
+      "view_count_30d": 277,
+      "status": "active",
+      "created_at_hours_ago": 403,
+      "last_nudge_hours_ago": 11,
+      "owner_name": "Ekaette Bassey"
+    },
+    {
+      "id": "shop_20",
+      "user_id": "usr_seller_20",
+      "business_name": "Ada George Superstore",
+      "slug": "ada-george-superstore",
+      "seller_type": "shop",
+      "primary_category": "Provisions",
+      "zone_id": "ada-george",
+      "lat": 4.862516,
+      "lng": 6.976462,
+      "landmark_text": "By Redeemed Church, Ada George — ask for Grace",
+      "whatsapp_number": "08161229651",
+      "phone": "08161229651",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.97,
+      "response_rate": 0.8996967572718859,
+      "view_count_30d": 50,
+      "status": "active",
+      "created_at_hours_ago": 519,
+      "last_nudge_hours_ago": 18,
+      "owner_name": "Grace Nwosu"
+    },
+    {
+      "id": "shop_21",
+      "user_id": "usr_seller_21",
+      "business_name": "Kelvin Phone World",
+      "slug": "kelvin-phone-world",
+      "seller_type": "shop",
+      "primary_category": "Phone Accessories",
+      "zone_id": "ada-george",
+      "lat": 4.862154,
+      "lng": 6.973025,
+      "landmark_text": "By Redeemed Church, Ada George — ask for Kelvin",
+      "whatsapp_number": "08031237570",
+      "phone": "08031237570",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.88,
+      "response_rate": 0.9146620822139084,
+      "view_count_30d": 366,
+      "status": "active",
+      "created_at_hours_ago": 820,
+      "last_nudge_hours_ago": 14,
+      "owner_name": "Kelvin Udom"
+    },
+    {
+      "id": "shop_22",
+      "user_id": "usr_seller_22",
+      "business_name": "Ada George Gas Fill",
+      "slug": "ada-george-gas-fill",
+      "seller_type": "shop",
+      "primary_category": "Gas",
+      "zone_id": "ada-george",
+      "lat": 4.854319,
+      "lng": 6.973437,
+      "landmark_text": "Beside NNPC filling station, Ada George — ask for Nkem",
+      "whatsapp_number": "08061245489",
+      "phone": "08061245489",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.9,
+      "response_rate": 0.6185401322320104,
+      "view_count_30d": 58,
+      "status": "active",
+      "created_at_hours_ago": 732,
+      "last_nudge_hours_ago": 28,
+      "owner_name": "Nkem Eze"
+    },
+    {
+      "id": "shop_23",
+      "user_id": "usr_seller_23",
+      "business_name": "Grace Electronics Ada George",
+      "slug": "grace-electronics-ada-george",
+      "seller_type": "shop",
+      "primary_category": "Electronics",
+      "zone_id": "ada-george",
+      "lat": 4.858905,
+      "lng": 6.974081,
+      "landmark_text": "No. 15 Ada George Road, by Iwofe junction — ask for Grace",
+      "whatsapp_number": "08131253408",
+      "phone": "08131253408",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.84,
+      "response_rate": 0.6299266331829131,
+      "view_count_30d": 682,
+      "status": "active",
+      "created_at_hours_ago": 308,
+      "last_nudge_hours_ago": 5,
+      "owner_name": "Grace Ogbonna"
+    },
+    {
+      "id": "shop_24",
+      "user_id": "usr_seller_24",
+      "business_name": "Rumuola Tailors",
+      "slug": "rumuola-tailors",
+      "seller_type": "service",
+      "primary_category": "Services",
+      "zone_id": "ada-george",
+      "lat": 4.852889,
+      "lng": 6.972491,
+      "landmark_text": "Beside NNPC filling station, Ada George — ask for Samuel",
+      "whatsapp_number": "07031261327",
+      "phone": "07031261327",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.92,
+      "response_rate": 0.633905343618244,
+      "view_count_30d": 51,
+      "status": "active",
+      "created_at_hours_ago": 321,
+      "last_nudge_hours_ago": 33,
+      "owner_name": "Samuel Nwosu"
+    },
+    {
+      "id": "shop_25",
+      "user_id": "usr_seller_25",
+      "business_name": "Emmanuella Foodstuff",
+      "slug": "emmanuella-foodstuff",
+      "seller_type": "stall",
+      "primary_category": "Foodstuff",
+      "zone_id": "ada-george",
+      "lat": 4.856879,
+      "lng": 6.971162,
+      "landmark_text": "Beside NNPC filling station, Ada George — ask for Emmanuella",
+      "whatsapp_number": "09061269246",
+      "phone": "09061269246",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.87,
+      "response_rate": 0.8946276835165918,
+      "view_count_30d": 275,
+      "status": "active",
+      "created_at_hours_ago": 523,
+      "last_nudge_hours_ago": 37,
+      "owner_name": "Emmanuella John"
+    },
+    {
+      "id": "shop_26",
+      "user_id": "usr_seller_26",
+      "business_name": "Rumuokoro Building Line",
+      "slug": "rumuokoro-building-line",
+      "seller_type": "shop",
+      "primary_category": "Building Materials",
+      "zone_id": "rumuokoro",
+      "lat": 4.877819,
+      "lng": 6.937449,
+      "landmark_text": "Rumuokoro Market, line 2 — ask for Ikechukwu",
+      "whatsapp_number": "08161277165",
+      "phone": "08161277165",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.85,
+      "response_rate": 0.6714464293792844,
+      "view_count_30d": 155,
+      "status": "active",
+      "created_at_hours_ago": 201,
+      "last_nudge_hours_ago": 19,
+      "owner_name": "Ikechukwu Umeh"
+    },
+    {
+      "id": "shop_27",
+      "user_id": "usr_seller_27",
+      "business_name": "Chuks Generator Repairs",
+      "slug": "chuks-generator-repairs",
+      "seller_type": "service",
+      "primary_category": "Services",
+      "zone_id": "rumuokoro",
+      "lat": 4.873432,
+      "lng": 6.937099,
+      "landmark_text": "Beside Rumuokoro Park — ask for Chuks",
+      "whatsapp_number": "08031285084",
+      "phone": "08031285084",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.95,
+      "response_rate": 0.9383911162614823,
+      "view_count_30d": 782,
+      "status": "active",
+      "created_at_hours_ago": 243,
+      "last_nudge_hours_ago": 3,
+      "owner_name": "Chuks Nnamdi"
+    },
+    {
+      "id": "shop_28",
+      "user_id": "usr_seller_28",
+      "business_name": "Victory Provisions Rumuokoro",
+      "slug": "victory-provisions-rumuokoro",
+      "seller_type": "stall",
+      "primary_category": "Provisions",
+      "zone_id": "rumuokoro",
+      "lat": 4.873077,
+      "lng": 6.931908,
+      "landmark_text": "By Igwuruta junction — ask for Victoria",
+      "whatsapp_number": "08061293003",
+      "phone": "08061293003",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.9,
+      "response_rate": 0.565023397654295,
+      "view_count_30d": 119,
+      "status": "active",
+      "created_at_hours_ago": 759,
+      "last_nudge_hours_ago": 33,
+      "owner_name": "Victoria Bassey"
+    },
+    {
+      "id": "shop_29",
+      "user_id": "usr_seller_29",
+      "business_name": "Ovie Phone Accessories",
+      "slug": "ovie-phone-accessories",
+      "seller_type": "stall",
+      "primary_category": "Phone Accessories",
+      "zone_id": "rumuokoro",
+      "lat": 4.879647,
+      "lng": 6.932666,
+      "landmark_text": "By Igwuruta junction — ask for Ovie",
+      "whatsapp_number": "08131300922",
+      "phone": "08131300922",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.82,
+      "response_rate": 0.5551820700988174,
+      "view_count_30d": 786,
+      "status": "active",
+      "created_at_hours_ago": 423,
+      "last_nudge_hours_ago": 3,
+      "owner_name": "Ovie Oghenekaro"
+    },
+    {
+      "id": "shop_30",
+      "user_id": "usr_seller_30",
+      "business_name": "Rumuokoro Gas Plant",
+      "slug": "rumuokoro-gas-plant",
+      "seller_type": "shop",
+      "primary_category": "Gas",
+      "zone_id": "rumuokoro",
+      "lat": 4.870783,
+      "lng": 6.929641,
+      "landmark_text": "Beside Rumuokoro Park — ask for Suleiman",
+      "whatsapp_number": "07031308841",
+      "phone": "07031308841",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "id",
+      "accuracy_score": 0.93,
+      "response_rate": 0.6499633872881532,
+      "view_count_30d": 140,
+      "status": "active",
+      "created_at_hours_ago": 860,
+      "last_nudge_hours_ago": 22,
+      "owner_name": "Suleiman Yakubu"
+    },
+    {
+      "id": "shop_31",
+      "user_id": "usr_seller_31",
+      "business_name": "Choba Student Mart",
+      "slug": "choba-student-mart",
+      "seller_type": "shop",
+      "primary_category": "Provisions",
+      "zone_id": "choba",
+      "lat": 4.897555,
+      "lng": 6.909972,
+      "landmark_text": "Uniport main gate, Choba — ask for Ada",
+      "whatsapp_number": "09061316760",
+      "phone": "09061316760",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.91,
+      "response_rate": 0.916695510596037,
+      "view_count_30d": 52,
+      "status": "active",
+      "created_at_hours_ago": 557,
+      "last_nudge_hours_ago": 29,
+      "owner_name": "Ada Nwankwo"
+    },
+    {
+      "id": "shop_32",
+      "user_id": "usr_seller_32",
+      "business_name": "Uniport Gate Phone Repairs",
+      "slug": "uniport-gate-phone-repairs",
+      "seller_type": "service",
+      "primary_category": "Services",
+      "zone_id": "choba",
+      "lat": 4.90011,
+      "lng": 6.904033,
+      "landmark_text": "Uniport main gate, Choba — ask for Boma",
+      "whatsapp_number": "08161324679",
+      "phone": "08161324679",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "visit",
+      "accuracy_score": 0.96,
+      "response_rate": 0.6725212817080319,
+      "view_count_30d": 812,
+      "status": "active",
+      "created_at_hours_ago": 343,
+      "last_nudge_hours_ago": 24,
+      "owner_name": "Boma Wike"
+    },
+    {
+      "id": "shop_33",
+      "user_id": "usr_seller_33",
+      "business_name": "Choba Fresh Foods",
+      "slug": "choba-fresh-foods",
+      "seller_type": "stall",
+      "primary_category": "Foodstuff",
+      "zone_id": "choba",
+      "lat": 4.893201,
+      "lng": 6.903217,
+      "landmark_text": "Opposite Choba Police Station — ask for Ijeoma",
+      "whatsapp_number": "08031332598",
+      "phone": "08031332598",
+      "hours": {
+        "mon": "8:00-18:00",
+        "tue": "8:00-18:00",
+        "wed": "8:00-18:00",
+        "thu": "8:00-18:00",
+        "fri": "8:00-18:00",
+        "sat": "8:00-16:00",
+        "sun": "closed"
+      },
+      "verification_tier": "phone",
+      "accuracy_score": 0.89,
+      "response_rate": 0.6967807571403682,
+      "view_count_30d": 531,
+      "status": "active",
+      "created_at_hours_ago": 427,
+      "last_nudge_hours_ago": 15,
+      "owner_name": "Ijeoma Okwu"
+    }
+  ],
+  "listings": [
+    {
+      "id": "lst_0001",
+      "seller_id": "shop_01",
+      "product_id": "pv-peak",
+      "title_as_listed": "Peak Milk Carton (24 tins)",
+      "category": "Provisions",
+      "price_kobo": 2705000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 92,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 99,
+      "report_count": 0,
+      "created_at_hours_ago": 418
+    },
+    {
+      "id": "lst_0002",
+      "seller_id": "shop_01",
+      "product_id": "pv-milo",
+      "title_as_listed": "Milo Refill 500g",
+      "category": "Provisions",
+      "price_kobo": 520000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 10,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 71,
+      "report_count": 0,
+      "created_at_hours_ago": 250
+    },
+    {
+      "id": "lst_0003",
+      "seller_id": "shop_01",
+      "product_id": "pv-golden-morn",
+      "title_as_listed": "Golden Morn 1kg",
+      "category": "Provisions",
+      "price_kobo": 355000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 10,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 23,
+      "report_count": 0,
+      "created_at_hours_ago": 304
+    },
+    {
+      "id": "lst_0004",
+      "seller_id": "shop_01",
+      "product_id": "pv-bournvita",
+      "title_as_listed": "Bournvita Refill 500g",
+      "category": "Provisions",
+      "price_kobo": 495000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 35,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 100,
+      "report_count": 0,
+      "created_at_hours_ago": 254
+    },
+    {
+      "id": "lst_0005",
+      "seller_id": "shop_01",
+      "product_id": "pv-seasoning",
+      "title_as_listed": "Knorr Seasoning Cube Carton",
+      "category": "Provisions",
+      "price_kobo": 980000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 21,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 68,
+      "report_count": 0,
+      "created_at_hours_ago": 611
+    },
+    {
+      "id": "lst_0006",
+      "seller_id": "shop_01",
+      "product_id": "fd-indomie",
+      "title_as_listed": "Indomie Carton (40 packs)",
+      "category": "Foodstuff",
+      "price_kobo": 950000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 396,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 103,
+      "report_count": 0,
+      "created_at_hours_ago": 758
+    },
+    {
+      "id": "lst_0007",
+      "seller_id": "shop_02",
+      "product_id": "el-tv32",
+      "title_as_listed": "32\" LED TV",
+      "category": "Electronics",
+      "price_kobo": 13500000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 29,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 18,
+      "report_count": 0,
+      "created_at_hours_ago": 558
+    },
+    {
+      "id": "lst_0008",
+      "seller_id": "shop_02",
+      "product_id": "el-dvd",
+      "title_as_listed": "DVD Player",
+      "category": "Electronics",
+      "price_kobo": 2090000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 100,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 100,
+      "report_count": 0,
+      "created_at_hours_ago": 579
+    },
+    {
+      "id": "lst_0009",
+      "seller_id": "shop_02",
+      "product_id": "el-home-theatre",
+      "title_as_listed": "Home Theatre System",
+      "category": "Electronics",
+      "price_kobo": 8110000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 19,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 44,
+      "report_count": 0,
+      "created_at_hours_ago": 140
+    },
+    {
+      "id": "lst_0010",
+      "seller_id": "shop_02",
+      "product_id": "el-fan-rechargeable",
+      "title_as_listed": "Rechargeable Standing Fan",
+      "category": "Electronics",
+      "price_kobo": 2735000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 36,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 91,
+      "report_count": 0,
+      "created_at_hours_ago": 66
+    },
+    {
+      "id": "lst_0011",
+      "seller_id": "shop_02",
+      "product_id": "el-iron",
+      "title_as_listed": "Pressing Iron",
+      "category": "Electronics",
+      "price_kobo": 835000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 10,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 17,
+      "report_count": 0,
+      "created_at_hours_ago": 111
+    },
+    {
+      "id": "lst_0012",
+      "seller_id": "shop_03",
+      "product_id": "ph-usbc",
+      "title_as_listed": "USB-C Charging Cable",
+      "category": "Phone Accessories",
+      "price_kobo": 145000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 5,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 96,
+      "report_count": 0,
+      "created_at_hours_ago": 587
+    },
+    {
+      "id": "lst_0013",
+      "seller_id": "shop_03",
+      "product_id": "ph-tecno-charger",
+      "title_as_listed": "Tecno Phone Charger",
+      "category": "Phone Accessories",
+      "price_kobo": 250000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 13,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 51,
+      "report_count": 0,
+      "created_at_hours_ago": 556
+    },
+    {
+      "id": "lst_0014",
+      "seller_id": "shop_03",
+      "product_id": "ph-powerbank",
+      "title_as_listed": "Power Bank 20000mAh",
+      "category": "Phone Accessories",
+      "price_kobo": 1315000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 21,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 112,
+      "report_count": 0,
+      "created_at_hours_ago": 302
+    },
+    {
+      "id": "lst_0015",
+      "seller_id": "shop_03",
+      "product_id": "ph-screen-guard",
+      "title_as_listed": "Screen Protector",
+      "category": "Phone Accessories",
+      "price_kobo": 90000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 24,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 106,
+      "report_count": 0,
+      "created_at_hours_ago": 64
+    },
+    {
+      "id": "lst_0016",
+      "seller_id": "shop_03",
+      "product_id": "ph-memory-card",
+      "title_as_listed": "Memory Card 32GB",
+      "category": "Phone Accessories",
+      "price_kobo": 650000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 20,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 108,
+      "report_count": 0,
+      "created_at_hours_ago": 548
+    },
+    {
+      "id": "lst_0017",
+      "seller_id": "shop_03",
+      "product_id": "ph-case",
+      "title_as_listed": "Phone Pouch",
+      "category": "Phone Accessories",
+      "price_kobo": 180000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 40,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 104,
+      "report_count": 0,
+      "created_at_hours_ago": 577
+    },
+    {
+      "id": "lst_0018",
+      "seller_id": "shop_04",
+      "product_id": "gas-125",
+      "title_as_listed": "12.5kg Cooking Gas Refill",
+      "category": "Gas",
+      "price_kobo": 1420000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 6,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 117,
+      "report_count": 0,
+      "created_at_hours_ago": 512
+    },
+    {
+      "id": "lst_0019",
+      "seller_id": "shop_04",
+      "product_id": "gas-6",
+      "title_as_listed": "6kg Cooking Gas Refill",
+      "category": "Gas",
+      "price_kobo": 820000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 268,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 43,
+      "report_count": 0,
+      "created_at_hours_ago": 394
+    },
+    {
+      "id": "lst_0020",
+      "seller_id": "shop_04",
+      "product_id": "gas-hose",
+      "title_as_listed": "Gas Hose & Regulator Set",
+      "category": "Gas",
+      "price_kobo": 665000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 10,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 45,
+      "report_count": 0,
+      "created_at_hours_ago": 458
+    },
+    {
+      "id": "lst_0021",
+      "seller_id": "shop_04",
+      "product_id": "gas-cyl-125",
+      "title_as_listed": "12.5kg Gas Cylinder (new)",
+      "category": "Gas",
+      "price_kobo": 3200000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 254,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 112,
+      "report_count": 0,
+      "created_at_hours_ago": 459
+    },
+    {
+      "id": "lst_0022",
+      "seller_id": "shop_05",
+      "product_id": "gen-1kva",
+      "title_as_listed": "1KVA Generator",
+      "category": "Generators",
+      "price_kobo": 17945000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 34,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 25,
+      "report_count": 0,
+      "created_at_hours_ago": 366
+    },
+    {
+      "id": "lst_0023",
+      "seller_id": "shop_05",
+      "product_id": "gen-35kva",
+      "title_as_listed": "3.5KVA Generator",
+      "category": "Generators",
+      "price_kobo": 38500000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 25,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 64,
+      "report_count": 0,
+      "created_at_hours_ago": 157
+    },
+    {
+      "id": "lst_0024",
+      "seller_id": "shop_05",
+      "product_id": "gen-75kva",
+      "title_as_listed": "7.5KVA Generator",
+      "category": "Generators",
+      "price_kobo": 63240000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 99,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 86,
+      "report_count": 0,
+      "created_at_hours_ago": 286
+    },
+    {
+      "id": "lst_0025",
+      "seller_id": "shop_05",
+      "product_id": "gen-oil",
+      "title_as_listed": "Generator Engine Oil 1L",
+      "category": "Generators",
+      "price_kobo": 420000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 32,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 88,
+      "report_count": 0,
+      "created_at_hours_ago": 466
+    },
+    {
+      "id": "lst_0026",
+      "seller_id": "shop_05",
+      "product_id": "gen-plug",
+      "title_as_listed": "Generator Spark Plug",
+      "category": "Generators",
+      "price_kobo": 250000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 54,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 26,
+      "report_count": 0,
+      "created_at_hours_ago": 356
+    },
+    {
+      "id": "lst_0027",
+      "seller_id": "shop_06",
+      "product_id": "fd-rice50",
+      "title_as_listed": "50kg Bag of Rice",
+      "category": "Foodstuff",
+      "price_kobo": 9200000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 5,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 68,
+      "report_count": 0,
+      "created_at_hours_ago": 602
+    },
+    {
+      "id": "lst_0028",
+      "seller_id": "shop_06",
+      "product_id": "fd-beans",
+      "title_as_listed": "Beans 5kg",
+      "category": "Foodstuff",
+      "price_kobo": 895000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 392,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 24,
+      "report_count": 0,
+      "created_at_hours_ago": 828
+    },
+    {
+      "id": "lst_0029",
+      "seller_id": "shop_06",
+      "product_id": "fd-garri",
+      "title_as_listed": "Garri 5kg",
+      "category": "Foodstuff",
+      "price_kobo": 415000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 27,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 119,
+      "report_count": 0,
+      "created_at_hours_ago": 159
+    },
+    {
+      "id": "lst_0030",
+      "seller_id": "shop_06",
+      "product_id": "fd-palm-oil",
+      "title_as_listed": "Palm Oil 5L",
+      "category": "Foodstuff",
+      "price_kobo": 780000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 8,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 18,
+      "report_count": 0,
+      "created_at_hours_ago": 544
+    },
+    {
+      "id": "lst_0031",
+      "seller_id": "shop_06",
+      "product_id": "fd-crayfish",
+      "title_as_listed": "Crayfish 1kg",
+      "category": "Foodstuff",
+      "price_kobo": 905000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 380,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 63,
+      "report_count": 0,
+      "created_at_hours_ago": 693
+    },
+    {
+      "id": "lst_0032",
+      "seller_id": "shop_06",
+      "product_id": "fd-pepper",
+      "title_as_listed": "Dry Pepper 1kg",
+      "category": "Foodstuff",
+      "price_kobo": 650000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 17,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 101,
+      "report_count": 0,
+      "created_at_hours_ago": 563
+    },
+    {
+      "id": "lst_0033",
+      "seller_id": "shop_07",
+      "product_id": "car-brake",
+      "title_as_listed": "Toyota Corolla Brake Pad",
+      "category": "Car Parts",
+      "price_kobo": 1450000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 381,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 79,
+      "report_count": 0,
+      "created_at_hours_ago": 839
+    },
+    {
+      "id": "lst_0034",
+      "seller_id": "shop_07",
+      "product_id": "car-oil",
+      "title_as_listed": "Engine Oil 5L",
+      "category": "Car Parts",
+      "price_kobo": 1795000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 15,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 36,
+      "report_count": 0,
+      "created_at_hours_ago": 319
+    },
+    {
+      "id": "lst_0035",
+      "seller_id": "shop_07",
+      "product_id": "car-wiper",
+      "title_as_listed": "Windscreen Wiper Pair",
+      "category": "Car Parts",
+      "price_kobo": 650000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 138,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 86,
+      "report_count": 0,
+      "created_at_hours_ago": 677
+    },
+    {
+      "id": "lst_0036",
+      "seller_id": "shop_07",
+      "product_id": "car-side-mirror",
+      "title_as_listed": "Side Mirror",
+      "category": "Car Parts",
+      "price_kobo": 1715000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 119,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 51,
+      "report_count": 0,
+      "created_at_hours_ago": 209
+    },
+    {
+      "id": "lst_0037",
+      "seller_id": "shop_08",
+      "product_id": "bm-cement",
+      "title_as_listed": "50kg Dangote Cement",
+      "category": "Building Materials",
+      "price_kobo": 1150000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 146,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 54,
+      "report_count": 0,
+      "created_at_hours_ago": 473
+    },
+    {
+      "id": "lst_0038",
+      "seller_id": "shop_08",
+      "product_id": "bm-iron12",
+      "title_as_listed": "Iron Rod 12mm",
+      "category": "Building Materials",
+      "price_kobo": 960000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 31,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 102,
+      "report_count": 0,
+      "created_at_hours_ago": 77
+    },
+    {
+      "id": "lst_0039",
+      "seller_id": "shop_08",
+      "product_id": "bm-roofing",
+      "title_as_listed": "Roofing Sheet (per metre)",
+      "category": "Building Materials",
+      "price_kobo": 430000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 204,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 17,
+      "report_count": 0,
+      "created_at_hours_ago": 229
+    },
+    {
+      "id": "lst_0040",
+      "seller_id": "shop_08",
+      "product_id": "bm-nails",
+      "title_as_listed": "Nails 2 inch (carton)",
+      "category": "Building Materials",
+      "price_kobo": 850000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 297,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 113,
+      "report_count": 0,
+      "created_at_hours_ago": 360
+    },
+    {
+      "id": "lst_0041",
+      "seller_id": "shop_08",
+      "product_id": "bm-pvc",
+      "title_as_listed": "PVC Pipe 4 inch",
+      "category": "Building Materials",
+      "price_kobo": 530000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 56,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 117,
+      "report_count": 0,
+      "created_at_hours_ago": 329
+    },
+    {
+      "id": "lst_0042",
+      "seller_id": "shop_09",
+      "product_id": "sv-tailor",
+      "title_as_listed": "Tailoring (per outfit)",
+      "category": "Services",
+      "price_kobo": 1200000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 285,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 91,
+      "report_count": 0,
+      "created_at_hours_ago": 578
+    },
+    {
+      "id": "lst_0043",
+      "seller_id": "shop_09",
+      "product_id": "sv-barbing",
+      "title_as_listed": "Barbing (haircut)",
+      "category": "Services",
+      "price_kobo": 270000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 53,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 114,
+      "report_count": 0,
+      "created_at_hours_ago": 577
+    },
+    {
+      "id": "lst_0044",
+      "seller_id": "shop_10",
+      "product_id": "ph-iphone-screen",
+      "title_as_listed": "iPhone 13 Screen Replacement",
+      "category": "Phone Accessories",
+      "price_kobo": 5975000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 156,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 88,
+      "report_count": 0,
+      "created_at_hours_ago": 453
+    },
+    {
+      "id": "lst_0045",
+      "seller_id": "shop_10",
+      "product_id": "ph-usbc",
+      "title_as_listed": "USB-C Charging Cable",
+      "category": "Phone Accessories",
+      "price_kobo": 150000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 270,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 118,
+      "report_count": 0,
+      "created_at_hours_ago": 465
+    },
+    {
+      "id": "lst_0046",
+      "seller_id": "shop_10",
+      "product_id": "ph-powerbank",
+      "title_as_listed": "Power Bank 20000mAh",
+      "category": "Phone Accessories",
+      "price_kobo": 1200000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 13,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 79,
+      "report_count": 0,
+      "created_at_hours_ago": 79
+    },
+    {
+      "id": "lst_0047",
+      "seller_id": "shop_10",
+      "product_id": "sv-phone-repair",
+      "title_as_listed": "Phone Screen Repair",
+      "category": "Services",
+      "price_kobo": 1500000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 66,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 92,
+      "report_count": 0,
+      "created_at_hours_ago": 659
+    },
+    {
+      "id": "lst_0048",
+      "seller_id": "shop_11",
+      "product_id": "bm-cement",
+      "title_as_listed": "50kg Dangote Cement",
+      "category": "Building Materials",
+      "price_kobo": 1115000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 130,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 117,
+      "report_count": 0,
+      "created_at_hours_ago": 284
+    },
+    {
+      "id": "lst_0049",
+      "seller_id": "shop_11",
+      "product_id": "bm-ceiling",
+      "title_as_listed": "Ceiling Board (per piece)",
+      "category": "Building Materials",
+      "price_kobo": 380000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 370,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 114,
+      "report_count": 0,
+      "created_at_hours_ago": 482
+    },
+    {
+      "id": "lst_0050",
+      "seller_id": "shop_11",
+      "product_id": "bm-tiles",
+      "title_as_listed": "Floor Tiles (per carton)",
+      "category": "Building Materials",
+      "price_kobo": 1275000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 100,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 69,
+      "report_count": 0,
+      "created_at_hours_ago": 473
+    },
+    {
+      "id": "lst_0051",
+      "seller_id": "shop_11",
+      "product_id": "bm-paint",
+      "title_as_listed": "Emulsion Paint 20L",
+      "category": "Building Materials",
+      "price_kobo": 3850000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 183,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 22,
+      "report_count": 0,
+      "created_at_hours_ago": 749
+    },
+    {
+      "id": "lst_0052",
+      "seller_id": "shop_12",
+      "product_id": "sv-fridge-repair",
+      "title_as_listed": "Fridge Repair",
+      "category": "Services",
+      "price_kobo": 1800000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 38,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 9,
+      "report_count": 0,
+      "created_at_hours_ago": 278
+    },
+    {
+      "id": "lst_0053",
+      "seller_id": "shop_12",
+      "product_id": "sv-gen-repair",
+      "title_as_listed": "Generator Repair",
+      "category": "Services",
+      "price_kobo": 1425000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 22,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 61,
+      "report_count": 0,
+      "created_at_hours_ago": 619
+    },
+    {
+      "id": "lst_0054",
+      "seller_id": "shop_13",
+      "product_id": "el-tv42",
+      "title_as_listed": "42\" Smart TV",
+      "category": "Electronics",
+      "price_kobo": 24500000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 37,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 29,
+      "report_count": 0,
+      "created_at_hours_ago": 318
+    },
+    {
+      "id": "lst_0055",
+      "seller_id": "shop_13",
+      "product_id": "el-ac15",
+      "title_as_listed": "1.5HP Air Conditioner",
+      "category": "Electronics",
+      "price_kobo": 39270000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 52,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 1,
+      "report_count": 0,
+      "created_at_hours_ago": 536
+    },
+    {
+      "id": "lst_0056",
+      "seller_id": "shop_13",
+      "product_id": "el-freezer",
+      "title_as_listed": "Deep Freezer 200L",
+      "category": "Electronics",
+      "price_kobo": 28500000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 30,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 114,
+      "report_count": 0,
+      "created_at_hours_ago": 83
+    },
+    {
+      "id": "lst_0057",
+      "seller_id": "shop_13",
+      "product_id": "el-fridge",
+      "title_as_listed": "Double Door Fridge",
+      "category": "Electronics",
+      "price_kobo": 33320000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 37,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 80,
+      "report_count": 0,
+      "created_at_hours_ago": 200
+    },
+    {
+      "id": "lst_0058",
+      "seller_id": "shop_13",
+      "product_id": "el-microwave",
+      "title_as_listed": "Microwave Oven",
+      "category": "Electronics",
+      "price_kobo": 6500000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 12,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 68,
+      "report_count": 0,
+      "created_at_hours_ago": 152
+    },
+    {
+      "id": "lst_0059",
+      "seller_id": "shop_13",
+      "product_id": "el-blender",
+      "title_as_listed": "Blender",
+      "category": "Electronics",
+      "price_kobo": 1760000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 32,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 97,
+      "report_count": 0,
+      "created_at_hours_ago": 552
+    },
+    {
+      "id": "lst_0060",
+      "seller_id": "shop_14",
+      "product_id": "ph-iphone-screen",
+      "title_as_listed": "iPhone 13 Screen Replacement",
+      "category": "Phone Accessories",
+      "price_kobo": 5800000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 17,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 16,
+      "report_count": 0,
+      "created_at_hours_ago": 199
+    },
+    {
+      "id": "lst_0061",
+      "seller_id": "shop_14",
+      "product_id": "ph-tecno-charger",
+      "title_as_listed": "Tecno Phone Charger",
+      "category": "Phone Accessories",
+      "price_kobo": 245000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 19,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 70,
+      "report_count": 0,
+      "created_at_hours_ago": 397
+    },
+    {
+      "id": "lst_0062",
+      "seller_id": "shop_14",
+      "product_id": "ph-powerbank",
+      "title_as_listed": "Power Bank 20000mAh",
+      "category": "Phone Accessories",
+      "price_kobo": 1250000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 11,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 19,
+      "report_count": 0,
+      "created_at_hours_ago": 163
+    },
+    {
+      "id": "lst_0063",
+      "seller_id": "shop_14",
+      "product_id": "ph-earpiece",
+      "title_as_listed": "Wired Earpiece",
+      "category": "Phone Accessories",
+      "price_kobo": 190000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 38,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 57,
+      "report_count": 0,
+      "created_at_hours_ago": 104
+    },
+    {
+      "id": "lst_0064",
+      "seller_id": "shop_14",
+      "product_id": "ph-memory-card",
+      "title_as_listed": "Memory Card 32GB",
+      "category": "Phone Accessories",
+      "price_kobo": 635000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 71,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 48,
+      "report_count": 0,
+      "created_at_hours_ago": 293
+    },
+    {
+      "id": "lst_0065",
+      "seller_id": "shop_14",
+      "product_id": "ph-screen-guard",
+      "title_as_listed": "Screen Protector",
+      "category": "Phone Accessories",
+      "price_kobo": 95000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 24,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 50,
+      "report_count": 0,
+      "created_at_hours_ago": 623
+    },
+    {
+      "id": "lst_0066",
+      "seller_id": "shop_15",
+      "product_id": "pv-tissue",
+      "title_as_listed": "Tissue Paper Carton",
+      "category": "Provisions",
+      "price_kobo": 1850000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 69,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 12,
+      "report_count": 0,
+      "created_at_hours_ago": 385
+    },
+    {
+      "id": "lst_0067",
+      "seller_id": "shop_15",
+      "product_id": "pv-soap",
+      "title_as_listed": "Bar Soap Carton",
+      "category": "Provisions",
+      "price_kobo": 1615000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 1,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 22,
+      "report_count": 0,
+      "created_at_hours_ago": 81
+    },
+    {
+      "id": "lst_0068",
+      "seller_id": "shop_15",
+      "product_id": "pv-detergent",
+      "title_as_listed": "Detergent 10kg",
+      "category": "Provisions",
+      "price_kobo": 1450000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 246,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 40,
+      "report_count": 0,
+      "created_at_hours_ago": 713
+    },
+    {
+      "id": "lst_0069",
+      "seller_id": "shop_15",
+      "product_id": "pv-water",
+      "title_as_listed": "Bottled Water Pack (12)",
+      "category": "Provisions",
+      "price_kobo": 215000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 373,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 99,
+      "report_count": 0,
+      "created_at_hours_ago": 434
+    },
+    {
+      "id": "lst_0070",
+      "seller_id": "shop_15",
+      "product_id": "pv-malt",
+      "title_as_listed": "Malt Drink Crate",
+      "category": "Provisions",
+      "price_kobo": 835000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 40,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 1,
+      "report_count": 0,
+      "created_at_hours_ago": 403
+    },
+    {
+      "id": "lst_0071",
+      "seller_id": "shop_16",
+      "product_id": "gas-125",
+      "title_as_listed": "12.5kg Cooking Gas Refill",
+      "category": "Gas",
+      "price_kobo": 1495000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 395,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 72,
+      "report_count": 0,
+      "created_at_hours_ago": 493
+    },
+    {
+      "id": "lst_0072",
+      "seller_id": "shop_16",
+      "product_id": "gas-cyl-50",
+      "title_as_listed": "50kg Gas Cylinder",
+      "category": "Gas",
+      "price_kobo": 7800000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 372,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 64,
+      "report_count": 0,
+      "created_at_hours_ago": 803
+    },
+    {
+      "id": "lst_0073",
+      "seller_id": "shop_16",
+      "product_id": "gas-burner",
+      "title_as_listed": "Two-Burner Gas Cooker",
+      "category": "Gas",
+      "price_kobo": 2795000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 2,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 110,
+      "report_count": 0,
+      "created_at_hours_ago": 217
+    },
+    {
+      "id": "lst_0074",
+      "seller_id": "shop_16",
+      "product_id": "gas-hose",
+      "title_as_listed": "Gas Hose & Regulator Set",
+      "category": "Gas",
+      "price_kobo": 650000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 113,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 8,
+      "report_count": 0,
+      "created_at_hours_ago": 522
+    },
+    {
+      "id": "lst_0075",
+      "seller_id": "shop_17",
+      "product_id": "el-tv32",
+      "title_as_listed": "32\" LED TV",
+      "category": "Electronics",
+      "price_kobo": 13230000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 10,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 112,
+      "report_count": 0,
+      "created_at_hours_ago": 481
+    },
+    {
+      "id": "lst_0076",
+      "seller_id": "shop_17",
+      "product_id": "el-kettle",
+      "title_as_listed": "Electric Kettle",
+      "category": "Electronics",
+      "price_kobo": 905000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 249,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 52,
+      "report_count": 0,
+      "created_at_hours_ago": 375
+    },
+    {
+      "id": "lst_0077",
+      "seller_id": "shop_17",
+      "product_id": "el-iron",
+      "title_as_listed": "Pressing Iron",
+      "category": "Electronics",
+      "price_kobo": 850000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 32,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 52,
+      "report_count": 0,
+      "created_at_hours_ago": 497
+    },
+    {
+      "id": "lst_0078",
+      "seller_id": "shop_17",
+      "product_id": "el-blender",
+      "title_as_listed": "Blender",
+      "category": "Electronics",
+      "price_kobo": 1905000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 18,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 26,
+      "report_count": 0,
+      "created_at_hours_ago": 507
+    },
+    {
+      "id": "lst_0079",
+      "seller_id": "shop_18",
+      "product_id": "car-battery",
+      "title_as_listed": "Car Battery 75Ah",
+      "category": "Car Parts",
+      "price_kobo": 8500000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 12,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 2,
+      "report_count": 0,
+      "created_at_hours_ago": 351
+    },
+    {
+      "id": "lst_0080",
+      "seller_id": "shop_18",
+      "product_id": "car-tyre",
+      "title_as_listed": "Tyre 205/55 R16",
+      "category": "Car Parts",
+      "price_kobo": 6140000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 36,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 46,
+      "report_count": 0,
+      "created_at_hours_ago": 421
+    },
+    {
+      "id": "lst_0081",
+      "seller_id": "shop_18",
+      "product_id": "car-headlamp",
+      "title_as_listed": "Camry Headlamp",
+      "category": "Car Parts",
+      "price_kobo": 3265000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 109,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 30,
+      "report_count": 0,
+      "created_at_hours_ago": 464
+    },
+    {
+      "id": "lst_0082",
+      "seller_id": "shop_18",
+      "product_id": "car-alternator",
+      "title_as_listed": "Alternator (Corolla)",
+      "category": "Car Parts",
+      "price_kobo": 6800000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 93,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 5,
+      "report_count": 0,
+      "created_at_hours_ago": 244
+    },
+    {
+      "id": "lst_0083",
+      "seller_id": "shop_18",
+      "product_id": "car-fuel-pump",
+      "title_as_listed": "Fuel Pump",
+      "category": "Car Parts",
+      "price_kobo": 4075000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 21,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 52,
+      "report_count": 0,
+      "created_at_hours_ago": 199
+    },
+    {
+      "id": "lst_0084",
+      "seller_id": "shop_19",
+      "product_id": "fd-crayfish",
+      "title_as_listed": "Crayfish 1kg",
+      "category": "Foodstuff",
+      "price_kobo": 835000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 26,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 69,
+      "report_count": 0,
+      "created_at_hours_ago": 490
+    },
+    {
+      "id": "lst_0085",
+      "seller_id": "shop_19",
+      "product_id": "fd-pepper",
+      "title_as_listed": "Dry Pepper 1kg",
+      "category": "Foodstuff",
+      "price_kobo": 600000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 144,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 119,
+      "report_count": 0,
+      "created_at_hours_ago": 691
+    },
+    {
+      "id": "lst_0086",
+      "seller_id": "shop_19",
+      "product_id": "fd-fish",
+      "title_as_listed": "Titus Fish (carton)",
+      "category": "Foodstuff",
+      "price_kobo": 4200000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 17,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 90,
+      "report_count": 0,
+      "created_at_hours_ago": 107
+    },
+    {
+      "id": "lst_0087",
+      "seller_id": "shop_19",
+      "product_id": "fd-palm-oil",
+      "title_as_listed": "Palm Oil 5L",
+      "category": "Foodstuff",
+      "price_kobo": 765000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 377,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 8,
+      "report_count": 0,
+      "created_at_hours_ago": 761
+    },
+    {
+      "id": "lst_0088",
+      "seller_id": "shop_19",
+      "product_id": "fd-onion",
+      "title_as_listed": "Onions 10kg Bag",
+      "category": "Foodstuff",
+      "price_kobo": 1250000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 10,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 63,
+      "report_count": 0,
+      "created_at_hours_ago": 559
+    },
+    {
+      "id": "lst_0089",
+      "seller_id": "shop_20",
+      "product_id": "pv-peak",
+      "title_as_listed": "Peak Milk Carton (24 tins)",
+      "category": "Provisions",
+      "price_kobo": 2650000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 7,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 8,
+      "report_count": 0,
+      "created_at_hours_ago": 362
+    },
+    {
+      "id": "lst_0090",
+      "seller_id": "shop_20",
+      "product_id": "pv-sugar",
+      "title_as_listed": "Sugar 50kg Bag",
+      "category": "Provisions",
+      "price_kobo": 6730000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 16,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 17,
+      "report_count": 0,
+      "created_at_hours_ago": 331
+    },
+    {
+      "id": "lst_0091",
+      "seller_id": "shop_20",
+      "product_id": "pv-detergent",
+      "title_as_listed": "Detergent 10kg",
+      "category": "Provisions",
+      "price_kobo": 1450000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 17,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 107,
+      "report_count": 0,
+      "created_at_hours_ago": 542
+    },
+    {
+      "id": "lst_0092",
+      "seller_id": "shop_20",
+      "product_id": "pv-toothpaste",
+      "title_as_listed": "Toothpaste Carton",
+      "category": "Provisions",
+      "price_kobo": 1215000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 4,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 115,
+      "report_count": 0,
+      "created_at_hours_ago": 90
+    },
+    {
+      "id": "lst_0093",
+      "seller_id": "shop_20",
+      "product_id": "pv-soap",
+      "title_as_listed": "Bar Soap Carton",
+      "category": "Provisions",
+      "price_kobo": 1650000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 146,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 55,
+      "report_count": 0,
+      "created_at_hours_ago": 626
+    },
+    {
+      "id": "lst_0094",
+      "seller_id": "shop_20",
+      "product_id": "pv-tissue",
+      "title_as_listed": "Tissue Paper Carton",
+      "category": "Provisions",
+      "price_kobo": 1885000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 178,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 119,
+      "report_count": 0,
+      "created_at_hours_ago": 244
+    },
+    {
+      "id": "lst_0095",
+      "seller_id": "shop_21",
+      "product_id": "ph-usbc",
+      "title_as_listed": "USB-C Charging Cable",
+      "category": "Phone Accessories",
+      "price_kobo": 150000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 108,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 105,
+      "report_count": 0,
+      "created_at_hours_ago": 541
+    },
+    {
+      "id": "lst_0096",
+      "seller_id": "shop_21",
+      "product_id": "ph-powerbank",
+      "title_as_listed": "Power Bank 20000mAh",
+      "category": "Phone Accessories",
+      "price_kobo": 1175000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 242,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 61,
+      "report_count": 0,
+      "created_at_hours_ago": 490
+    },
+    {
+      "id": "lst_0097",
+      "seller_id": "shop_21",
+      "product_id": "ph-case",
+      "title_as_listed": "Phone Pouch",
+      "category": "Phone Accessories",
+      "price_kobo": 165000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 40,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 16,
+      "report_count": 0,
+      "created_at_hours_ago": 494
+    },
+    {
+      "id": "lst_0098",
+      "seller_id": "shop_21",
+      "product_id": "sv-phone-repair",
+      "title_as_listed": "Phone Screen Repair",
+      "category": "Services",
+      "price_kobo": 1500000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 68,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 14,
+      "report_count": 0,
+      "created_at_hours_ago": 516
+    },
+    {
+      "id": "lst_0099",
+      "seller_id": "shop_22",
+      "product_id": "gas-125",
+      "title_as_listed": "12.5kg Cooking Gas Refill",
+      "category": "Gas",
+      "price_kobo": 1390000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 37,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 110,
+      "report_count": 0,
+      "created_at_hours_ago": 124
+    },
+    {
+      "id": "lst_0100",
+      "seller_id": "shop_22",
+      "product_id": "gas-6",
+      "title_as_listed": "6kg Cooking Gas Refill",
+      "category": "Gas",
+      "price_kobo": 780000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 32,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 71,
+      "report_count": 0,
+      "created_at_hours_ago": 488
+    },
+    {
+      "id": "lst_0101",
+      "seller_id": "shop_22",
+      "product_id": "gas-burner",
+      "title_as_listed": "Two-Burner Gas Cooker",
+      "category": "Gas",
+      "price_kobo": 2850000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 7,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 112,
+      "report_count": 0,
+      "created_at_hours_ago": 580
+    },
+    {
+      "id": "lst_0102",
+      "seller_id": "shop_23",
+      "product_id": "el-fan-rechargeable",
+      "title_as_listed": "Rechargeable Standing Fan",
+      "category": "Electronics",
+      "price_kobo": 2850000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 25,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 54,
+      "report_count": 0,
+      "created_at_hours_ago": 522
+    },
+    {
+      "id": "lst_0103",
+      "seller_id": "shop_23",
+      "product_id": "el-tv32",
+      "title_as_listed": "32\" LED TV",
+      "category": "Electronics",
+      "price_kobo": 14040000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 127,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 58,
+      "report_count": 0,
+      "created_at_hours_ago": 608
+    },
+    {
+      "id": "lst_0104",
+      "seller_id": "shop_23",
+      "product_id": "el-freezer",
+      "title_as_listed": "Deep Freezer 200L",
+      "category": "Electronics",
+      "price_kobo": 28215000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 113,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 11,
+      "report_count": 0,
+      "created_at_hours_ago": 608
+    },
+    {
+      "id": "lst_0105",
+      "seller_id": "shop_23",
+      "product_id": "el-ac15",
+      "title_as_listed": "1.5HP Air Conditioner",
+      "category": "Electronics",
+      "price_kobo": 37345000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 150,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 16,
+      "report_count": 0,
+      "created_at_hours_ago": 466
+    },
+    {
+      "id": "lst_0106",
+      "seller_id": "shop_24",
+      "product_id": "sv-tailor",
+      "title_as_listed": "Tailoring (per outfit)",
+      "category": "Services",
+      "price_kobo": 1105000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 10,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 31,
+      "report_count": 0,
+      "created_at_hours_ago": 335
+    },
+    {
+      "id": "lst_0107",
+      "seller_id": "shop_24",
+      "product_id": "sv-barbing",
+      "title_as_listed": "Barbing (haircut)",
+      "category": "Services",
+      "price_kobo": 300000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 269,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 53,
+      "report_count": 0,
+      "created_at_hours_ago": 748
+    },
+    {
+      "id": "lst_0108",
+      "seller_id": "shop_25",
+      "product_id": "fd-rice25",
+      "title_as_listed": "25kg Bag of Rice",
+      "category": "Foodstuff",
+      "price_kobo": 4700000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 276,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 12,
+      "report_count": 0,
+      "created_at_hours_ago": 695
+    },
+    {
+      "id": "lst_0109",
+      "seller_id": "shop_25",
+      "product_id": "fd-beans",
+      "title_as_listed": "Beans 5kg",
+      "category": "Foodstuff",
+      "price_kobo": 930000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 96,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 51,
+      "report_count": 0,
+      "created_at_hours_ago": 660
+    },
+    {
+      "id": "lst_0110",
+      "seller_id": "shop_25",
+      "product_id": "fd-garri",
+      "title_as_listed": "Garri 5kg",
+      "category": "Foodstuff",
+      "price_kobo": 430000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 112,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 85,
+      "report_count": 0,
+      "created_at_hours_ago": 261
+    },
+    {
+      "id": "lst_0111",
+      "seller_id": "shop_25",
+      "product_id": "fd-eggs",
+      "title_as_listed": "Crate of Eggs",
+      "category": "Foodstuff",
+      "price_kobo": 520000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 148,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 111,
+      "report_count": 0,
+      "created_at_hours_ago": 733
+    },
+    {
+      "id": "lst_0112",
+      "seller_id": "shop_25",
+      "product_id": "fd-chicken",
+      "title_as_listed": "Frozen Chicken 1kg",
+      "category": "Foodstuff",
+      "price_kobo": 640000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 35,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 89,
+      "report_count": 0,
+      "created_at_hours_ago": 158
+    },
+    {
+      "id": "lst_0113",
+      "seller_id": "shop_26",
+      "product_id": "bm-cement",
+      "title_as_listed": "50kg Dangote Cement",
+      "category": "Building Materials",
+      "price_kobo": 1175000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 52,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 25,
+      "report_count": 0,
+      "created_at_hours_ago": 194
+    },
+    {
+      "id": "lst_0114",
+      "seller_id": "shop_26",
+      "product_id": "bm-iron12",
+      "title_as_listed": "Iron Rod 12mm",
+      "category": "Building Materials",
+      "price_kobo": 980000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 188,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 45,
+      "report_count": 0,
+      "created_at_hours_ago": 526
+    },
+    {
+      "id": "lst_0115",
+      "seller_id": "shop_26",
+      "product_id": "bm-roofing",
+      "title_as_listed": "Roofing Sheet (per metre)",
+      "category": "Building Materials",
+      "price_kobo": 420000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 70,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 17,
+      "report_count": 0,
+      "created_at_hours_ago": 245
+    },
+    {
+      "id": "lst_0116",
+      "seller_id": "shop_26",
+      "product_id": "bm-tiles",
+      "title_as_listed": "Floor Tiles (per carton)",
+      "category": "Building Materials",
+      "price_kobo": 1225000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 37,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 30,
+      "report_count": 0,
+      "created_at_hours_ago": 610
+    },
+    {
+      "id": "lst_0117",
+      "seller_id": "shop_27",
+      "product_id": "sv-gen-repair",
+      "title_as_listed": "Generator Repair",
+      "category": "Services",
+      "price_kobo": 1500000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 231,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 82,
+      "report_count": 0,
+      "created_at_hours_ago": 479
+    },
+    {
+      "id": "lst_0118",
+      "seller_id": "shop_27",
+      "product_id": "gen-oil",
+      "title_as_listed": "Generator Engine Oil 1L",
+      "category": "Generators",
+      "price_kobo": 405000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 28,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 52,
+      "report_count": 0,
+      "created_at_hours_ago": 383
+    },
+    {
+      "id": "lst_0119",
+      "seller_id": "shop_27",
+      "product_id": "gen-plug",
+      "title_as_listed": "Generator Spark Plug",
+      "category": "Generators",
+      "price_kobo": 250000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 19,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 17,
+      "report_count": 0,
+      "created_at_hours_ago": 212
+    },
+    {
+      "id": "lst_0120",
+      "seller_id": "shop_27",
+      "product_id": "gen-fuel-pipe",
+      "title_as_listed": "Generator Fuel Pipe",
+      "category": "Generators",
+      "price_kobo": 180000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 136,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 33,
+      "report_count": 0,
+      "created_at_hours_ago": 425
+    },
+    {
+      "id": "lst_0121",
+      "seller_id": "shop_28",
+      "product_id": "pv-water",
+      "title_as_listed": "Bottled Water Pack (12)",
+      "category": "Provisions",
+      "price_kobo": 240000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 135,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 44,
+      "report_count": 0,
+      "created_at_hours_ago": 703
+    },
+    {
+      "id": "lst_0122",
+      "seller_id": "shop_28",
+      "product_id": "pv-malt",
+      "title_as_listed": "Malt Drink Crate",
+      "category": "Provisions",
+      "price_kobo": 805000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 15,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 50,
+      "report_count": 0,
+      "created_at_hours_ago": 202
+    },
+    {
+      "id": "lst_0123",
+      "seller_id": "shop_28",
+      "product_id": "pv-golden-morn",
+      "title_as_listed": "Golden Morn 1kg",
+      "category": "Provisions",
+      "price_kobo": 360000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 209,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 3,
+      "report_count": 0,
+      "created_at_hours_ago": 619
+    },
+    {
+      "id": "lst_0124",
+      "seller_id": "shop_28",
+      "product_id": "pv-milo",
+      "title_as_listed": "Milo Refill 500g",
+      "category": "Provisions",
+      "price_kobo": 530000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 30,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 1,
+      "report_count": 0,
+      "created_at_hours_ago": 65
+    },
+    {
+      "id": "lst_0125",
+      "seller_id": "shop_29",
+      "product_id": "ph-tecno-charger",
+      "title_as_listed": "Tecno Phone Charger",
+      "category": "Phone Accessories",
+      "price_kobo": 250000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 111,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 42,
+      "report_count": 0,
+      "created_at_hours_ago": 489
+    },
+    {
+      "id": "lst_0126",
+      "seller_id": "shop_29",
+      "product_id": "ph-usbc",
+      "title_as_listed": "USB-C Charging Cable",
+      "category": "Phone Accessories",
+      "price_kobo": 150000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 104,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 49,
+      "report_count": 0,
+      "created_at_hours_ago": 663
+    },
+    {
+      "id": "lst_0127",
+      "seller_id": "shop_29",
+      "product_id": "ph-earpiece",
+      "title_as_listed": "Wired Earpiece",
+      "category": "Phone Accessories",
+      "price_kobo": 185000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 191,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 100,
+      "report_count": 0,
+      "created_at_hours_ago": 222
+    },
+    {
+      "id": "lst_0128",
+      "seller_id": "shop_29",
+      "product_id": "ph-screen-guard",
+      "title_as_listed": "Screen Protector",
+      "category": "Phone Accessories",
+      "price_kobo": 100000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 27,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 10,
+      "report_count": 0,
+      "created_at_hours_ago": 620
+    },
+    {
+      "id": "lst_0129",
+      "seller_id": "shop_30",
+      "product_id": "gas-125",
+      "title_as_listed": "12.5kg Cooking Gas Refill",
+      "category": "Gas",
+      "price_kobo": 1435000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 309,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 83,
+      "report_count": 0,
+      "created_at_hours_ago": 342
+    },
+    {
+      "id": "lst_0130",
+      "seller_id": "shop_30",
+      "product_id": "gas-cyl-125",
+      "title_as_listed": "12.5kg Gas Cylinder (new)",
+      "category": "Gas",
+      "price_kobo": 3200000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 34,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 36,
+      "report_count": 0,
+      "created_at_hours_ago": 469
+    },
+    {
+      "id": "lst_0131",
+      "seller_id": "shop_30",
+      "product_id": "gas-6",
+      "title_as_listed": "6kg Cooking Gas Refill",
+      "category": "Gas",
+      "price_kobo": 820000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "unconfirmed",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 369,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 70,
+      "report_count": 0,
+      "created_at_hours_ago": 883
+    },
+    {
+      "id": "lst_0132",
+      "seller_id": "shop_30",
+      "product_id": "gas-hose",
+      "title_as_listed": "Gas Hose & Regulator Set",
+      "category": "Gas",
+      "price_kobo": 650000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 33,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 47,
+      "report_count": 0,
+      "created_at_hours_ago": 384
+    },
+    {
+      "id": "lst_0133",
+      "seller_id": "shop_31",
+      "product_id": "pv-golden-morn",
+      "title_as_listed": "Golden Morn 1kg",
+      "category": "Provisions",
+      "price_kobo": 360000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 364,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 23,
+      "report_count": 0,
+      "created_at_hours_ago": 687
+    },
+    {
+      "id": "lst_0134",
+      "seller_id": "shop_31",
+      "product_id": "pv-bournvita",
+      "title_as_listed": "Bournvita Refill 500g",
+      "category": "Provisions",
+      "price_kobo": 470000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 16,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 120,
+      "report_count": 0,
+      "created_at_hours_ago": 552
+    },
+    {
+      "id": "lst_0135",
+      "seller_id": "shop_31",
+      "product_id": "pv-water",
+      "title_as_listed": "Bottled Water Pack (12)",
+      "category": "Provisions",
+      "price_kobo": 230000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "low",
+      "condition": "used",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 39,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 19,
+      "report_count": 0,
+      "created_at_hours_ago": 222
+    },
+    {
+      "id": "lst_0136",
+      "seller_id": "shop_31",
+      "product_id": "fd-indomie",
+      "title_as_listed": "Indomie Carton (40 packs)",
+      "category": "Foodstuff",
+      "price_kobo": 930000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 16,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 64,
+      "report_count": 0,
+      "created_at_hours_ago": 588
+    },
+    {
+      "id": "lst_0137",
+      "seller_id": "shop_31",
+      "product_id": "pv-tissue",
+      "title_as_listed": "Tissue Paper Carton",
+      "category": "Provisions",
+      "price_kobo": 1850000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 199,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 110,
+      "report_count": 0,
+      "created_at_hours_ago": 278
+    },
+    {
+      "id": "lst_0138",
+      "seller_id": "shop_32",
+      "product_id": "sv-phone-repair",
+      "title_as_listed": "Phone Screen Repair",
+      "category": "Services",
+      "price_kobo": 1425000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 24,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 51,
+      "report_count": 0,
+      "created_at_hours_ago": 499
+    },
+    {
+      "id": "lst_0139",
+      "seller_id": "shop_32",
+      "product_id": "ph-iphone-screen",
+      "title_as_listed": "iPhone 13 Screen Replacement",
+      "category": "Phone Accessories",
+      "price_kobo": 5800000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 29,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 55,
+      "report_count": 0,
+      "created_at_hours_ago": 508
+    },
+    {
+      "id": "lst_0140",
+      "seller_id": "shop_32",
+      "product_id": "ph-usbc",
+      "title_as_listed": "USB-C Charging Cable",
+      "category": "Phone Accessories",
+      "price_kobo": 150000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 76,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 96,
+      "report_count": 0,
+      "created_at_hours_ago": 217
+    },
+    {
+      "id": "lst_0141",
+      "seller_id": "shop_32",
+      "product_id": "ph-memory-card",
+      "title_as_listed": "Memory Card 32GB",
+      "category": "Phone Accessories",
+      "price_kobo": 650000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 23,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 47,
+      "report_count": 0,
+      "created_at_hours_ago": 511
+    },
+    {
+      "id": "lst_0142",
+      "seller_id": "shop_33",
+      "product_id": "fd-yam",
+      "title_as_listed": "Yam Tubers (5 pieces)",
+      "category": "Foodstuff",
+      "price_kobo": 1100000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 3,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 57,
+      "report_count": 0,
+      "created_at_hours_ago": 331
+    },
+    {
+      "id": "lst_0143",
+      "seller_id": "shop_33",
+      "product_id": "fd-garri",
+      "title_as_listed": "Garri 5kg",
+      "category": "Foodstuff",
+      "price_kobo": 425000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "out",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 6,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 117,
+      "report_count": 0,
+      "created_at_hours_ago": 290
+    },
+    {
+      "id": "lst_0144",
+      "seller_id": "shop_33",
+      "product_id": "fd-beans",
+      "title_as_listed": "Beans 5kg",
+      "category": "Foodstuff",
+      "price_kobo": 950000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 3,
+      "evidence": "agent",
+      "status": "active",
+      "views_7d": 117,
+      "report_count": 0,
+      "created_at_hours_ago": 323
+    },
+    {
+      "id": "lst_0145",
+      "seller_id": "shop_33",
+      "product_id": "fd-onion",
+      "title_as_listed": "Onions 10kg Bag",
+      "category": "Foodstuff",
+      "price_kobo": 1215000,
+      "price_negotiable": false,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 37,
+      "evidence": "buyer_report",
+      "status": "active",
+      "views_7d": 29,
+      "report_count": 0,
+      "created_at_hours_ago": 384
+    },
+    {
+      "id": "lst_0146",
+      "seller_id": "shop_33",
+      "product_id": "fd-eggs",
+      "title_as_listed": "Crate of Eggs",
+      "category": "Foodstuff",
+      "price_kobo": 520000,
+      "price_negotiable": true,
+      "unit": "each",
+      "stock_status": "in",
+      "condition": "new",
+      "photo_url": null,
+      "confirmed_at_hours_ago": 359,
+      "evidence": "self",
+      "status": "active",
+      "views_7d": 101,
+      "report_count": 0,
+      "created_at_hours_ago": 788
+    }
+  ],
+  "verification_requests": [
+    {
+      "id": "ver_0001",
+      "seller_id": "shop_02",
+      "tier_requested": "visit",
+      "note": "Stall photographed, GPS captured at the shop. Wants the Verified stall badge.",
+      "evidence_photo_url": null,
+      "agent_name": "Field agent — Tobias",
+      "state": "pending",
+      "created_at_hours_ago": 26,
+      "reviewed_by": null,
+      "reviewed_at_hours_ago": null,
+      "rejection_reason": null
+    },
+    {
+      "id": "ver_0002",
+      "seller_id": "shop_15",
+      "tier_requested": "id",
+      "note": "Uploaded NIN slip. Name on ID matches the business owner.",
+      "evidence_photo_url": null,
+      "agent_name": null,
+      "state": "pending",
+      "created_at_hours_ago": 14,
+      "reviewed_by": null,
+      "reviewed_at_hours_ago": null,
+      "rejection_reason": null
+    },
+    {
+      "id": "ver_0003",
+      "seller_id": "shop_24",
+      "tier_requested": "id",
+      "note": "Blurry ID photo, cannot read the name.",
+      "evidence_photo_url": null,
+      "agent_name": null,
+      "state": "pending",
+      "created_at_hours_ago": 8,
+      "reviewed_by": null,
+      "reviewed_at_hours_ago": null,
+      "rejection_reason": null
+    }
+  ],
+  "reports": [
+    {
+      "id": "rep_0001",
+      "listing_id": "lst_0005",
+      "reason": "wrong_price",
+      "note": "Price on the app was ₦185,000 but the shop said ₦240,000 when I got there.",
+      "reporter": "usr_buyer_demo",
+      "state": "open",
+      "created_at_hours_ago": 20,
+      "handled_by": null,
+      "handled_at_hours_ago": null,
+      "resolution_note": null
+    },
+    {
+      "id": "rep_0002",
+      "listing_id": "lst_0031",
+      "reason": "not_available",
+      "note": "Went to the stall twice, they never had this item in stock.",
+      "reporter": "usr_buyer_demo",
+      "state": "open",
+      "created_at_hours_ago": 6,
+      "handled_by": null,
+      "handled_at_hours_ago": null,
+      "resolution_note": null
+    },
+    {
+      "id": "rep_0003",
+      "listing_id": "lst_0062",
+      "reason": "wrong_location",
+      "note": "The pin sends you to a totally different street. Shop is not at Creek Road.",
+      "reporter": "usr_buyer_demo",
+      "state": "open",
+      "created_at_hours_ago": 3,
+      "handled_by": null,
+      "handled_at_hours_ago": null,
+      "resolution_note": null
+    }
+  ],
+  "pin_flags": [
+    {
+      "id": "pin_0001",
+      "seller_id": "shop_27",
+      "claimed_zone": "rumuokoro",
+      "distance_km": 4.8,
+      "lat": 4.8321,
+      "lng": 6.9012,
+      "note": "Pin dropped ~4.8 km outside Rumuokoro boundary (suspected pin-dropping into a richer zone).",
+      "state": "open",
+      "created_at_hours_ago": 30
+    },
+    {
+      "id": "pin_0002",
+      "seller_id": "shop_19",
+      "claimed_zone": "creek-road",
+      "distance_km": 2.6,
+      "lat": 4.7892,
+      "lng": 7.021,
+      "note": "Pin is ~2.6 km outside Creek Road boundary.",
+      "state": "open",
+      "created_at_hours_ago": 11
+    }
+  ],
+  "banned_attempts": [
+    {
+      "id": "ban_0001",
+      "seller_id": "shop_09",
+      "attempted_name": "Tramadol 500mg (prescription drug)",
+      "reason": "prescription_drugs",
+      "raw_input": "tramadol 500mg",
+      "state": "blocked",
+      "created_at_hours_ago": 52
+    },
+    {
+      "id": "ban_0002",
+      "seller_id": "shop_23",
+      "attempted_name": "Rolex watch (replica)",
+      "reason": "counterfeit",
+      "raw_input": "rolex replica",
+      "state": "blocked",
+      "created_at_hours_ago": 18
+    }
+  ],
+  "search_queries": [
+    {
+      "raw_query": "wedding cake",
+      "cluster": "Mile 1",
+      "result_count": 0,
+      "hours_ago": 6
+    },
+    {
+      "raw_query": "solar panel",
+      "cluster": "Mile 1",
+      "result_count": 0,
+      "hours_ago": 9
+    },
+    {
+      "raw_query": "school bag",
+      "cluster": "Ada George",
+      "result_count": 0,
+      "hours_ago": 12
+    },
+    {
+      "raw_query": "bulb",
+      "cluster": "Mile 3",
+      "result_count": 0,
+      "hours_ago": 15
+    },
+    {
+      "raw_query": "washing machine",
+      "cluster": "Creek Road",
+      "result_count": 0,
+      "hours_ago": 18
+    },
+    {
+      "raw_query": "baby pram",
+      "cluster": "Rumuokoro",
+      "result_count": 0,
+      "hours_ago": 22
+    },
+    {
+      "raw_query": "iron rod 16mm",
+      "cluster": "Choba",
+      "result_count": 0,
+      "hours_ago": 26
+    },
+    {
+      "raw_query": "paint brush",
+      "cluster": "Mile 1",
+      "result_count": 0,
+      "hours_ago": 30
+    },
+    {
+      "raw_query": "printer ink",
+      "cluster": "Ada George",
+      "result_count": 0,
+      "hours_ago": 33
+    },
+    {
+      "raw_query": "generator",
+      "cluster": "Mile 1",
+      "result_count": 3,
+      "hours_ago": 2
+    },
+    {
+      "raw_query": "indomine",
+      "cluster": "Mile 1",
+      "result_count": 2,
+      "hours_ago": 4
+    },
+    {
+      "raw_query": "cement",
+      "cluster": "Mile 3",
+      "result_count": 4,
+      "hours_ago": 5
+    }
+  ],
+  "demand_posts": [
+    {
+      "id": "dmd_0001",
+      "raw_text": "I need a 1.5HP air conditioner, anyone around Woji?",
+      "cluster": "Ada George",
+      "created_at_hours_ago": 5
+    },
+    {
+      "id": "dmd_0002",
+      "raw_text": "Looking for wedding cake in Mile 1",
+      "cluster": "Mile 1",
+      "created_at_hours_ago": 7
+    },
+    {
+      "id": "dmd_0003",
+      "raw_text": "Solar panel and inverter, 1KVA",
+      "cluster": "Mile 1",
+      "created_at_hours_ago": 10
+    },
+    {
+      "id": "dmd_0004",
+      "raw_text": "School bag for primary 3",
+      "cluster": "Ada George",
+      "created_at_hours_ago": 13
+    }
+  ],
+  "confirm_requests": [],
+  "accuracy_reports": [],
+  "audit_log": [],
+  "events": [],
+  "admin_sessions": []
+}

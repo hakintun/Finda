@@ -467,6 +467,49 @@ export function toggleSellerStatus(db: any, actorId: string, sellerId: string) {
   return { ok: true as const, status: next };
 }
 
+/**
+ * Delists or restores any registered Customer (`db.users` — Buyer or Seller),
+ * immediately revoking active sessions and syncing any owned shop (`db.sellers`).
+ */
+export function toggleCustomerStatus(db: any, actorId: string, userId: string) {
+  const user = (db.users || []).find((u: any) => u.id === userId);
+  if (!user) return { ok: false as const, error: "not_found" };
+  const before = user.status || "active";
+  const next = before === "active" ? "delisted" : "active";
+  user.status = next;
+
+  // Revoke active frontend sessions immediately when delisted
+  if (next !== "active") {
+    db.user_sessions = (db.user_sessions || []).filter(
+      (sess: any) => sess.user_id !== user.id
+    );
+  }
+
+  // Sync any shops linked to this customer account
+  const linkedShops = (db.sellers || []).filter(
+    (s: any) => s.user_id === user.id
+  );
+  for (const s of linkedShops) {
+    s.status = next;
+  }
+
+  audit(
+    db,
+    actorId,
+    "user",
+    user.id,
+    next === "delisted" ? "customer_delisted" : "customer_restored",
+    { status: before },
+    { status: next, synced_shops: linkedShops.map((s: any) => s.id) }
+  );
+  trackEvent(
+    db,
+    next === "delisted" ? "customer_delisted" : "customer_restored",
+    { user_id: user.id }
+  );
+  return { ok: true as const, status: next };
+}
+
 export function addBannedTerm(db: any, actorId: string, term: string, reason: string) {
   const t = (term || "").trim().toLowerCase();
   if (!t) return { ok: false as const, error: "empty" };

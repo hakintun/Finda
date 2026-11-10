@@ -4,15 +4,36 @@ import * as React from "react";
 
 const STORAGE_KEY = "finda_saved_ads_v1";
 
-export function getSavedIds(): string[] {
+export function readSavedIds(): string[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : [];
   } catch {
     return [];
   }
+}
+
+export const getSavedIds = readSavedIds;
+
+export function toggleSavedId(id: string): boolean {
+  const current = new Set(readSavedIds());
+  let nextSaved = false;
+  if (current.has(id)) {
+    current.delete(id);
+  } else {
+    current.add(id);
+    nextSaved = true;
+  }
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...current]));
+    window.dispatchEvent(new CustomEvent("finda:saved-changed"));
+  } catch {
+    // ignore storage quota errors
+  }
+  return nextSaved;
 }
 
 export function SaveAdButton({
@@ -25,50 +46,32 @@ export function SaveAdButton({
   const [saved, setSaved] = React.useState(false);
 
   React.useEffect(() => {
-    setSaved(getSavedIds().includes(listingId));
+    const sync = () => setSaved(readSavedIds().includes(listingId));
+    sync();
+    window.addEventListener("finda:saved-changed", sync);
+    return () => window.removeEventListener("finda:saved-changed", sync);
   }, [listingId]);
-
-  function toggle(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    const current = getSavedIds();
-    const next = current.includes(listingId)
-      ? current.filter((x) => x !== listingId)
-      : [listingId, ...current];
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      window.dispatchEvent(new CustomEvent("finda-saved-change"));
-    } catch {
-      // ignore storage quota errors
-    }
-    setSaved(!saved);
-  }
-
-  if (compact) {
-    return (
-      <button
-        type="button"
-        onClick={toggle}
-        aria-label={saved ? "Remove from saved ads" : "Save ad"}
-        title={saved ? "Saved" : "Save ad"}
-        className={`inline-flex h-8 w-8 items-center justify-center rounded-xl border transition cursor-pointer ${
-          saved
-            ? "border-[#FCA5A5] bg-[#FEF2F2] text-[#DC2626]"
-            : "border-[#E4E1D6] bg-[#FAF9F5] text-[#4B5563] hover:border-[#064E3B] hover:text-[#064E3B]"
-        }`}
-      >
-        {saved ? "♥" : "♡"}
-      </button>
-    );
-  }
 
   return (
     <button
       type="button"
-      onClick={toggle}
-      className={`btn btn-sm ${saved ? "btn-danger" : ""}`}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setSaved(toggleSavedId(listingId));
+      }}
+      aria-label={saved ? "Remove from saved items" : "Save item"}
+      title={saved ? "Saved" : "Bookmark item"}
+      className={`inline-flex items-center justify-center rounded-full border transition cursor-pointer ${
+        compact ? "h-9 w-9 text-sm shadow-sm" : "min-h-10 px-3.5 gap-1.5 text-xs font-bold"
+      } ${
+        saved
+          ? "border-[#065F46] bg-[#ECFDF5] text-[#065F46]"
+          : "border-[#DEDBD0] bg-white text-[#374151] hover:border-[#065F46] hover:text-[#065F46]"
+      }`}
     >
-      {saved ? "♥ Saved" : "♡ Save Ad"}
+      <span aria-hidden="true">{saved ? "♥" : "♡"}</span>
+      {!compact ? <span>{saved ? "Saved" : "Save"}</span> : null}
     </button>
   );
 }

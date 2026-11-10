@@ -135,6 +135,12 @@ export async function toggleSellerStatus(formData: FormData) {
   run((db) => ops.toggleSellerStatus(db, session.actor_id, sellerId));
 }
 
+export async function toggleCustomerStatus(formData: FormData) {
+  const session = await requireAdmin();
+  const userId = String(formData.get("user_id") || "");
+  run((db) => ops.toggleCustomerStatus(db, session.actor_id, userId));
+}
+
 export async function addBannedTerm(formData: FormData) {
   const session = await requireAdmin();
   run((db) =>

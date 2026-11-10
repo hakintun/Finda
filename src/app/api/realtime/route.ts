@@ -6,11 +6,15 @@ export const runtime = "nodejs";
 export async function GET(req: Request) {
   const encoder = new TextEncoder();
   let cleanup: (() => void) | null = null;
+  let diskPoll: ReturnType<typeof setInterval> | null = null;
   let heartbeat: ReturnType<typeof setInterval> | null = null;
 
   const stream = new ReadableStream({
     start(controller) {
-      const send = (obj: unknown) => {
+      let lastSentVersion = getDBVersion();
+
+      const send = (obj: { version: number; updatedAt?: string }) => {
+        lastSentVersion = obj.version;
         try {
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify(obj)}\n\n`)
@@ -21,11 +25,22 @@ export async function GET(req: Request) {
       };
 
       // Send initial version snapshot immediately
-      send({ version: getDBVersion() });
+      send({ version: lastSentVersion });
 
+      // 0ms in-process broadcast
       cleanup = subscribeDBChanges((payload) => {
-        send(payload);
+        if (payload.version !== lastSentVersion) {
+          send(payload);
+        }
       });
+
+      // Cross-worker / Turbopack fallback: lightweight statSync check every 750ms
+      diskPoll = setInterval(() => {
+        const current = getDBVersion();
+        if (current !== lastSentVersion) {
+          send({ version: current, updatedAt: new Date().toISOString() });
+        }
+      }, 750);
 
       // Keep proxy connections alive every 20s
       heartbeat = setInterval(() => {
@@ -38,6 +53,7 @@ export async function GET(req: Request) {
 
       req.signal.addEventListener("abort", () => {
         if (cleanup) cleanup();
+        if (diskPoll) clearInterval(diskPoll);
         if (heartbeat) clearInterval(heartbeat);
         try {
           controller.close();
@@ -48,6 +64,7 @@ export async function GET(req: Request) {
     },
     cancel() {
       if (cleanup) cleanup();
+      if (diskPoll) clearInterval(diskPoll);
       if (heartbeat) clearInterval(heartbeat);
     },
   });

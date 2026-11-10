@@ -34,7 +34,12 @@ export default function OnboardingWizard({
   const [busy, setBusy] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [demoCode, setDemoCode] = useState<string | null>(null);
+  const [waLink, setWaLink] = useState<string | null>(null);
+  const [verifyChannel, setVerifyChannel] = useState<"email" | "phone" | "whatsapp">(
+    (initialDraft as any).verify_channel || "whatsapp"
+  );
   const [phoneInput, setPhoneInput] = useState(initialDraft.phone || "");
+  const [emailInput, setEmailInput] = useState((initialDraft as any).email || "");
   const [publishWarnings, setPublishWarnings] = useState<string[]>([]);
 
   /* ------------------------------------------------ persistence */
@@ -65,12 +70,18 @@ export default function OnboardingWizard({
     setBusy(true); setErrors([]);
     const res = await fetch("/api/onboard", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "send-otp", phone: phoneInput }),
+      body: JSON.stringify({
+        action: "send-otp",
+        channel: verifyChannel,
+        phone: phoneInput,
+        email: emailInput || undefined,
+      }),
     });
     const data = await res.json();
     setBusy(false);
     if (!data.ok) return setErrors(data.errors || ["Could not send the code."]);
     setDemoCode(data.demo_code);
+    setWaLink(data.whatsapp_link || null);
     setDraft(data.draft);
   }
 
@@ -183,47 +194,141 @@ export default function OnboardingWizard({
       {/* ------------------------------------------------ STEP 1 */}
       {step === 1 && (
         <div className="card">
-          <h2 className="card-title">Step 1 · Your phone number</h2>
-          <p className="muted small">Buyers only see this when they tap “Show number”. We use it to send you the daily one-tap reminder.</p>
+          <h2 className="card-title">Step 1 · Verify via WhatsApp, Phone SMS, or Email</h2>
+          <p className="muted small">
+            Choose your preferred verification channel. Buyers only see your shop number when they tap “Show contact”.
+          </p>
 
           {!draft.otp_sent ? (
             <>
-              <label className="field">
-                <span className="lbl">Phone number</span>
-                <input type="tel" inputMode="numeric" placeholder="0803 123 4567" value={phoneInput}
-                  onChange={(e) => setPhoneInput(e.target.value)} />
-                <span className="hint">{toE164(phoneInput) ? `Saved as ${toE164(phoneInput)}` : "Nigerian numbers only (+234)"}</span>
+              <div className="field mb16">
+                <span className="lbl">Verification channel</span>
+                <div className="grid grid-3" style={{ gap: 8 }}>
+                  {(
+                    [
+                      { id: "whatsapp", label: "💬 WhatsApp" },
+                      { id: "phone", label: "📱 Phone SMS" },
+                      { id: "email", label: "📧 Email" },
+                    ] as const
+                  ).map((ch) => (
+                    <button
+                      key={ch.id}
+                      type="button"
+                      onClick={() => setVerifyChannel(ch.id)}
+                      className="btn btn-sm"
+                      style={{
+                        borderColor: verifyChannel === ch.id ? "var(--green-700)" : undefined,
+                        background: verifyChannel === ch.id ? "var(--green-50)" : undefined,
+                      }}
+                    >
+                      {verifyChannel === ch.id ? "✓ " : ""}
+                      {ch.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <label className="field mb16">
+                <span className="lbl">Shop Phone / WhatsApp Number</span>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  placeholder="e.g. 0803 000 0000"
+                  value={phoneInput}
+                  onChange={(e) => setPhoneInput(e.target.value)}
+                />
+                <span className="hint">
+                  {toE164(phoneInput) ? `Saved as ${toE164(phoneInput)}` : "Nigerian numbers (+234)"}
+                </span>
               </label>
+
+              {verifyChannel === "email" ? (
+                <label className="field mb16">
+                  <span className="lbl">Email Address (for verification code)</span>
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                  />
+                </label>
+              ) : null}
+
               <button className="btn btn-primary btn-block mt16" onClick={sendOtp} disabled={busy}>
-                {busy ? "Sending…" : "Send me the code"}
+                {busy ? "Sending…" : `Send 6-digit code via ${verifyChannel.toUpperCase()}`}
               </button>
             </>
           ) : (
             <>
-              <div className="notice notice-info mb16">
-                Demo build — no SMS is sent. <strong>Your code is {demoCode}</strong>
-                <div className="tiny" style={{ marginTop: 4 }}>In production Member 2 wires this to Termii / WhatsApp.</div>
-              </div>
+              {demoCode ? (
+                <div className="notice notice-info mb16">
+                  Instant sandbox verification code ({verifyChannel.toUpperCase()}):{" "}
+                  <strong className="mono">{demoCode}</strong>{" "}
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    style={{ marginLeft: 8 }}
+                    onClick={() => setOtpCode(demoCode)}
+                  >
+                    Auto-fill
+                  </button>
+                </div>
+              ) : null}
+              {waLink ? (
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-wa btn-sm mb16"
+                >
+                  💬 Open Verification Code in WhatsApp
+                </a>
+              ) : null}
               <label className="field">
-                <span className="lbl">6-digit code</span>
-                <input type="text" inputMode="numeric" maxLength={6} placeholder="123456"
-                  value={otpCode} onChange={(e) => setOtpCode(e.target.value)} />
-                <span className="hint">Sent to {draft.phone || phoneInput}</span>
+                <span className="lbl">6-digit verification code</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="123456"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                />
+                <span className="hint">
+                  Sent via {verifyChannel.toUpperCase()} to{" "}
+                  {verifyChannel === "email" ? emailInput : draft.phone || phoneInput}
+                </span>
               </label>
               <label className="checkline mt16">
-                <input type="checkbox" checked={draft.consent} onChange={(e) => patch({ consent: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={draft.consent}
+                  onChange={(e) => patch({ consent: e.target.checked })}
+                />
                 <span>
-                  I agree that Finda can store my shop name, phone number and location, and show my items to buyers
-                  searching nearby. See the <a href="/privacy" target="_blank" rel="noreferrer">privacy notice</a>.
+                  I agree that Finda can store my shop name, contact and location, and show my items to buyers
+                  searching nearby. See the{" "}
+                  <a href="/privacy" target="_blank" rel="noreferrer">
+                    privacy notice
+                  </a>
+                  .
                 </span>
               </label>
               <div className="btn-row mt16">
-                <button className="btn btn-primary grow" onClick={verifyOtp} disabled={busy || !draft.consent}>
+                <button
+                  className="btn btn-primary grow"
+                  onClick={verifyOtp}
+                  disabled={busy || !draft.consent}
+                >
                   {busy ? "Checking…" : "Confirm code"}
                 </button>
-                <button className="btn" onClick={sendOtp} disabled={busy}>Resend</button>
+                <button className="btn" onClick={sendOtp} disabled={busy}>
+                  Resend
+                </button>
               </div>
-              {!draft.consent ? <div className="tiny muted mt8">Tick the consent box to continue.</div> : null}
+              {!draft.consent ? (
+                <div className="tiny muted mt8">Tick the consent box to continue.</div>
+              ) : null}
             </>
           )}
         </div>
@@ -235,16 +340,16 @@ export default function OnboardingWizard({
           <h2 className="card-title">Step 2 · Your shop</h2>
           <p className="muted small">Write it the way customers say it out loud.</p>
           <label className="field mb16">
-            <span className="lbl">Shop name</span>
-            <input type="text" placeholder="e.g. Ngozi Provisions" value={draft.business_name}
+            <span className="lbl">Shop or stall name</span>
+            <input type="text" placeholder="e.g. Sunlight Electricals & Solar" value={draft.business_name}
               onChange={(e) => patch({ business_name: e.target.value }, 2)} autoFocus />
             <span className="hint">This is the name buyers will see on every result card.</span>
           </label>
           <label className="field mb16">
             <span className="lbl">Who should buyers ask for?</span>
-            <input type="text" placeholder="e.g. Mama Ngozi" value={draft.owner_name}
+            <input type="text" placeholder="e.g. Shop Manager / First Name" value={draft.owner_name}
               onChange={(e) => patch({ owner_name: e.target.value }, 2)} />
-            <span className="hint">Shown on the “Get there” page: “Ask for Mama Ngozi at line 4.”</span>
+            <span className="hint">Shown on the directions page so walk-in buyers know who to ask for.</span>
           </label>
           <label className="field">
             <span className="lbl">What kind of place is it?</span>

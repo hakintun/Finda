@@ -4,6 +4,7 @@ import {
   MarketplaceFooter,
   TopBar,
 } from "@/components/buyer/shell";
+import { ProductArtwork } from "@/components/buyer/product-artwork";
 import { RevealPhoneButton } from "@/components/buyer/reveal-phone-button";
 import { SaveAdButton } from "@/components/buyer/save-ad-button";
 import {
@@ -26,7 +27,7 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export default async function FindaStockDetailPage({
+export default async function FindaListingDetailPage({
   params,
   searchParams,
 }: {
@@ -64,21 +65,21 @@ export default async function FindaStockDetailPage({
 
   if (!listing || !seller) {
     return (
-      <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
+      <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
         <TopBar customer={topCustomer} />
         <main className="mx-auto w-full max-w-xl flex-1 px-4 py-14 text-center">
-          <div className="rounded-2xl border border-[#E4E1D6] bg-white p-8 shadow-xs space-y-4">
+          <div className="rounded-2xl border border-[#DEDBD0] bg-white p-8 shadow-xs space-y-4">
             <div className="text-4xl">📦</div>
             <h1 className="text-xl font-extrabold text-[#111827]">
-              This stock item is no longer active
+              This listing is no longer available
             </h1>
             <p className="text-sm text-[#4B5563]">
-              The trader may have sold out or this listing was removed by
+              The seller may have sold out or this account/item was delisted by
               marketplace moderation.
             </p>
             <div className="flex flex-wrap justify-center gap-2.5 pt-1">
               <Link href="/search" className="btn btn-primary">
-                Explore Live Stock
+                Browse Active Stock
               </Link>
               <Link href="/" className="btn">
                 Home
@@ -105,7 +106,7 @@ export default async function FindaStockDetailPage({
     .slice(0, 3);
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
+    <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
       <TopBar
         activeClusterLabel={zone?.name || "Port Harcourt"}
         customer={topCustomer}
@@ -117,15 +118,16 @@ export default async function FindaStockDetailPage({
           aria-label="Breadcrumb"
           className="flex flex-wrap items-center gap-1.5 text-xs text-[#6B7280]"
         >
-          <Link href="/" className="hover:text-[#064E3B]">
-            Home
+          <Link href="/" className="hover:text-[#065F46]">
+            All Port Harcourt
           </Link>
           <span>/</span>
           <Link
             href={`/search?category=${encodeURIComponent(
               listing.category || seller.primary_category || ""
             )}`}
-            className="hover:text-[#064E3B]"
+            prefetch={false}
+            className="hover:text-[#065F46]"
           >
             {listing.category || seller.primary_category}
           </Link>
@@ -134,7 +136,8 @@ export default async function FindaStockDetailPage({
               <span>/</span>
               <Link
                 href={`/search?zone=${encodeURIComponent(zone.id)}`}
-                className="hover:text-[#064E3B]"
+                prefetch={false}
+                className="hover:text-[#065F46]"
               >
                 {zone.name}
               </Link>
@@ -148,7 +151,7 @@ export default async function FindaStockDetailPage({
 
         {sp.reported === "1" ? (
           <div className="notice notice-ok">
-            ✓ Report submitted. Finda&apos;s market team reviews every report
+            ✓ Report submitted. Finda&apos;s moderation team reviews every report
             promptly.
           </div>
         ) : null}
@@ -165,51 +168,46 @@ export default async function FindaStockDetailPage({
         ) : null}
 
         <div className="grid gap-6 lg:grid-cols-[1fr_350px]">
-          {/* LEFT COLUMN: Finda Live-Stock Ticket Sheet */}
+          {/* LEFT COLUMN: Jiji-style Product Showcase + Specs + Finda 1-Tap Confirm */}
           <div className="space-y-5">
-            <section className="overflow-hidden rounded-3xl border border-[#E4E1D6] bg-white shadow-xs">
-              {/* Distinctive Deep Forest Top Status Band */}
-              <div className="finda-canopy px-6 py-5 text-white flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-3 py-1 text-xs font-bold text-[#FDE68A]">
-                    <span>{vis.emoji}</span>
-                    <span>{vis.shortLabel}</span>
+            <section className="overflow-hidden rounded-3xl border border-[#DEDBD0] bg-white shadow-xs">
+              {/* Bespoke Visual Product Stage */}
+              <div className="relative border-b border-[#E5E2D9]">
+                <ProductArtwork
+                  title={listing.title_as_listed}
+                  category={listing.category || seller.primary_category}
+                  size="hero"
+                />
+
+                <div className="absolute left-4 top-4 z-20 flex flex-wrap gap-2">
+                  <span className="rounded-lg bg-white/95 px-3 py-1 text-xs font-extrabold text-[#111827] shadow-xs">
+                    {vis.emoji} {vis.shortLabel}
                   </span>
                   <StockBadge status={mapDbStockToUi(listing.stock_status)} />
                 </div>
 
-                <SaveAdButton listingId={listing.id} compact={false} />
+                <div className="absolute right-4 top-4 z-20">
+                  <SaveAdButton listingId={listing.id} compact={false} />
+                </div>
               </div>
 
-              {/* Main Price, Freshness & Specs */}
-              <div className="p-6 space-y-6">
-                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-dashed border-[#DFDCD2] pb-5">
-                  <div className="space-y-1.5">
-                    <h1 className="text-2xl font-black tracking-tight text-[#111827] sm:text-3xl">
-                      {listing.title_as_listed}
-                    </h1>
-                    <div className="flex flex-wrap items-center gap-3 text-xs">
-                      <FreshnessTag confirmedAt={listing.confirmed_at} />
-                      <span className="text-[#6B7280]">
-                        · {listing.views_7d || 1} recent checks
-                      </span>
-                    </div>
+              <div className="p-6 space-y-5">
+                <div className="space-y-2 border-b border-dashed border-[#E2DFD5] pb-4">
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-[#6B7280]">
+                    <span>📍 {zone?.name || "Port Harcourt"}</span>
+                    <span>·</span>
+                    <FreshnessTag confirmedAt={listing.confirmed_at} />
+                    <span>·</span>
+                    <span>👁️ {listing.views_7d || 1} views</span>
                   </div>
 
-                  <div className="rounded-2xl border border-[#A7F3D0] bg-[#ECFDF5] px-4 py-3 text-left sm:text-right">
-                    <p className="text-2xl font-black text-[#064E3B] tabular-nums">
-                      {formatNairaFromKobo(listing.price_kobo)}
-                    </p>
-                    <p className="text-[11px] font-bold text-[#065F46]">
-                      {listing.price_negotiable
-                        ? `Negotiable · per ${unitLabel}`
-                        : `Stall price · per ${unitLabel}`}
-                    </p>
-                  </div>
+                  <h1 className="text-2xl font-black tracking-tight text-[#111827] sm:text-3xl">
+                    {listing.title_as_listed}
+                  </h1>
                 </div>
 
-                {/* Spec Tiles */}
-                <div className="grid grid-cols-2 gap-3 rounded-2xl bg-[#F8F7F2] border border-[#E4E1D6] p-4 sm:grid-cols-3 text-xs">
+                {/* Jiji-style Key Attributes Grid */}
+                <div className="grid grid-cols-2 gap-3 rounded-2xl bg-[#FAF9F5] border border-[#E5E2D9] p-4 sm:grid-cols-3 text-xs">
                   <div>
                     <span className="block uppercase text-[10px] font-bold text-[#6B7280]">
                       Condition
@@ -220,13 +218,13 @@ export default async function FindaStockDetailPage({
                   </div>
                   <div>
                     <span className="block uppercase text-[10px] font-bold text-[#6B7280]">
-                      Selling Unit
+                      Unit / Pack
                     </span>
                     <span className="font-bold text-[#111827]">{unitLabel}</span>
                   </div>
                   <div>
                     <span className="block uppercase text-[10px] font-bold text-[#6B7280]">
-                      Department
+                      Category
                     </span>
                     <span className="font-bold text-[#111827]">
                       {listing.category || seller.primary_category}
@@ -234,7 +232,7 @@ export default async function FindaStockDetailPage({
                   </div>
                   <div>
                     <span className="block uppercase text-[10px] font-bold text-[#6B7280]">
-                      Market Hub
+                      Market Area
                     </span>
                     <span className="font-bold text-[#111827]">
                       {zone?.name || "Port Harcourt"}
@@ -242,13 +240,13 @@ export default async function FindaStockDetailPage({
                   </div>
                   <div className="col-span-2">
                     <span className="block uppercase text-[10px] font-bold text-[#6B7280]">
-                      Opening Status
+                      Stall Hours
                     </span>
                     <span
                       className={`font-bold ${
                         openState.open === false
                           ? "text-[#991B1B]"
-                          : "text-[#064E3B]"
+                          : "text-[#065F46]"
                       }`}
                     >
                       {openState.label}
@@ -256,21 +254,21 @@ export default async function FindaStockDetailPage({
                   </div>
                 </div>
 
-                {/* 1-Tap Confirm Availability Before Making the Trip */}
+                {/* Unique Finda Feature: 1-Tap "Confirm Availability Before Leaving Home" */}
                 <form
                   action={startConfirmForMe}
-                  className="rounded-2xl border-2 border-[#064E3B] bg-[#ECFDF5]/65 p-5 space-y-3"
+                  className="rounded-2xl border-2 border-[#065F46] bg-[#ECFDF5]/65 p-5 space-y-3"
                 >
                   <input type="hidden" name="listing_id" value={listing.id} />
                   <div>
-                    <p className="text-sm font-extrabold text-[#042F22]">
-                      ⚡ Ask Trader Before Leaving Home: &ldquo;Still on ground
-                      at {formatNairaFromKobo(listing.price_kobo)}?&rdquo;
+                    <p className="text-sm font-extrabold text-[#043D2D]">
+                      ⚡ Quick Check: &ldquo;Is this still in stock at{" "}
+                      {formatNairaFromKobo(listing.price_kobo)}?&rdquo;
                     </p>
                     <p className="text-xs text-[#374151]">
                       Sends an instant 1-tap Yes/No ping to{" "}
-                      <strong>{seller.business_name}</strong> so you don&apos;t
-                      waste transport fare.
+                      <strong>{seller.business_name}</strong> before you spend
+                      transport fare.
                     </p>
                   </div>
                   <div className="flex flex-col gap-2 sm:flex-row">
@@ -279,22 +277,22 @@ export default async function FindaStockDetailPage({
                       type="text"
                       defaultValue={customerSession?.user?.name || ""}
                       placeholder="Your first name"
-                      className="min-h-11 flex-1 rounded-xl border border-[#D1CEC2] bg-white px-3 text-sm"
+                      className="min-h-11 flex-1 rounded-xl border border-[#CFC9BA] bg-white px-3 text-sm"
                     />
                     <button
                       type="submit"
-                      className="min-h-11 rounded-xl bg-[#064E3B] px-5 text-sm font-extrabold text-white hover:bg-[#043927] cursor-pointer"
+                      className="min-h-11 rounded-xl bg-[#065F46] px-5 text-sm font-extrabold text-white hover:bg-[#064E3B] cursor-pointer"
                     >
-                      ✓ Check Availability
+                      ✓ Ask Seller Now
                     </button>
                   </div>
                 </form>
 
                 {/* Buyer Trip Accuracy Feedback */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#F1EFE7] pt-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#F3F2EC] pt-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-semibold text-[#4B5563]">
-                      Visited this stall recently?
+                      Visited this stall?
                     </span>
                     <form action={recordTripOutcome} className="inline">
                       <input
@@ -310,7 +308,7 @@ export default async function FindaStockDetailPage({
                       <input type="hidden" name="verdict" value="got_it" />
                       <button
                         type="submit"
-                        className="rounded-lg border border-[#D1CEC2] bg-white px-3 py-1.5 text-xs font-bold text-[#064E3B] hover:bg-[#ECFDF5] cursor-pointer"
+                        className="rounded-lg border border-[#CFC9BA] bg-white px-3 py-1.5 text-xs font-bold text-[#065F46] hover:bg-[#ECFDF5] cursor-pointer"
                       >
                         ✓ Bought it at this price
                       </button>
@@ -333,7 +331,7 @@ export default async function FindaStockDetailPage({
                       />
                       <button
                         type="submit"
-                        className="rounded-lg border border-[#D1CEC2] bg-white px-3 py-1.5 text-xs font-bold text-[#991B1B] hover:bg-[#FEF2F2] cursor-pointer"
+                        className="rounded-lg border border-[#CFC9BA] bg-white px-3 py-1.5 text-xs font-bold text-[#991B1B] hover:bg-[#FEF2F2] cursor-pointer"
                       >
                         ✗ Out of stock
                       </button>
@@ -343,11 +341,11 @@ export default async function FindaStockDetailPage({
               </div>
             </section>
 
-            {/* Other Stalls Carrying Similar Stock */}
+            {/* Similar Ads in Port Harcourt */}
             {similar.length > 0 ? (
               <section className="space-y-3">
                 <h2 className="text-base font-extrabold text-[#111827]">
-                  Compare Other Port Harcourt Stalls
+                  Similar Ads in Port Harcourt
                 </h2>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   {similar.map((row) => {
@@ -368,31 +366,49 @@ export default async function FindaStockDetailPage({
             ) : null}
           </div>
 
-          {/* RIGHT COLUMN: Stall Landmark Ticket + Protected Contact + Report */}
+          {/* RIGHT SIDEBAR (Jiji-style Price Box + Seller Storefront + Show Contact + Safety Tips) */}
           <aside className="space-y-4">
-            <section className="rounded-3xl border border-[#E4E1D6] bg-white p-5 shadow-xs space-y-4">
-              <div className="space-y-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B7280]">
-                  Verified Stall Profile
+            {/* Price Callout Card */}
+            <section className="rounded-2xl border border-[#DEDBD0] bg-white p-5 shadow-xs space-y-1">
+              <p className="text-3xl font-black text-[#065F46] tabular-nums">
+                {formatNairaFromKobo(listing.price_kobo)}
+              </p>
+              <p className="text-xs font-semibold text-[#4B5563]">
+                {listing.price_negotiable
+                  ? `Negotiable · per ${unitLabel}`
+                  : `Fixed stall price · per ${unitLabel}`}
+              </p>
+            </section>
+
+            {/* Seller Storefront & Contact Card */}
+            <section className="rounded-2xl border border-[#DEDBD0] bg-white p-5 shadow-xs space-y-4">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] text-lg font-black text-[#065F46]">
+                  {String(seller.business_name || "S")
+                    .slice(0, 1)
+                    .toUpperCase()}
                 </span>
-                <Link
-                  href={`/s/${seller.slug}`}
-                  className="block text-lg font-extrabold text-[#111827] hover:text-[#064E3B]"
-                >
-                  {seller.business_name}
-                </Link>
-                <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                  <VerificationBadge
-                    tier={mapDbTierToUi(seller.verification_tier)}
-                  />
-                  <span className="rounded-full bg-[#F1EFE7] px-2.5 py-0.5 text-[11px] font-bold text-[#374151]">
-                    {Math.round((seller.accuracy_score ?? 0.9) * 100)}% accuracy
-                  </span>
+                <div className="min-w-0 space-y-1">
+                  <Link
+                    href={`/s/${seller.slug}`}
+                    prefetch={false}
+                    className="block text-base font-extrabold text-[#111827] hover:text-[#065F46] truncate"
+                  >
+                    {seller.business_name}
+                  </Link>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <VerificationBadge
+                      tier={mapDbTierToUi(seller.verification_tier)}
+                    />
+                    <span className="rounded-full bg-[#F3F2EC] px-2 py-0.5 text-[10px] font-bold text-[#374151]">
+                      {Math.round((seller.accuracy_score ?? 0.9) * 100)}% accurate
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-[#F8F7F2] border border-[#E4E1D6] p-3.5 text-xs space-y-1.5">
-                <p className="font-extrabold text-[#064E3B]">
+              <div className="rounded-xl bg-[#FAF9F5] border border-[#E5E2D9] p-3 text-xs space-y-1">
+                <p className="font-bold text-[#065F46]">
                   📍 {zone?.name || "Port Harcourt"}
                 </p>
                 <p className="font-medium text-[#111827]">
@@ -416,48 +432,43 @@ export default async function FindaStockDetailPage({
 
                 <Link
                   href={`/s/${seller.slug}/map`}
+                  prefetch={false}
                   className="btn btn-block"
                 >
-                  🗺️ Street Landmark &amp; Pin Map
+                  🗺️ View Directions &amp; Pin Map
                 </Link>
 
                 <Link
                   href={`/s/${seller.slug}`}
-                  className="block text-center text-xs font-bold text-[#064E3B] hover:underline pt-1"
+                  prefetch={false}
+                  className="block text-center text-xs font-bold text-[#065F46] hover:underline pt-0.5"
                 >
-                  See all stock in this stall →
+                  View all items from this seller →
                 </Link>
               </div>
             </section>
 
-            {/* Buyer Market Tips */}
-            <section className="rounded-2xl border border-[#E4E1D6] bg-white p-5 shadow-2xs space-y-2">
+            {/* Safety Tips (Jiji-inspired buyer protection card) */}
+            <section className="rounded-2xl border border-[#DEDBD0] bg-white p-5 shadow-2xs space-y-2">
               <h2 className="text-sm font-extrabold text-[#111827]">
-                🧭 Smart Market Trip Checklist
+                🛡️ Safety tips
               </h2>
               <ul className="list-disc pl-4 space-y-1.5 text-xs text-[#4B5563]">
-                <li>
-                  Tap <strong>Check Availability</strong> before taking a Keke
-                  or Bolt.
-                </li>
-                <li>
-                  Give your driver the exact street landmark shown above.
-                </li>
-                <li>
-                  Inspect the item at the stall before making any transfer.
-                </li>
+                <li>Avoid paying in advance before inspecting the item.</li>
+                <li>Meet the seller at their verified public market stall.</li>
+                <li>Check the item quality and price before completing payment.</li>
               </ul>
             </section>
 
-            {/* Report */}
-            <section className="rounded-2xl border border-[#E4E1D6] bg-white p-4 shadow-2xs">
+            {/* Report Abuse / Wrong Price */}
+            <section className="rounded-2xl border border-[#DEDBD0] bg-white p-4 shadow-2xs">
               <details className="text-xs">
                 <summary className="cursor-pointer font-bold text-[#991B1B] text-center">
-                  🚩 Flag Wrong Price or Issue
+                  🚩 Report Abuse or Wrong Price
                 </summary>
                 <form
                   action={flagListingReport}
-                  className="mt-3 space-y-2.5 border-t border-[#F1EFE7] pt-3"
+                  className="mt-3 space-y-2.5 border-t border-[#F3F2EC] pt-3"
                 >
                   <input type="hidden" name="listing_id" value={listing.id} />
                   <input
@@ -468,18 +479,18 @@ export default async function FindaStockDetailPage({
                   <select
                     name="reason"
                     defaultValue="wrong_price"
-                    className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs"
+                    className="min-h-10 w-full rounded-xl border border-[#CFC9BA] bg-white px-3 text-xs"
                   >
-                    <option value="wrong_price">Price is different at stall</option>
+                    <option value="wrong_price">Price is different at shop</option>
                     <option value="not_available">Item out of stock</option>
-                    <option value="wrong_location">Wrong street landmark</option>
+                    <option value="wrong_location">Wrong landmark / pin</option>
                     <option value="counterfeit">Suspected fake / unsafe</option>
                   </select>
                   <input
                     name="note"
                     type="text"
                     placeholder="Short note (optional)"
-                    className="min-h-10 w-full rounded-xl border border-[#D1CEC2] px-3 text-xs"
+                    className="min-h-10 w-full rounded-xl border border-[#CFC9BA] px-3 text-xs"
                   />
                   <button
                     type="submit"
@@ -490,6 +501,20 @@ export default async function FindaStockDetailPage({
                 </form>
               </details>
             </section>
+
+            {/* Post Ad Like This CTA (Jiji sidebar prompt) */}
+            <div className="rounded-2xl border border-[#A7F3D0] bg-[#ECFDF5] p-4 text-center space-y-2">
+              <p className="text-xs font-bold text-[#065F46]">
+                Have items like this in your shop?
+              </p>
+              <Link
+                href="/sell"
+                prefetch={false}
+                className="btn btn-primary btn-sm btn-block"
+              >
+                + Post Your Stock Free
+              </Link>
+            </div>
           </aside>
         </div>
       </main>

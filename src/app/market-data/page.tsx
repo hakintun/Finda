@@ -138,18 +138,17 @@ export default async function MarketData({ searchParams }: { searchParams: Promi
       </div>
 
       {/* ------------------------------------------------ shops */}
-      <div className="section-h"><h2>Sample shops</h2><p>Realistic stalls and shops across all six areas</p></div>
+      <div className="section-h"><h2>Active verified shops</h2><p>Live stalls and shops across all six Port Harcourt areas</p></div>
       <div className="card card-pad0">
         <div className="tbl-scroll">
           <table className="tbl">
-            <thead><tr><th>Shop</th><th>Owner</th><th>Market</th><th>Category</th><th>Items</th><th>Tier</th></tr></thead>
+            <thead><tr><th>Shop</th><th>Market</th><th>Category</th><th>Items</th><th>Tier</th></tr></thead>
             <tbody>
-              {db.sellers.map((s: any) => {
+              {activeSellers.map((s: any) => {
                 const n = db.listings.filter((l: any) => l.seller_id === s.id && l.status !== "delisted").length;
                 return (
                   <tr key={s.id}>
-                    <td className="b"><Link href={`/s/${s.slug}`}>{s.business_name}</Link></td>
-                    <td className="muted small">{s.owner_name}</td>
+                    <td className="b"><Link prefetch={false} href={`/s/${s.slug}`}>{s.business_name}</Link></td>
                     <td className="muted small">{db.zones.find((z: any) => z.id === s.zone_id)?.name}</td>
                     <td className="muted small">{s.primary_category}</td>
                     <td>{n}</td>

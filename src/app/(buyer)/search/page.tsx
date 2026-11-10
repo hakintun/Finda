@@ -4,104 +4,101 @@ import {
   MarketplaceFooter,
   TopBar,
 } from "@/components/buyer/shell";
+import { HeroSearchBar } from "@/components/buyer/hero-search";
 import { getDB, saveDBBackground } from "@/lib/db";
 import { getCustomerSession } from "@/lib/customer-auth";
-import { logSearchQuery } from "@/lib/buyer-ops";
+import { formatNairaFromKobo } from "@/lib/format";
 import { queryBuyerCatalog, toResultCardListing } from "@/lib/buyer-cards";
 import { postBuyerDemand } from "../actions";
 
 export const dynamic = "force-dynamic";
 
-type SearchParams = Promise<{
-  q?: string;
-  zone?: string;
-  category?: string;
-  stock?: string;
-  tier?: string;
-  minPrice?: string;
-  maxPrice?: string;
-  sort?: string;
-  expired?: string;
-  demand?: string;
-  feedback?: string;
-  demoted?: string;
-}>;
-
-const PRICE_RANGES = [
-  { label: "Under ₦10,000", min: "", max: "10000" },
-  { label: "₦10,000 – ₦50,000", min: "10000", max: "50000" },
-  { label: "₦50,000 – ₦250,000", min: "50000", max: "250000" },
-  { label: "Above ₦250,000", min: "250000", max: "" },
-];
-
-export default async function BuyerSearchPage({
+export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<{
+    q?: string;
+    zone?: string;
+    category?: string;
+    stock?: string;
+    tier?: string;
+    min_price?: string;
+    max_price?: string;
+    expired?: string;
+    sort?: string;
+    view?: string;
+    demand_posted?: string;
+  }>;
 }) {
   const [sp, customerSession] = await Promise.all([
     searchParams,
     getCustomerSession(),
   ]);
 
-  const q = (sp.q || "").trim();
-  const zoneId = sp.zone && sp.zone !== "all" ? sp.zone : undefined;
-  const category = sp.category && sp.category !== "all" ? sp.category : undefined;
-  const stockFilter = sp.stock || "all";
-  const tierFilter = sp.tier || "all";
-  const minPriceNaira = sp.minPrice ? Number(sp.minPrice) : undefined;
-  const maxPriceNaira = sp.maxPrice ? Number(sp.maxPrice) : undefined;
-  const sort = (sp.sort as any) || "best";
-  const includeExpired = sp.expired === "1";
-
   const db = getDB();
-  const zones: any[] = db.zones || [];
-  const activeZone = zones.find((z: any) => z.id === zoneId);
+  const q = (sp.q || "").trim();
+  const zoneId = sp.zone || "";
+  const category = sp.category || "";
+  const stockOnly = sp.stock === "1";
+  const tierFilter = sp.tier || "all";
+  const minPriceNaira = sp.min_price ? Number(sp.min_price) : 0;
+  const maxPriceNaira = sp.max_price ? Number(sp.max_price) : 0;
+  const includeExpired = sp.expired === "1";
+  const viewMode: "grid" | "list" = sp.view === "list" ? "list" : "grid";
+  const sort = (
+    ["best", "cheapest", "highest", "freshest", "nearest"].includes(
+      sp.sort || ""
+    )
+      ? sp.sort
+      : "best"
+  ) as "best" | "cheapest" | "highest" | "freshest" | "nearest";
 
+  const activeZone = (db.zones || []).find((z: any) => z.id === zoneId);
   const origin = activeZone
-    ? { lat: activeZone.center_lat, lng: activeZone.center_lng }
+    ? {
+        lat: activeZone.lat ?? activeZone.center_lat,
+        lng: activeZone.lng ?? activeZone.center_lng,
+      }
     : null;
 
-  const { results: baseResults, expanded } = queryBuyerCatalog(db, {
+  const { results, expanded, total } = queryBuyerCatalog(db, {
     q,
-    zoneId,
-    category,
-    stockOnly: stockFilter === "in_stock",
+    zoneId: zoneId || undefined,
+    category: category || undefined,
+    stockOnly,
     tierFilter,
-    maxPriceKobo:
-      maxPriceNaira && Number.isFinite(maxPriceNaira) && maxPriceNaira > 0
-        ? Math.round(maxPriceNaira * 100)
-        : undefined,
+    minPriceKobo: minPriceNaira > 0 ? Math.round(minPriceNaira * 100) : undefined,
+    maxPriceKobo: maxPriceNaira > 0 ? Math.round(maxPriceNaira * 100) : undefined,
     includeExpired,
     origin,
     sort,
-    limit: 120,
+    limit: 60,
   });
 
-  const filtered =
-    minPriceNaira && Number.isFinite(minPriceNaira) && minPriceNaira > 0
-      ? baseResults.filter(
-          (r) => r.listing.price_kobo >= Math.round(minPriceNaira * 100)
-        )
-      : baseResults;
-
+  // Non-blocking search telemetry
   if (q) {
-    logSearchQuery(db, q, activeZone?.name || "Port Harcourt", filtered.length);
+    db.search_queries = db.search_queries || [];
+    db.search_queries.unshift({
+      id: `sq_${Date.now()}`,
+      raw_query: q,
+      cluster: zoneId || "all",
+      result_count: total,
+      created_at: new Date().toISOString(),
+    });
+    db.search_queries = db.search_queries.slice(0, 500);
     saveDBBackground(db);
   }
 
-  const fallbackSuggestions =
-    filtered.length === 0
-      ? queryBuyerCatalog(db, { zoneId, sort: "freshest", limit: 3 }).results
-      : [];
-
-  const categories: string[] = Array.from(
+  const categories = Array.from(
     new Set<string>(
-      (db.products || []).map((p: any) => String(p.category || ""))
+      (db.products || []).map((p: any) => p.category).filter(Boolean)
     )
-  )
-    .filter(Boolean)
-    .sort();
+  ).sort();
+
+  const suggestions = (db.products || []).slice(0, 80).map((p: any) => ({
+    name: String(p.canonical_name),
+    category: String(p.category || "Market"),
+  }));
 
   const topCustomer = customerSession
     ? {
@@ -112,101 +109,114 @@ export default async function BuyerSearchPage({
       }
     : null;
 
+  function buildFilterHref(overrides: Record<string, string | undefined>) {
+    const merged: Record<string, string> = {};
+    if (q) merged.q = q;
+    if (zoneId) merged.zone = zoneId;
+    if (category) merged.category = category;
+    if (stockOnly) merged.stock = "1";
+    if (tierFilter !== "all") merged.tier = tierFilter;
+    if (minPriceNaira > 0) merged.min_price = String(minPriceNaira);
+    if (maxPriceNaira > 0) merged.max_price = String(maxPriceNaira);
+    if (includeExpired) merged.expired = "1";
+    if (sort !== "best") merged.sort = sort;
+    if (viewMode !== "grid") merged.view = viewMode;
+
+    for (const [k, v] of Object.entries(overrides)) {
+      if (!v) delete merged[k];
+      else merged[k] = v;
+    }
+    const qs = new URLSearchParams(merged).toString();
+    return `/search${qs ? `?${qs}` : ""}`;
+  }
+
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
+    <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
       <TopBar
         activeClusterLabel={activeZone?.name || "Port Harcourt"}
         customer={topCustomer}
       />
 
-      {/* Deep Forest Search Strip */}
-      <div className="finda-canopy px-4 py-4 text-white">
-        <form
-          action="/search"
-          method="get"
-          role="search"
-          className="mx-auto flex max-w-6xl gap-2"
-        >
-          {category ? (
-            <input type="hidden" name="category" value={category} />
-          ) : null}
-          {zoneId ? <input type="hidden" name="zone" value={zoneId} /> : null}
-          <input
-            name="q"
-            type="search"
-            defaultValue={q}
-            placeholder="Search item, brand, or Pidgin slang across Port Harcourt…"
-            className="min-h-11 flex-1 rounded-xl border-0 bg-white px-4 text-sm text-[#111827]"
+      {/* Deep Emerald Search Strip */}
+      <div className="finda-canopy py-4 shadow-xs">
+        <div className="mx-auto max-w-6xl px-4">
+          <HeroSearchBar
+            zones={(db.zones || []).map((z: any) => ({ id: z.id, name: z.name }))}
+            suggestions={suggestions}
+            defaultQuery={q}
+            defaultZone={zoneId}
           />
-          <button
-            type="submit"
-            className="min-h-11 rounded-xl bg-[#FDE68A] px-5 text-xs font-black uppercase tracking-wide text-[#042F22] hover:bg-[#FCD34D] cursor-pointer"
-          >
-            Search
-          </button>
-        </form>
+        </div>
       </div>
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-5 space-y-4">
         {/* Breadcrumbs */}
-        <nav
-          aria-label="Breadcrumb"
-          className="text-xs text-[#6B7280] flex flex-wrap items-center gap-1.5"
-        >
-          <Link href="/" className="hover:text-[#064E3B]">
-            Home
+        <nav className="flex flex-wrap items-center gap-1.5 text-xs text-[#6B7280]">
+          <Link href="/" className="hover:text-[#065F46]">
+            Port Harcourt
           </Link>
           <span>/</span>
-          <Link href="/search" className="hover:text-[#064E3B]">
-            Live Stock
-          </Link>
+          <span className="font-semibold text-[#111827]">
+            {category || "All Categories"}
+          </span>
           {activeZone ? (
             <>
               <span>/</span>
-              <span className="font-semibold text-[#111827]">
+              <span className="font-semibold text-[#065F46]">
                 {activeZone.name}
               </span>
             </>
           ) : null}
-          {category ? (
-            <>
-              <span>/</span>
-              <span className="font-semibold text-[#111827]">{category}</span>
-            </>
-          ) : null}
         </nav>
 
-        {sp.demand === "sent" ? (
+        {sp.demand_posted === "1" ? (
           <div className="notice notice-ok">
-            ✓ Request logged! Nearby verified Port Harcourt stalls can now see
-            what you need.
+            ✓ Demand request posted! Nearby Port Harcourt stalls in{" "}
+            <strong>{activeZone?.name || "your area"}</strong> have been
+            alerted.
           </div>
         ) : null}
 
-        <div className="grid gap-6 lg:grid-cols-[270px_1fr]">
-          {/* Left Refine Panel */}
-          <aside>
+        <div className="grid gap-6 lg:grid-cols-[265px_1fr]">
+          {/* LEFT FILTER SIDEBAR (Jiji-style Category + Location + Price ₦ Min/Max + Verification) */}
+          <aside className="space-y-4">
             <form
               action="/search"
               method="get"
-              className="rounded-2xl border border-[#E4E1D6] bg-white p-4 shadow-2xs space-y-5"
+              className="rounded-2xl border border-[#DEDBD0] bg-white p-4 shadow-2xs space-y-4"
             >
-              <input type="hidden" name="q" value={q} />
+              {q ? <input type="hidden" name="q" value={q} /> : null}
+              {viewMode !== "grid" ? (
+                <input type="hidden" name="view" value={viewMode} />
+              ) : null}
 
-              <div className="space-y-1.5">
+              <div className="flex items-center justify-between border-b border-[#F3F2EC] pb-2.5">
+                <h2 className="text-sm font-extrabold text-[#111827]">
+                  Filters
+                </h2>
+                <Link
+                  href="/search"
+                  prefetch={false}
+                  className="text-xs font-bold text-[#065F46] hover:underline"
+                >
+                  Reset all
+                </Link>
+              </div>
+
+              <div>
                 <label
                   htmlFor="flt-cat"
-                  className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]"
+                  className="mb-1 block text-xs font-bold text-[#374151]"
                 >
-                  Department
+                  Category
                 </label>
                 <select
                   id="flt-cat"
                   name="category"
-                  defaultValue={category || "all"}
-                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
+                  defaultValue={category}
+                  className="min-h-10 w-full rounded-xl border border-[#CFC9BA] bg-white px-3 text-xs font-semibold"
                 >
-                  <option value="all">All Departments</option>
+                  <option value="">All Categories</option>
                   {categories.map((c) => (
                     <option key={c} value={c}>
                       {c}
@@ -215,21 +225,21 @@ export default async function BuyerSearchPage({
                 </select>
               </div>
 
-              <div className="space-y-1.5">
+              <div>
                 <label
                   htmlFor="flt-zone"
-                  className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]"
+                  className="mb-1 block text-xs font-bold text-[#374151]"
                 >
-                  Market Hub
+                  Market Location
                 </label>
                 <select
                   id="flt-zone"
                   name="zone"
-                  defaultValue={zoneId || "all"}
-                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
+                  defaultValue={zoneId}
+                  className="min-h-10 w-full rounded-xl border border-[#CFC9BA] bg-white px-3 text-xs font-semibold"
                 >
-                  <option value="all">All Port Harcourt</option>
-                  {zones.map((z: any) => (
+                  <option value="">All Port Harcourt</option>
+                  {(db.zones || []).map((z: any) => (
                     <option key={z.id} value={z.id}>
                       {z.name}
                     </option>
@@ -237,138 +247,231 @@ export default async function BuyerSearchPage({
                 </select>
               </div>
 
-              <div className="space-y-2 border-t border-[#F1EFE7] pt-4">
-                <span className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]">
-                  Budget (₦)
+              {/* Jiji-style Price, ₦ Min - Max + Quick Brackets */}
+              <div className="space-y-2 border-t border-[#F3F2EC] pt-3">
+                <span className="block text-xs font-bold text-[#374151]">
+                  Price, ₦
                 </span>
                 <div className="grid grid-cols-2 gap-2">
                   <input
-                    name="minPrice"
+                    name="min_price"
                     type="number"
                     min={0}
-                    defaultValue={minPriceNaira || ""}
-                    placeholder="Min ₦"
-                    className="min-h-9 rounded-lg border border-[#D1CEC2] px-2.5 text-xs"
+                    step={500}
+                    defaultValue={minPriceNaira > 0 ? minPriceNaira : ""}
+                    placeholder="min"
+                    className="min-h-9 rounded-xl border border-[#CFC9BA] px-2.5 text-xs"
                   />
                   <input
-                    name="maxPrice"
+                    name="max_price"
                     type="number"
                     min={0}
-                    defaultValue={maxPriceNaira || ""}
-                    placeholder="Max ₦"
-                    className="min-h-9 rounded-lg border border-[#D1CEC2] px-2.5 text-xs"
+                    step={500}
+                    defaultValue={maxPriceNaira > 0 ? maxPriceNaira : ""}
+                    placeholder="max"
+                    className="min-h-9 rounded-xl border border-[#CFC9BA] px-2.5 text-xs"
                   />
                 </div>
-                <div className="space-y-1 pt-1">
-                  {PRICE_RANGES.map((b) => (
+                <div className="flex flex-wrap gap-1 pt-0.5 text-[11px]">
+                  {[
+                    { label: "Under ₦10k", min: "", max: "10000" },
+                    { label: "₦10k–₦50k", min: "10000", max: "50000" },
+                    { label: "₦50k–₦200k", min: "50000", max: "200000" },
+                    { label: "₦200k+", min: "200000", max: "" },
+                  ].map((b) => (
                     <Link
                       key={b.label}
-                      href={`/search?q=${encodeURIComponent(q)}&zone=${
-                        zoneId || "all"
-                      }&category=${category || "all"}&minPrice=${
-                        b.min
-                      }&maxPrice=${b.max}`}
-                      className="block rounded-lg px-2 py-1 text-xs text-[#4B5563] hover:bg-[#ECFDF5] hover:text-[#064E3B]"
+                      prefetch={false}
+                      href={buildFilterHref({
+                        min_price: b.min || undefined,
+                        max_price: b.max || undefined,
+                      })}
+                      className="rounded-lg border border-[#DEDBD0] bg-[#FAF9F5] px-2 py-0.5 font-semibold text-[#374151] hover:border-[#065F46] hover:text-[#065F46]"
                     >
-                      • {b.label}
+                      {b.label}
                     </Link>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-2 border-t border-[#F1EFE7] pt-4">
-                <span className="block text-xs font-extrabold uppercase tracking-wider text-[#374151]">
-                  Trust &amp; Availability
-                </span>
+              <div className="border-t border-[#F3F2EC] pt-3">
+                <label
+                  htmlFor="flt-tier"
+                  className="mb-1 block text-xs font-bold text-[#374151]"
+                >
+                  Seller Verification
+                </label>
                 <select
+                  id="flt-tier"
                   name="tier"
                   defaultValue={tierFilter}
-                  aria-label="Verification tier"
-                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
+                  className="min-h-10 w-full rounded-xl border border-[#CFC9BA] bg-white px-3 text-xs font-semibold"
                 >
-                  <option value="all">All Stalls</option>
+                  <option value="all">All Sellers</option>
                   <option value="verified_any">✓ Verified Stalls Only</option>
-                  <option value="visit">✓✓✓ Physically Visited Stalls</option>
+                  <option value="visit">✓✓✓ Field-Visited Only</option>
                 </select>
+              </div>
 
-                <select
-                  name="stock"
-                  defaultValue={stockFilter}
-                  aria-label="Stock status"
-                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
+              <div>
+                <label
+                  htmlFor="flt-sort"
+                  className="mb-1 block text-xs font-bold text-[#374151]"
                 >
-                  <option value="all">Any Stock Status</option>
-                  <option value="in_stock">In Stock / Low Stock Only</option>
-                </select>
-
+                  Sort By
+                </label>
                 <select
+                  id="flt-sort"
                   name="sort"
                   defaultValue={sort}
-                  aria-label="Sort order"
-                  className="min-h-10 w-full rounded-xl border border-[#D1CEC2] bg-white px-3 text-xs font-semibold"
+                  className="min-h-10 w-full rounded-xl border border-[#CFC9BA] bg-white px-3 text-xs font-semibold"
                 >
-                  <option value="best">Sort: Best Match</option>
-                  <option value="cheapest">Sort: Lowest Price (₦)</option>
-                  <option value="freshest">Sort: Recently Confirmed</option>
-                  <option value="nearest">Sort: Nearest Hub</option>
+                  <option value="best">Recommended</option>
+                  <option value="freshest">Newest Confirmed</option>
+                  <option value="cheapest">Lowest Price First</option>
+                  <option value="highest">Highest Price First</option>
+                  <option value="nearest">Nearest Market Hub</option>
                 </select>
-
-                <label className="flex items-center gap-2 pt-1 text-xs text-[#4B5563] cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="expired"
-                    value="1"
-                    defaultChecked={includeExpired}
-                  />
-                  Include &gt;14d unconfirmed
-                </label>
               </div>
 
-              <div className="flex items-center gap-2 pt-1">
-                <button
-                  type="submit"
-                  className="min-h-10 flex-1 rounded-xl bg-[#064E3B] px-3 text-xs font-extrabold text-white hover:bg-[#043927] cursor-pointer"
-                >
-                  Apply Filters
-                </button>
-                <Link
-                  href="/search"
-                  className="text-xs font-bold text-[#6B7280] hover:text-[#111827]"
-                >
-                  Reset
-                </Link>
-              </div>
+              <label className="flex items-center gap-2 text-xs font-semibold text-[#374151] cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="stock"
+                  value="1"
+                  defaultChecked={stockOnly}
+                  className="h-4 w-4 accent-[#065F46]"
+                />
+                <span>In stock / Low stock only</span>
+              </label>
+
+              <button
+                type="submit"
+                className="min-h-11 w-full rounded-xl bg-[#065F46] text-xs font-extrabold text-white hover:bg-[#064E3B] cursor-pointer"
+              >
+                Apply Filters
+              </button>
             </form>
           </aside>
 
-          {/* Right Results Grid */}
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-baseline justify-between gap-2 rounded-2xl border border-[#E4E1D6] bg-white px-4 py-3 shadow-2xs">
+          {/* RIGHT RESULTS COLUMN */}
+          <section className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#DEDBD0] bg-white px-4 py-3 shadow-2xs">
               <div>
                 <h1 className="text-base font-extrabold text-[#111827]">
                   {q
-                    ? `${filtered.length} stalls matched “${q}”`
+                    ? `Results for "${q}"`
                     : category
                     ? `${category} in ${activeZone?.name || "Port Harcourt"}`
-                    : `Confirmed Stock in ${activeZone?.name || "Port Harcourt"}`}{" "}
-                  <span className="text-xs font-semibold text-[#6B7280]">
-                    ({filtered.length} items)
-                  </span>
+                    : `All Active Stock in ${activeZone?.name || "Port Harcourt"}`}
                 </h1>
-                {q && expanded.length > 1 ? (
-                  <p className="text-[11px] text-[#6B7280]">
-                    Expanded local terms:{" "}
-                    <span className="font-semibold">
-                      {expanded.slice(0, 5).join(", ")}
-                    </span>
-                  </p>
-                ) : null}
+                <p className="text-xs text-[#4B5563]">
+                  Found <strong>{total}</strong> active listing
+                  {total === 1 ? "" : "s"}
+                  {minPriceNaira > 0
+                    ? ` · From ${formatNairaFromKobo(minPriceNaira * 100)}`
+                    : ""}
+                  {maxPriceNaira > 0
+                    ? ` · Up to ${formatNairaFromKobo(maxPriceNaira * 100)}`
+                    : ""}
+                  {expanded.length > 1
+                    ? ` · Matched local terms: ${expanded.slice(0, 4).join(", ")}`
+                    : ""}
+                </p>
+              </div>
+
+              <div className="inline-flex rounded-xl border border-[#DEDBD0] bg-[#FAF9F5] p-1 text-xs">
+                <Link
+                  prefetch={false}
+                  href={buildFilterHref({ view: undefined })}
+                  className={`rounded-lg px-2.5 py-1 font-bold ${
+                    viewMode === "grid"
+                      ? "bg-white text-[#065F46] shadow-2xs"
+                      : "text-[#6B7280]"
+                  }`}
+                >
+                  ⊞ Grid
+                </Link>
+                <Link
+                  prefetch={false}
+                  href={buildFilterHref({ view: "list" })}
+                  className={`rounded-lg px-2.5 py-1 font-bold ${
+                    viewMode === "list"
+                      ? "bg-white text-[#065F46] shadow-2xs"
+                      : "text-[#6B7280]"
+                  }`}
+                >
+                  ☰ List
+                </Link>
               </div>
             </div>
 
-            {filtered.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {filtered.map((row) => {
+            {results.length === 0 ? (
+              <div className="rounded-2xl border border-[#DEDBD0] bg-white p-6 space-y-4 shadow-2xs">
+                <div className="space-y-1">
+                  <h2 className="text-lg font-extrabold text-[#111827]">
+                    No active stalls matched &ldquo;{q || category || "that filter"}&rdquo;
+                  </h2>
+                  <p className="text-xs text-[#4B5563]">
+                    Post what you need below and verified Port Harcourt traders
+                    in this area can respond with availability and price.
+                  </p>
+                </div>
+
+                <form
+                  action={postBuyerDemand}
+                  className="grid gap-3 rounded-xl bg-[#FAF9F5] border border-[#DEDBD0] p-4 sm:grid-cols-2"
+                >
+                  <div>
+                    <label className="mb-1 block text-xs font-bold">
+                      What item do you need?
+                    </label>
+                    <input
+                      name="query_text"
+                      type="text"
+                      required
+                      defaultValue={q}
+                      placeholder="e.g. 200Ah Tubular Inverter Battery"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-bold">
+                      Preferred Market Area
+                    </label>
+                    <select name="zone_id" defaultValue={zoneId || "mile1"}>
+                      {(db.zones || []).map((z: any) => (
+                        <option key={z.id} value={z.id}>
+                          {z.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="mb-1 block text-xs font-bold">
+                      Your Phone or WhatsApp (optional)
+                    </label>
+                    <input
+                      name="buyer_phone"
+                      type="tel"
+                      placeholder="0803 000 0000"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <button type="submit" className="btn btn-primary">
+                      Alert Nearby Stalls
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div
+                className={
+                  viewMode === "list"
+                    ? "space-y-3"
+                    : "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+                }
+              >
+                {results.map((row) => {
                   const card = toResultCardListing(row);
                   return (
                     <JijiAdCard
@@ -378,89 +481,13 @@ export default async function BuyerSearchPage({
                         row.listing.category || row.seller.primary_category
                       }
                       unit={row.listing.pack_size || row.listing.unit}
+                      layout={viewMode}
                     />
                   );
                 })}
               </div>
-            ) : (
-              <div className="space-y-5">
-                <div className="rounded-2xl border border-[#E4E1D6] bg-white p-6 space-y-3 shadow-2xs">
-                  <h2 className="text-lg font-extrabold text-[#111827]">
-                    No confirmed stall matched{" "}
-                    {q ? `“${q}”` : "those exact filters"} right now
-                  </h2>
-                  <p className="text-sm text-[#4B5563]">
-                    Tell local Port Harcourt traders what you&apos;re looking
-                    for and our market team will notify stalls in that line.
-                  </p>
-
-                  <form action={postBuyerDemand} className="space-y-2.5 pt-1">
-                    <input type="hidden" name="return_q" value={q} />
-                    <input
-                      type="hidden"
-                      name="cluster"
-                      value={activeZone?.name || "Port Harcourt"}
-                    />
-                    <div className="field">
-                      <label className="lbl" htmlFor="demand-text">
-                        What item do you need?
-                      </label>
-                      <input
-                        id="demand-text"
-                        name="raw_text"
-                        type="text"
-                        required
-                        defaultValue={q}
-                        placeholder="e.g. 200Ah tubular battery around Mile 3"
-                      />
-                    </div>
-                    <div className="field">
-                      <label className="lbl" htmlFor="demand-phone">
-                        Your WhatsApp or Phone (optional)
-                      </label>
-                      <input
-                        id="demand-phone"
-                        name="buyer_phone"
-                        type="tel"
-                        defaultValue={customerSession?.user?.phone || ""}
-                        placeholder="e.g. 0803 123 4567"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="min-h-11 rounded-xl bg-[#064E3B] px-5 text-xs font-extrabold uppercase text-white hover:bg-[#043927] cursor-pointer"
-                    >
-                      Notify Nearby Stalls
-                    </button>
-                  </form>
-                </div>
-
-                {fallbackSuggestions.length > 0 ? (
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-extrabold text-[#374151]">
-                      Recently confirmed stock nearby instead
-                    </h3>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                      {fallbackSuggestions.map((row) => {
-                        const card = toResultCardListing(row);
-                        return (
-                          <JijiAdCard
-                            key={card.id}
-                            listing={card}
-                            category={
-                              row.listing.category ||
-                              row.seller.primary_category
-                            }
-                            unit={row.listing.pack_size || row.listing.unit}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                ) : null}
-              </div>
             )}
-          </div>
+          </section>
         </div>
       </main>
 

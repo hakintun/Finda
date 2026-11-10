@@ -6,8 +6,8 @@ const SELLER_COOKIE = "finda_seller";
 
 /**
  * Enforces strict separation between Customers (Buyers/Sellers) and Admin tools.
- * Logged-in customers without an active staff session cannot access `/admin` or
- * staff-only endpoints (`/api/export`, `/api/seller/switch`).
+ * Customers without an active staff session cannot access `/admin`, `/test-plan`,
+ * `/api/export`, or `/api/seller/switch`.
  */
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -30,6 +30,13 @@ export function middleware(req: NextRequest) {
     );
   }
 
+  // Internal staff test plan requires admin session
+  if (pathname.startsWith("/test-plan") && !hasAdmin) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/restricted";
+    return NextResponse.redirect(url);
+  }
+
   // Block signed-in buyers/sellers from opening `/admin/*`
   if (pathname.startsWith("/admin") && isLoggedCustomer && !hasAdmin) {
     const url = req.nextUrl.clone();
@@ -41,5 +48,10 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/export/:path*", "/api/seller/switch/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/test-plan/:path*",
+    "/api/export/:path*",
+    "/api/seller/switch/:path*",
+  ],
 };

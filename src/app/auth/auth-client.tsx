@@ -320,7 +320,7 @@ export function AuthClient({
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Chinedu Amadi"
+              placeholder="Enter your full name"
               autoComplete="name"
             />
           </div>

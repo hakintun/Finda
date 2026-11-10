@@ -5,7 +5,7 @@ import {
   registerCustomer,
   verifyCustomerOtp,
 } from "./customer-auth";
-import { toggleSellerStatus } from "./ops";
+import { toggleCustomerStatus, toggleSellerStatus } from "./ops";
 import { queryBuyerCatalog } from "./buyer-cards";
 
 function makeDb() {
@@ -191,5 +191,23 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       password: "mySecretPassword",
     });
     expect(blocked.ok).toBe(false);
+  });
+
+  it("delists and restores a customer record directly via toggleCustomerStatus", () => {
+    const db = makeDb();
+    expect(queryBuyerCatalog(db, {}).results).toHaveLength(1);
+    expect(db.user_sessions).toHaveLength(1);
+
+    const out = toggleCustomerStatus(db, "usr_admin", "usr_existing");
+    expect(out.ok).toBe(true);
+    if (out.ok) expect(out.status).toBe("delisted");
+
+    // Linked shop & listings vanish from catalog and sessions are revoked
+    expect(queryBuyerCatalog(db, {}).results).toHaveLength(0);
+    expect(db.user_sessions).toHaveLength(0);
+
+    const back = toggleCustomerStatus(db, "usr_admin", "usr_existing");
+    expect(back.ok).toBe(true);
+    expect(queryBuyerCatalog(db, {}).results).toHaveLength(1);
   });
 });

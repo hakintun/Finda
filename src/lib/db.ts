@@ -111,12 +111,6 @@ function fileStamp(): string | null {
 }
 
 export function getDB(): DB {
-  const now = Date.now();
-  // Fast path: serve straight from memory within 1.5s window
-  if (store.cache && now - store.cache.checkedAt < 1500) {
-    return store.cache.db;
-  }
-
   const stamp = fileStamp();
 
   if (!stamp) {
@@ -124,7 +118,7 @@ export function getDB(): DB {
     const db = materialiseSeed(seed);
     writeFileSync(DB_PATH, JSON.stringify(db));
     store.version += 1;
-    store.cache = { db, stamp: fileStamp()!, checkedAt: now };
+    store.cache = { db, stamp: fileStamp()!, checkedAt: Date.now() };
     return db;
   }
 
@@ -134,12 +128,11 @@ export function getDB(): DB {
     if (!isMaterialised(raw)) {
       writeFileSync(DB_PATH, JSON.stringify(db));
     }
-    store.version = Math.max(store.version, Number(db._version || 1));
-    store.cache = { db, stamp: fileStamp()!, checkedAt: now };
+    store.version += 1;
+    store.cache = { db, stamp: fileStamp()!, checkedAt: Date.now() };
     return db;
   }
 
-  store.cache.checkedAt = now;
   return store.cache.db;
 }
 
@@ -155,6 +148,10 @@ function broadcast(updatedAt: string) {
 }
 
 export function saveDB(db: DB) {
+  if (store.flushTimer) {
+    clearTimeout(store.flushTimer);
+    store.flushTimer = null;
+  }
   const updatedAt = new Date().toISOString();
   store.version += 1;
   db._version = store.version;
@@ -167,16 +164,22 @@ export function saveDB(db: DB) {
 
 /**
  * Non-blocking background persistence for high-frequency telemetry (e.g. search logs)
- * so buyer page loads never wait on disk I/O.
+ * so buyer page loads never wait on disk I/O and never overwrite newer mutations.
  */
 export function saveDBBackground(db: DB) {
   if (store.flushTimer) return;
+  const scheduledVersion = store.version;
+  const scheduledStamp = store.cache?.stamp || null;
   store.flushTimer = setTimeout(async () => {
     store.flushTimer = null;
     try {
+      // Abort background telemetry flush if any real mutation happened in memory or on disk
+      if (store.version !== scheduledVersion) return;
+      if (scheduledStamp && fileStamp() !== scheduledStamp) return;
+
       db._updated_at = new Date().toISOString();
       await writeFile(DB_PATH, JSON.stringify(db));
-      if (store.cache) {
+      if (store.cache && store.version === scheduledVersion) {
         const st = fileStamp();
         if (st) store.cache.stamp = st;
         store.cache.checkedAt = Date.now();

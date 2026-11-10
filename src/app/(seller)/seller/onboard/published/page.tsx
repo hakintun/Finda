@@ -93,17 +93,15 @@ export default async function PublishedPage({ searchParams }: { searchParams: Pr
       </div>
 
       <div className="card mt16">
-        <h3 className="card-title">Next: show the team</h3>
+        <h3 className="card-title">Keep your prices fresh in 1 tap</h3>
         <p className="small muted mb0">
-          This shop is now in search, in the admin seller list, and it appears on the Freshness Dashboard.
-          Sign in as this shop at the <Link href="/seller">seller console</Link> to test the one-tap dashboard and the Daily Tap.
-          Do it once more and use the “10 common items” shortcut to check the 4-minute path.
+          Open your <Link href="/seller">Seller Dashboard</Link> anytime to update stock status, adjust Naira prices, or reply to buyer availability checks.
         </p>
       </div>
 
       <div className="btn-row mt16">
-        <Link className="btn" href="/seller/onboard">Start another sign-up</Link>
-        <Link className="btn" href="/test-plan">Go to the test plan</Link>
+        <Link className="btn btn-primary" href="/seller">Open my Seller Dashboard →</Link>
+        <Link className="btn" href="/">Back to Marketplace</Link>
       </div>
     </main>
   );

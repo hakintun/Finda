@@ -21,23 +21,23 @@ export default async function AuthPage({
   }
 
   return (
-    <div className="min-h-dvh flex flex-col bg-[#F8F7F2]">
-      <header className="border-b border-[#E4E1D6] bg-[#FAF9F5] text-[#111827]">
+    <div className="min-h-dvh flex flex-col bg-[#FAF9F5]">
+      <header className="bg-[#065F46] text-white shadow-xs">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#064E3B] text-sm font-black text-[#FDE68A]">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 border border-white/25 text-sm font-black text-[#FDE68A]">
               F
             </span>
-            <span className="text-xl font-black tracking-tight text-[#042F22]">
+            <span className="text-xl font-black tracking-tight text-white">
               Finda
             </span>
-            <span className="rounded-full bg-[#ECFDF5] border border-[#A7F3D0] px-2.5 py-0.5 text-[11px] font-bold text-[#064E3B]">
+            <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-bold text-emerald-100">
               Port Harcourt
             </span>
           </Link>
           <Link
             href="/"
-            className="rounded-xl border border-[#D5D1C4] bg-white px-3.5 py-1.5 text-xs font-bold text-[#1F2937] hover:border-[#064E3B] hover:text-[#064E3B]"
+            className="rounded-xl bg-white/15 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-white/25"
           >
             ← Back to Marketplace
           </Link>

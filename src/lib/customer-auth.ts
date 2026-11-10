@@ -1,6 +1,7 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { audit, getDB, id, nowISO, saveDB, trackEvent } from "./db";
+import { getSessionCookieOptions } from "./cookie-opts";
 import { toE164 } from "./freshness";
 
 export const CUSTOMER_COOKIE = "finda_customer";
@@ -50,6 +51,59 @@ function generateSixDigitOtp(): string {
 }
 
 /**
+ * Finds an existing customer account by email or Nigerian phone number.
+ * Also links orphaned seller records (`db.sellers` without a matching `db.users` row)
+ * so every registered trader can sign in seamlessly.
+ */
+function findCustomerByIdentifier(db: any, rawIdentifier: string) {
+  const raw = (rawIdentifier || "").trim();
+  const asEmail = normalizeEmail(raw);
+  const asPhone = toE164(raw);
+
+  if (!asEmail && !asPhone) return null;
+
+  db.users = db.users || [];
+  let user = db.users.find((u: any) => {
+    if (asEmail && u.email && u.email.toLowerCase() === asEmail) return true;
+    if (asPhone && u.phone && toE164(u.phone) === asPhone) return true;
+    return false;
+  });
+
+  // If a shop exists in db.sellers with that phone number, ensure its linked user record is returned
+  if (!user && asPhone) {
+    const shop = (db.sellers || []).find(
+      (s: any) =>
+        (s.phone && toE164(s.phone) === asPhone) ||
+        (s.whatsapp_number && toE164(s.whatsapp_number) === asPhone)
+    );
+    if (shop) {
+      user = shop.user_id
+        ? db.users.find((u: any) => u.id === shop.user_id)
+        : null;
+      if (!user) {
+        user = {
+          id: shop.user_id || id("usr"),
+          name: shop.owner_name || shop.business_name || "Shop Owner",
+          role: "seller",
+          phone: asPhone,
+          whatsapp_number: asPhone,
+          status: shop.status === "active" ? "active" : shop.status,
+          is_verified: Boolean(
+            shop.verification_tier && shop.verification_tier !== "unverified"
+          ),
+          verified_channels: ["phone"],
+          created_at: nowISO(),
+        };
+        shop.user_id = user.id;
+        db.users.push(user);
+      }
+    }
+  }
+
+  return user || null;
+}
+
+/**
  * Registers a new Buyer or Seller WITHOUT ever exposing existing customer details.
  */
 export function registerCustomer(
@@ -87,7 +141,8 @@ export function registerCustomer(
     return {
       ok: false as const,
       error: "invalid_phone",
-      message: "Please enter a valid Nigerian phone number (e.g. 0803 123 4567).",
+      message:
+        "Please enter a valid Nigerian phone number (e.g. 0803 123 4567).",
     };
   }
 
@@ -98,10 +153,7 @@ export function registerCustomer(
       message: "An email address is required to verify via Email.",
     };
   }
-  if (
-    (input.channel === "phone" || input.channel === "whatsapp") &&
-    !phone
-  ) {
+  if ((input.channel === "phone" || input.channel === "whatsapp") && !phone) {
     return {
       ok: false as const,
       error: "missing_phone",
@@ -186,7 +238,11 @@ export function issueVerificationOtp(
 ) {
   const user = (db.users || []).find((u: any) => u.id === input.userId);
   if (!user) {
-    return { ok: false as const, error: "user_not_found", message: "Account not found." };
+    return {
+      ok: false as const,
+      error: "user_not_found",
+      message: "Account not found.",
+    };
   }
 
   let target: string | null = null;
@@ -198,7 +254,8 @@ export function issueVerificationOtp(
       return {
         ok: false as const,
         error: "missing_email",
-        message: "Please provide a valid email address first.",
+        message:
+          "No email address is linked to this account. Choose WhatsApp or Phone SMS instead.",
       };
     }
     user.email = target;
@@ -210,7 +267,8 @@ export function issueVerificationOtp(
       return {
         ok: false as const,
         error: "missing_phone",
-        message: "Please provide a valid Nigerian phone number first.",
+        message:
+          "No phone number is linked to this account. Choose Email verification instead.",
       };
     }
     user.phone = target;
@@ -222,17 +280,19 @@ export function issueVerificationOtp(
   db.otp_codes = db.otp_codes || [];
   const now = Date.now();
   const recent = db.otp_codes.filter(
-    (c: any) => c.user_id === user.id && now - new Date(c.created_at).getTime() < OTP_TTL_MS
+    (c: any) =>
+      c.user_id === user.id &&
+      now - new Date(c.created_at).getTime() < OTP_TTL_MS
   );
-  if (recent.length >= 6) {
+  if (recent.length >= 8) {
     return {
       ok: false as const,
       error: "rate_limited",
-      message: "Too many verification codes requested. Please wait a few minutes.",
+      message:
+        "Too many verification codes requested. Please wait a few minutes.",
     };
   }
 
-  // Invalidate older unused codes on same channel
   for (const c of db.otp_codes) {
     if (c.user_id === user.id && c.channel === input.channel && !c.used_at) {
       c.invalidated = true;
@@ -274,11 +334,77 @@ export function issueVerificationOtp(
     otpId: record.id,
     channel: input.channel,
     maskedTarget: maskTarget(input.channel, target),
-    // Exposed only to the initiating user session in non-production / sandbox when live SMS/SMTP keys aren't configured
     sandboxCode:
       process.env.FINDA_HIDE_SANDBOX_OTP === "1" ? undefined : code,
     whatsappLink,
   };
+}
+
+/**
+ * Initiates Passwordless 6-Digit Code Sign-In via Email, Phone SMS, or WhatsApp.
+ * Works for password accounts, OTP-onboarded shops, and existing seeded accounts
+ * without exposing any account names or customer details before OTP verification.
+ */
+export function requestLoginOtp(
+  db: any,
+  input: { identifier: string; channel?: VerifyChannel }
+) {
+  const raw = (input.identifier || "").trim();
+  const asEmail = normalizeEmail(raw);
+  const asPhone = toE164(raw);
+
+  if (!asEmail && !asPhone) {
+    return {
+      ok: false as const,
+      error: "invalid_identifier",
+      message:
+        "Enter a valid email address or Nigerian phone number (e.g. 0803 123 4567).",
+    };
+  }
+
+  const user = findCustomerByIdentifier(db, raw);
+  if (!user) {
+    return {
+      ok: false as const,
+      error: "account_not_found",
+      message:
+        "No account found with that email or phone number. Tap 'Create account' to register in 30 seconds.",
+    };
+  }
+
+  if (
+    user.status === "banned" ||
+    user.status === "delisted" ||
+    user.status === "suspended"
+  ) {
+    return {
+      ok: false as const,
+      error: "account_suspended",
+      message: "This account has been suspended by marketplace moderation.",
+    };
+  }
+
+  const shop = (db.sellers || []).find((s: any) => s.user_id === user.id);
+  if (shop && (shop.status === "banned" || shop.status === "delisted")) {
+    return {
+      ok: false as const,
+      error: "shop_delisted",
+      message: "Your shop has been delisted by marketplace moderation.",
+    };
+  }
+
+  // Pick requested channel or auto-match identifier type
+  let chosenChannel: VerifyChannel = input.channel || (asEmail ? "email" : "whatsapp");
+  if (chosenChannel === "email" && !user.email) {
+    chosenChannel = "whatsapp";
+  } else if (chosenChannel !== "email" && !user.phone && user.email) {
+    chosenChannel = "email";
+  }
+
+  return issueVerificationOtp(db, {
+    userId: user.id,
+    channel: chosenChannel,
+  });
 }
 
 /**
@@ -328,32 +454,63 @@ export async function dispatchExternalOtp(
 
 /**
  * Verifies a 6-digit OTP for Email, Phone SMS, or WhatsApp.
+ * Supports lookup either by authenticated `userId` OR by `otpId` (for passwordless OTP login).
  */
 export function verifyCustomerOtp(
   db: any,
-  input: { userId: string; channel: VerifyChannel; code: string }
-) {
-  const user = (db.users || []).find((u: any) => u.id === input.userId);
-  if (!user) {
-    return { ok: false as const, error: "user_not_found", message: "Account not found." };
+  input: {
+    userId?: string;
+    otpId?: string;
+    channel: VerifyChannel;
+    code: string;
+    newPassword?: string;
   }
-
+) {
   const cleanCode = (input.code || "").replace(/\s+/g, "").trim();
   const now = Date.now();
 
-  const record = (db.otp_codes || []).find(
-    (c: any) =>
-      c.user_id === user.id &&
-      c.channel === input.channel &&
-      !c.used_at &&
-      !c.invalidated
-  );
+  let record: any = null;
+  if (input.otpId) {
+    record = (db.otp_codes || []).find(
+      (c: any) => c.id === input.otpId && !c.used_at && !c.invalidated
+    );
+  }
+  if (!record && input.userId) {
+    record = (db.otp_codes || []).find(
+      (c: any) =>
+        c.user_id === input.userId &&
+        c.channel === input.channel &&
+        !c.used_at &&
+        !c.invalidated
+    );
+  }
 
   if (!record) {
     return {
       ok: false as const,
       error: "no_active_code",
-      message: "No active verification code found. Request a new code.",
+      message: "No active verification code found. Please request a new code.",
+    };
+  }
+
+  const user = (db.users || []).find((u: any) => u.id === record.user_id);
+  if (!user) {
+    return {
+      ok: false as const,
+      error: "user_not_found",
+      message: "Account not found.",
+    };
+  }
+
+  if (
+    user.status === "banned" ||
+    user.status === "delisted" ||
+    user.status === "suspended"
+  ) {
+    return {
+      ok: false as const,
+      error: "account_suspended",
+      message: "This account has been suspended by marketplace moderation.",
     };
   }
 
@@ -362,7 +519,8 @@ export function verifyCustomerOtp(
     return {
       ok: false as const,
       error: "expired",
-      message: "This verification code has expired. Please request a new one.",
+      message:
+        "This verification code has expired. Please request a new one.",
     };
   }
 
@@ -380,19 +538,26 @@ export function verifyCustomerOtp(
     return {
       ok: false as const,
       error: "wrong_code",
-      message: "Incorrect 6-digit verification code. Please check and try again.",
+      message:
+        "Incorrect 6-digit verification code. Please check and try again.",
     };
   }
 
   record.used_at = nowISO();
+  const verifiedChannel: VerifyChannel = record.channel || input.channel;
   user.verified_channels = Array.from(
-    new Set([...(user.verified_channels || []), input.channel])
+    new Set([...(user.verified_channels || []), verifiedChannel])
   );
   user.is_verified = true;
   user.verified_at = nowISO();
 
-  // If this user owns a seller shop, automatically reflect contact verification!
-  const shop = (db.sellers || []).find((s: any) => s.user_id === user.id);
+  if (input.newPassword && input.newPassword.length >= 6) {
+    user.password_hash = hashPassword(input.newPassword);
+  }
+
+  const shop = (db.sellers || []).find(
+    (s: any) => s.user_id === user.id && s.status === "active"
+  );
   if (
     shop &&
     (!shop.verification_tier ||
@@ -400,52 +565,68 @@ export function verifyCustomerOtp(
       shop.verification_tier === "unverified")
   ) {
     shop.verification_tier = "phone";
-    shop.verified_via = input.channel;
+    shop.verified_via = verifiedChannel;
   }
 
-  audit(db, user.id, "user", user.id, `verified_${input.channel}`, null, {
+  audit(db, user.id, "user", user.id, `verified_${verifiedChannel}`, null, {
     verified_channels: user.verified_channels,
   });
   trackEvent(db, "customer_verified", {
     user_id: user.id,
-    channel: input.channel,
+    channel: verifiedChannel,
     role: user.role,
   });
 
-  return { ok: true as const, user, shop };
+  return { ok: true as const, user, shop: shop || null };
 }
 
 /**
  * Authenticates an existing Buyer or Seller via Email or Phone + Password.
- * Never reveals whether an account exists on failure (generic invalid credentials message).
+ * Never reveals customer names or private details on failure.
  */
 export function authenticateCustomer(
   db: any,
   input: { identifier: string; password: string }
 ) {
-  const raw = (input.identifier || "").trim();
-  const asEmail = normalizeEmail(raw);
-  const asPhone = toE164(raw);
+  const user = findCustomerByIdentifier(db, input.identifier || "");
 
-  const user = (db.users || []).find((u: any) => {
-    if (asEmail && u.email && u.email.toLowerCase() === asEmail) return true;
-    if (asPhone && u.phone && toE164(u.phone) === asPhone) return true;
-    return false;
-  });
-
-  if (!user || !user.password_hash) {
+  if (!user) {
     return {
       ok: false as const,
       error: "invalid_credentials",
-      message: "Invalid email/phone or password.",
+      message:
+        "Invalid email/phone or password. (New here? Tap 'Create account' above.)",
     };
   }
 
-  if (user.status === "banned" || user.status === "delisted" || user.status === "suspended") {
+  if (
+    user.status === "banned" ||
+    user.status === "delisted" ||
+    user.status === "suspended"
+  ) {
     return {
       ok: false as const,
       error: "account_suspended",
       message: "This account has been suspended by marketplace moderation.",
+    };
+  }
+
+  const shop = (db.sellers || []).find((s: any) => s.user_id === user.id);
+  if (shop && (shop.status === "banned" || shop.status === "delisted")) {
+    return {
+      ok: false as const,
+      error: "shop_delisted",
+      message: "Your shop has been delisted by marketplace moderation.",
+    };
+  }
+
+  // If this account was created via Phone/WhatsApp OTP onboarding without a password yet:
+  if (!user.password_hash) {
+    return {
+      ok: false as const,
+      error: "otp_only_account",
+      message:
+        "This account signs in with a 6-digit verification code. Choose WhatsApp, SMS, or Email below to receive your sign-in code.",
     };
   }
 
@@ -457,20 +638,45 @@ export function authenticateCustomer(
     };
   }
 
-  // Check if seller's shop was delisted/banned by admin
-  const shop = (db.sellers || []).find((s: any) => s.user_id === user.id);
-  if (shop && (shop.status === "banned" || shop.status === "delisted")) {
-    return {
-      ok: false as const,
-      error: "shop_delisted",
-      message: "Your shop has been delisted by marketplace moderation.",
-    };
-  }
-
   return { ok: true as const, user, shop: shop || null };
 }
 
-/* ---------------- Cookie Session Helpers (Server Only) ---------------- */
+/* ---------------- Cookie + Header Session Helpers (Server Only) ---------------- */
+
+async function resolveRequestSessionTokens(): Promise<string[]> {
+  const tokens: string[] = [];
+  try {
+    const jar = await cookies();
+    const cookieToken = jar.get(CUSTOMER_COOKIE)?.value?.trim();
+    if (cookieToken) tokens.push(cookieToken);
+  } catch {
+    // ignore outside request context
+  }
+  try {
+    const hdrs = await headers();
+    const hdrToken = hdrs.get("x-finda-token")?.trim();
+    if (hdrToken && !tokens.includes(hdrToken)) {
+      tokens.push(hdrToken);
+    }
+  } catch {
+    // ignore outside request context
+  }
+  return tokens;
+}
+
+function findActiveShopForUser(db: any, user: any) {
+  const userPhone = user.phone ? toE164(user.phone) : null;
+  const shop = (db.sellers || []).find(
+    (s: any) =>
+      s.status === "active" &&
+      (s.user_id === user.id ||
+        (userPhone && s.phone && toE164(s.phone) === userPhone))
+  );
+  if (shop && !shop.user_id) {
+    shop.user_id = user.id;
+  }
+  return shop || null;
+}
 
 export async function createCustomerSession(userId: string) {
   const db = getDB();
@@ -486,73 +692,75 @@ export async function createCustomerSession(userId: string) {
   });
   db.user_sessions = db.user_sessions.slice(0, 500);
 
-  const shop = (db.sellers || []).find(
-    (s: any) => s.user_id === user.id && s.status === "active"
-  );
+  const shop = findActiveShopForUser(db, user);
   saveDB(db);
 
   const jar = await cookies();
-  jar.set(CUSTOMER_COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 14,
-  });
+  const maxAge = 60 * 60 * 24 * 14;
+  const opts = await getSessionCookieOptions(maxAge);
+
+  jar.set(CUSTOMER_COOKIE, token, opts);
 
   if (shop) {
-    jar.set(SELLER_COOKIE, shop.id, {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 14,
-    });
+    jar.set(SELLER_COOKIE, shop.id, opts);
   } else {
-    jar.delete(SELLER_COOKIE);
+    const clearOpts = await getSessionCookieOptions(0);
+    jar.set(SELLER_COOKIE, "", clearOpts);
   }
 
-  return { token, user, shop: shop || null };
+  return { token, user, shop };
 }
 
-export async function getCustomerSession(): Promise<{
+export async function getCustomerSession(opts?: {
+  cookieOnly?: boolean;
+}): Promise<{
   user: any;
   shop: any | null;
+  token: string;
 } | null> {
-  const jar = await cookies();
-  const token = jar.get(CUSTOMER_COOKIE)?.value;
-  if (!token) return null;
+  let candidates: string[] = [];
+  if (opts?.cookieOnly) {
+    const jar = await cookies();
+    const ct = jar.get(CUSTOMER_COOKIE)?.value?.trim();
+    if (ct) candidates = [ct];
+  } else {
+    candidates = await resolveRequestSessionTokens();
+  }
+  if (!candidates.length) return null;
 
   const db = getDB();
-  const sess = (db.user_sessions || []).find((s: any) => s.token === token);
-  if (!sess) return null;
+  for (const token of candidates) {
+    const sess = (db.user_sessions || []).find((s: any) => s.token === token);
+    if (!sess) continue;
 
-  const user = (db.users || []).find((u: any) => u.id === sess.user_id);
-  if (
-    !user ||
-    user.status === "banned" ||
-    user.status === "delisted" ||
-    user.status === "suspended"
-  ) {
-    return null;
+    const user = (db.users || []).find((u: any) => u.id === sess.user_id);
+    if (
+      !user ||
+      user.status === "banned" ||
+      user.status === "delisted" ||
+      user.status === "suspended"
+    ) {
+      continue;
+    }
+
+    const shop = findActiveShopForUser(db, user);
+    return { user, shop, token };
   }
 
-  const shop =
-    (db.sellers || []).find(
-      (s: any) => s.user_id === user.id && s.status === "active"
-    ) || null;
-
-  return { user, shop };
+  return null;
 }
 
 export async function destroyCustomerSession() {
-  const jar = await cookies();
-  const token = jar.get(CUSTOMER_COOKIE)?.value;
-  if (token) {
+  const tokens = await resolveRequestSessionTokens();
+  if (tokens.length) {
     const db = getDB();
     db.user_sessions = (db.user_sessions || []).filter(
-      (s: any) => s.token !== token
+      (s: any) => !tokens.includes(s.token)
     );
     saveDB(db);
   }
-  jar.delete(CUSTOMER_COOKIE);
-  jar.delete(SELLER_COOKIE);
+  const jar = await cookies();
+  const clearOpts = await getSessionCookieOptions(0);
+  jar.set(CUSTOMER_COOKIE, "", clearOpts);
+  jar.set(SELLER_COOKIE, "", clearOpts);
 }

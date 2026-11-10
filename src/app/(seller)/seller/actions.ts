@@ -4,12 +4,26 @@
  * Thin Server Action wrappers: auth + persistence live here, all business rules
  * live in lib/ops.ts (which is unit-tested — see tests/ops.test.ts).
  */
+import { cookies, headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getDB, saveDB } from "@/lib/db";
 import { getAdminSession, getSellerSession, setSellerSession, clearSellerSession } from "@/lib/auth";
-import { destroyCustomerSession } from "@/lib/customer-auth";
+import { CUSTOMER_COOKIE, destroyCustomerSession } from "@/lib/customer-auth";
 import * as ops from "@/lib/ops";
+
+async function redirectWithAuth(target: string): Promise<never> {
+  const jar = await cookies();
+  const hasCookie = Boolean(jar.get(CUSTOMER_COOKIE)?.value);
+  if (!hasCookie) {
+    const hdrToken = (await headers()).get("x-finda-token")?.trim();
+    if (hdrToken && target.startsWith("/") && !target.includes("__ft=")) {
+      const sep = target.includes("?") ? "&" : "?";
+      redirect(`${target}${sep}__ft=${encodeURIComponent(hdrToken)}`);
+    }
+  }
+  redirect(target);
+}
 
 async function requireShop() {
   const session = await getSellerSession();
@@ -80,12 +94,12 @@ export async function addListing(formData: FormData) {
   );
   if (!result.ok) {
     if (result.error === "banned") {
-      redirect(`/seller/items?blocked=${encodeURIComponent(result.banned.label)}`);
+      await redirectWithAuth(`/seller/items?blocked=${encodeURIComponent(result.banned.label)}`);
     }
-    redirect("/seller/items?error=invalid");
+    await redirectWithAuth("/seller/items?error=invalid");
   }
   revalidatePath("/seller/items");
-  redirect("/seller/items?saved=1");
+  await redirectWithAuth("/seller/items?saved=1");
 }
 
 export async function bulkAddCommon(formData: FormData) {
@@ -99,7 +113,7 @@ export async function bulkAddCommon(formData: FormData) {
   }
   const out = run((dbx) => ops.bulkAddCommon(dbx, seller.id, category, prices));
   revalidatePath("/seller/items");
-  redirect(`/seller/items?bulk=${out.added}`);
+  await redirectWithAuth(`/seller/items?bulk=${out.added}`);
 }
 
 /* ------------------------------ daily tap -------------------------------- */
@@ -107,7 +121,7 @@ export async function dailyTapAll() {
   const { seller } = await requireShop();
   run((db) => ops.dailyTapAll(db, seller.id));
   revalidatePath("/seller");
-  redirect("/seller?tapped=1");
+  await redirectWithAuth("/seller?tapped=1");
 }
 
 export async function dailyTapOne(formData: FormData) {
@@ -132,7 +146,7 @@ export async function requestVerification(formData: FormData) {
     ops.requestVerification(db, seller.id, String(formData.get("tier") || "id"), String(formData.get("note") || "").trim())
   );
   revalidatePath("/seller/verify");
-  redirect("/seller/verify?sent=1");
+  await redirectWithAuth("/seller/verify?sent=1");
 }
 
 /* ------------------------------ location --------------------------------- */
@@ -147,5 +161,5 @@ export async function updateLocation(formData: FormData) {
     )
   );
   revalidatePath("/seller/location");
-  redirect(out.ok ? "/seller/location?saved=1" : "/seller/location?error=invalid");
+  await redirectWithAuth(out.ok ? "/seller/location?saved=1" : "/seller/location?error=invalid");
 }

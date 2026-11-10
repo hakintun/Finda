@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { RealtimeRefresh } from "@/components/buyer/realtime-refresh";
+import { AuthSessionBridge } from "@/components/buyer/auth-session-bridge";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,6 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en-NG">
       <body className="antialiased selection:bg-emerald-100 selection:text-emerald-950">
+        <Suspense fallback={null}>
+          <AuthSessionBridge />
+        </Suspense>
         <RealtimeRefresh />
         {children}
       </body>

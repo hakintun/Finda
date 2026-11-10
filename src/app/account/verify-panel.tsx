@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { clearClientAuthAndRedirect } from "@/lib/client-session";
 
 type Channel = "email" | "phone" | "whatsapp";
 
@@ -87,13 +88,7 @@ export function VerifyChannelsPanel({
   }
 
   async function handleSignOut() {
-    await fetch("/api/auth", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "logout" }),
-    });
-    router.push("/");
-    router.refresh();
+    await clearClientAuthAndRedirect("/");
   }
 
   const rows: { id: Channel; title: string; icon: string; val?: string | null; placeholder: string }[] = [

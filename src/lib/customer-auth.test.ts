@@ -3,10 +3,12 @@ import {
   authenticateCustomer,
   issueVerificationOtp,
   registerCustomer,
+  requestLoginOtp,
   verifyCustomerOtp,
 } from "./customer-auth";
 import { toggleCustomerStatus, toggleSellerStatus } from "./ops";
 import { queryBuyerCatalog } from "./buyer-cards";
+import { emptyDraft, parsePriceNaira, validateStep } from "./onboarding";
 
 function makeDb() {
   const now = new Date().toISOString();
@@ -209,5 +211,63 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
     const back = toggleCustomerStatus(db, "usr_admin", "usr_existing");
     expect(back.ok).toBe(true);
     expect(queryBuyerCatalog(db, {}).results).toHaveLength(1);
+  });
+
+  it("allows OTP-only accounts to sign in seamlessly via 6-digit code (WhatsApp/SMS/Email)", () => {
+    const db = makeDb();
+    // usr_existing has no password_hash -> password login guides to 6-digit code
+    const pwAttempt = authenticateCustomer(db, {
+      identifier: "+2348030001111",
+      password: "anyPassword",
+    });
+    expect(pwAttempt.ok).toBe(false);
+    if (!pwAttempt.ok) expect(pwAttempt.error).toBe("otp_only_account");
+
+    // Sign in with 6-digit code via WhatsApp
+    const otpReq = requestLoginOtp(db, {
+      identifier: "0803 000 1111",
+      channel: "whatsapp",
+    });
+    expect(otpReq.ok).toBe(true);
+    if (!otpReq.ok) return;
+
+    const ver = verifyCustomerOtp(db, {
+      otpId: otpReq.otpId,
+      channel: "whatsapp",
+      code: otpReq.sandboxCode!,
+    });
+    expect(ver.ok).toBe(true);
+    if (ver.ok) {
+      expect(ver.user.id).toBe("usr_existing");
+      expect(ver.shop?.id).toBe("shop_existing");
+    }
+  });
+
+  it("parses formatted Naira prices with commas and symbols cleanly during publish validation", () => {
+    expect(parsePriceNaira("18,500")).toBe(18500);
+    expect(parsePriceNaira("₦ 250,000")).toBe(250000);
+    expect(parsePriceNaira("4500")).toBe(4500);
+    expect(parsePriceNaira("")).toBe(0);
+
+    const d = emptyDraft("drf_test_publish");
+    d.verified = true;
+    d.consent = true;
+    d.business_name = "Rivers Solar Hub";
+    d.owner_name = "Tamuno";
+    d.primary_category = "Solar & Power";
+    d.zone_id = "mile-1";
+    d.lat = 4.7918;
+    d.lng = 7.0012;
+    d.landmark_text = "Beside First Bank, Mile 1 Market";
+    d.items = [
+      {
+        title: "200Ah Tubular Battery",
+        product_id: null,
+        price_naira: "₦ 185,000",
+        stock_status: "in",
+      },
+    ];
+
+    expect(validateStep(5, d)).toEqual([]);
   });
 });

@@ -2,9 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {
+  completeClientAuthAndNavigate,
+  saveClientSessionToken,
+} from "@/lib/client-session";
 
 type TabMode = "login" | "register" | "verify";
+type LoginMethod = "password" | "otp";
 type Channel = "email" | "phone" | "whatsapp";
 
 export function AuthClient({
@@ -16,8 +20,8 @@ export function AuthClient({
   initialRole?: "buyer" | "seller";
   nextPath?: string;
 }) {
-  const router = useRouter();
   const [tab, setTab] = React.useState<TabMode>(initialTab);
+  const [loginMethod, setLoginMethod] = React.useState<LoginMethod>("password");
   const [role, setRole] = React.useState<"buyer" | "seller">(initialRole);
   const [channel, setChannel] = React.useState<Channel>("whatsapp");
 
@@ -30,11 +34,14 @@ export function AuthClient({
 
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [infoNotice, setInfoNotice] = React.useState<string | null>(null);
   const [otpMeta, setOtpMeta] = React.useState<{
+    otpId?: string;
     channel: Channel;
     maskedTarget: string;
     sandboxCode?: string;
     whatsappLink?: string | null;
+    purpose?: "register" | "login";
   } | null>(null);
 
   function destinationAfterAuth(userRole: string, hasShop?: boolean) {
@@ -47,13 +54,19 @@ export function AuthClient({
     return "/";
   }
 
+  async function finishSignIn(path: string, sessionToken?: string | null) {
+    await completeClientAuthAndNavigate(path, sessionToken);
+  }
+
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError(null);
+    setInfoNotice(null);
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "register",
@@ -68,12 +81,20 @@ export function AuthClient({
       const data = await res.json();
       if (!res.ok || !data.ok) {
         setError(data.message || "Could not create your account.");
-      } else if (data.otp) {
-        setOtpMeta(data.otp);
-        setTab("verify");
       } else {
-        router.push(destinationAfterAuth(data.user.role, false));
-        router.refresh();
+        if (data.sessionToken) {
+          saveClientSessionToken(data.sessionToken);
+        }
+        if (data.otp) {
+          setOtpMeta({ ...data.otp, purpose: "register" });
+          setOtpCode("");
+          setTab("verify");
+        } else {
+          await finishSignIn(
+            destinationAfterAuth(data.user.role, false),
+            data.sessionToken
+          );
+        }
       }
     } catch {
       setError("Network error — please check your connection.");
@@ -82,13 +103,15 @@ export function AuthClient({
     }
   }
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handlePasswordLogin(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError(null);
+    setInfoNotice(null);
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "login",
@@ -98,10 +121,53 @@ export function AuthClient({
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setError(data.message || "Invalid login details.");
+        // Smooth upgrade path if account was created via Phone/WhatsApp OTP without a password
+        if (data.error === "otp_only_account") {
+          setLoginMethod("otp");
+          setInfoNotice(
+            data.message ||
+              "This account signs in with a 6-digit verification code. Tap Send Sign-In Code below."
+          );
+        } else {
+          setError(data.message || "Invalid email/phone or password.");
+        }
       } else {
-        router.push(destinationAfterAuth(data.user.role, data.hasShop));
-        router.refresh();
+        await finishSignIn(
+          destinationAfterAuth(data.user.role, data.hasShop),
+          data.sessionToken
+        );
+      }
+    } catch {
+      setError("Network error — please check your connection.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleOtpLoginRequest(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError(null);
+    setInfoNotice(null);
+    try {
+      const autoChannel: Channel = identifier.includes("@") ? "email" : channel;
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "request_login_otp",
+          identifier,
+          channel: autoChannel,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setError(data.message || "Could not send sign-in code.");
+      } else {
+        setOtpMeta({ ...data.otp, purpose: "login" });
+        setOtpCode("");
+        setTab("verify");
       }
     } catch {
       setError("Network error — please check your connection.");
@@ -118,9 +184,11 @@ export function AuthClient({
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "verify_otp",
+          otpId: otpMeta.otpId,
           channel: otpMeta.channel,
           code: otpCode,
         }),
@@ -129,8 +197,10 @@ export function AuthClient({
       if (!res.ok || !data.ok) {
         setError(data.message || "Invalid verification code.");
       } else {
-        router.push(destinationAfterAuth(data.role, data.hasShop));
-        router.refresh();
+        await finishSignIn(
+          destinationAfterAuth(data.role, data.hasShop),
+          data.sessionToken
+        );
       }
     } catch {
       setError("Network error — please try again.");
@@ -145,10 +215,12 @@ export function AuthClient({
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "send_otp",
           channel: nextChannel,
+          identifier: otpMeta?.purpose === "login" ? identifier : undefined,
         }),
       });
       const data = await res.json();
@@ -156,7 +228,10 @@ export function AuthClient({
         setError(data.message || "Could not send code on that channel.");
       } else {
         setChannel(nextChannel);
-        setOtpMeta(data);
+        setOtpMeta({
+          ...(data.otp || data),
+          purpose: otpMeta?.purpose || "register",
+        });
       }
     } finally {
       setBusy(false);
@@ -164,18 +239,19 @@ export function AuthClient({
   }
 
   return (
-    <div className="mx-auto w-full max-w-md rounded-3xl border border-[#E4E1D6] bg-white p-6 shadow-md">
+    <div className="mx-auto w-full max-w-md rounded-3xl border border-[#DEDBD0] bg-white p-6 shadow-md">
       {tab !== "verify" ? (
-        <div className="grid grid-cols-2 rounded-xl bg-[#F1EFE7] p-1 mb-5">
+        <div className="grid grid-cols-2 rounded-xl bg-[#F3F2EC] p-1 mb-5">
           <button
             type="button"
             onClick={() => {
               setTab("login");
               setError(null);
+              setInfoNotice(null);
             }}
-            className={`min-h-10 rounded-lg text-sm font-bold transition ${
+            className={`min-h-10 rounded-lg text-sm font-bold transition cursor-pointer ${
               tab === "login"
-                ? "bg-white text-[#064E3B] shadow-xs"
+                ? "bg-white text-[#065F46] shadow-xs"
                 : "text-[#4B5563]"
             }`}
           >
@@ -186,10 +262,11 @@ export function AuthClient({
             onClick={() => {
               setTab("register");
               setError(null);
+              setInfoNotice(null);
             }}
-            className={`min-h-10 rounded-lg text-sm font-bold transition ${
+            className={`min-h-10 rounded-lg text-sm font-bold transition cursor-pointer ${
               tab === "register"
-                ? "bg-white text-[#064E3B] shadow-xs"
+                ? "bg-white text-[#065F46] shadow-xs"
                 : "text-[#4B5563]"
             }`}
           >
@@ -204,67 +281,168 @@ export function AuthClient({
         </div>
       ) : null}
 
-      {/* ---------------- SIGN IN ---------------- */}
+      {infoNotice ? (
+        <div role="status" className="notice notice-info mb-4">
+          {infoNotice}
+        </div>
+      ) : null}
+
+      {/* ---------------- SIGN IN (Password OR 6-Digit Code) ---------------- */}
       {tab === "login" ? (
-        <form onSubmit={handleLogin} className="space-y-4">
+        <div className="space-y-4">
           <div>
             <h1 className="text-xl font-extrabold text-[#111827]">
               Sign in to Finda
             </h1>
             <p className="mt-1 text-xs text-[#4B5563]">
-              Enter your registered email address or Nigerian phone number.
+              Sign in with your password or an instant 6-digit code via WhatsApp,
+              SMS, or Email.
             </p>
           </div>
 
-          <div className="field">
-            <label className="lbl" htmlFor="login-id">
-              Email or Phone Number
-            </label>
-            <input
-              id="login-id"
-              type="text"
-              required
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="e.g. you@email.com or 0803 123 4567"
-              autoComplete="username"
-            />
+          {/* Login Method Switcher */}
+          <div className="grid grid-cols-2 gap-1.5 rounded-xl border border-[#DEDBD0] bg-[#FAF9F5] p-1">
+            <button
+              type="button"
+              onClick={() => {
+                setLoginMethod("password");
+                setError(null);
+              }}
+              className={`min-h-9 rounded-lg px-2 text-xs font-bold transition cursor-pointer ${
+                loginMethod === "password"
+                  ? "bg-[#065F46] text-white"
+                  : "text-[#374151] hover:text-[#111827]"
+              }`}
+            >
+              🔑 With Password
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setLoginMethod("otp");
+                setError(null);
+              }}
+              className={`min-h-9 rounded-lg px-2 text-xs font-bold transition cursor-pointer ${
+                loginMethod === "otp"
+                  ? "bg-[#065F46] text-white"
+                  : "text-[#374151] hover:text-[#111827]"
+              }`}
+            >
+              📲 With 6-Digit Code
+            </button>
           </div>
 
-          <div className="field">
-            <label className="lbl" htmlFor="login-pw">
-              Password
-            </label>
-            <input
-              id="login-pw"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              autoComplete="current-password"
-            />
-          </div>
+          {loginMethod === "password" ? (
+            <form onSubmit={handlePasswordLogin} className="space-y-4">
+              <div className="field">
+                <label className="lbl" htmlFor="login-id">
+                  Email or Phone Number
+                </label>
+                <input
+                  id="login-id"
+                  type="text"
+                  required
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="e.g. you@email.com or 0803 000 0000"
+                  autoComplete="username"
+                />
+              </div>
 
-          <button
-            type="submit"
-            disabled={busy}
-            className="min-h-12 w-full rounded-xl bg-[#064E3B] px-4 text-sm font-extrabold text-white hover:bg-[#043927] disabled:opacity-60 cursor-pointer"
-          >
-            {busy ? "Signing in…" : "SIGN IN"}
-          </button>
+              <div className="field">
+                <label className="lbl" htmlFor="login-pw">
+                  Password
+                </label>
+                <input
+                  id="login-pw"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={busy}
+                className="min-h-12 w-full rounded-xl bg-[#065F46] px-4 text-sm font-extrabold text-white hover:bg-[#064E3B] disabled:opacity-60 cursor-pointer"
+              >
+                {busy ? "Signing in…" : "SIGN IN"}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleOtpLoginRequest} className="space-y-4">
+              <div className="field">
+                <label className="lbl" htmlFor="otp-login-id">
+                  Registered Email or Phone Number
+                </label>
+                <input
+                  id="otp-login-id"
+                  type="text"
+                  required
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="e.g. 0803 000 0000 or you@email.com"
+                  autoComplete="username"
+                />
+              </div>
+
+              {!identifier.includes("@") ? (
+                <div className="space-y-1.5">
+                  <span className="text-xs font-bold text-[#111827]">
+                    Send 6-digit code via
+                  </span>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {(
+                      [
+                        { id: "whatsapp", label: "💬 WhatsApp" },
+                        { id: "phone", label: "📱 SMS" },
+                        { id: "email", label: "📧 Email" },
+                      ] as const
+                    ).map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setChannel(opt.id)}
+                        className={`min-h-9 rounded-xl border px-2 py-1 text-xs font-bold cursor-pointer ${
+                          channel === opt.id
+                            ? "border-2 border-[#065F46] bg-[#ECFDF5] text-[#065F46]"
+                            : "border-[#CFC9BA] bg-white text-[#374151]"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              <button
+                type="submit"
+                disabled={busy}
+                className="min-h-12 w-full rounded-xl bg-[#065F46] px-4 text-sm font-extrabold text-white hover:bg-[#064E3B] disabled:opacity-60 cursor-pointer"
+              >
+                {busy ? "Sending code…" : "SEND 6-DIGIT SIGN-IN CODE"}
+              </button>
+            </form>
+          )}
 
           <p className="text-center text-xs text-[#4B5563]">
             Don&apos;t have an account yet?{" "}
             <button
               type="button"
-              onClick={() => setTab("register")}
-              className="font-bold text-[#064E3B] hover:underline cursor-pointer"
+              onClick={() => {
+                setTab("register");
+                setError(null);
+              }}
+              className="font-bold text-[#065F46] hover:underline cursor-pointer"
             >
-              Register now
+              Create account
             </button>
           </p>
-        </form>
+        </div>
       ) : null}
 
       {/* ---------------- REGISTRATION ---------------- */}
@@ -290,8 +468,8 @@ export function AuthClient({
                 onClick={() => setRole("buyer")}
                 className={`min-h-11 rounded-xl border px-3 py-2 text-xs font-bold cursor-pointer ${
                   role === "buyer"
-                    ? "border-2 border-[#064E3B] bg-[#ECFDF5] text-[#064E3B]"
-                    : "border-[#D5D1C4] bg-white text-[#374151]"
+                    ? "border-2 border-[#065F46] bg-[#ECFDF5] text-[#065F46]"
+                    : "border-[#CFC9BA] bg-white text-[#374151]"
                 }`}
               >
                 🛒 Buyer Account
@@ -301,8 +479,8 @@ export function AuthClient({
                 onClick={() => setRole("seller")}
                 className={`min-h-11 rounded-xl border px-3 py-2 text-xs font-bold cursor-pointer ${
                   role === "seller"
-                    ? "border-2 border-[#064E3B] bg-[#ECFDF5] text-[#064E3B]"
-                    : "border-[#D5D1C4] bg-white text-[#374151]"
+                    ? "border-2 border-[#065F46] bg-[#ECFDF5] text-[#065F46]"
+                    : "border-[#CFC9BA] bg-white text-[#374151]"
                 }`}
               >
                 🏪 Seller / Stall
@@ -344,8 +522,8 @@ export function AuthClient({
                   onClick={() => setChannel(opt.id)}
                   className={`min-h-10 rounded-xl border px-2 py-1.5 text-xs font-bold cursor-pointer ${
                     channel === opt.id
-                      ? "border-2 border-[#064E3B] bg-[#ECFDF5] text-[#064E3B]"
-                      : "border-[#D5D1C4] bg-white text-[#374151]"
+                      ? "border-2 border-[#065F46] bg-[#ECFDF5] text-[#065F46]"
+                      : "border-[#CFC9BA] bg-white text-[#374151]"
                   }`}
                 >
                   {opt.label}
@@ -357,7 +535,9 @@ export function AuthClient({
           <div className="field">
             <label className="lbl" htmlFor="reg-email">
               Email Address{" "}
-              {channel === "email" ? "(Required)" : "(Optional — good for backup)"}
+              {channel === "email"
+                ? "(Required)"
+                : "(Optional — good for backup)"}
             </label>
             <input
               id="reg-email"
@@ -381,7 +561,7 @@ export function AuthClient({
               required={channel !== "email"}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="e.g. 0803 123 4567"
+              placeholder="e.g. 0803 000 0000"
               autoComplete="tel"
             />
           </div>
@@ -405,7 +585,7 @@ export function AuthClient({
           <button
             type="submit"
             disabled={busy}
-            className="min-h-12 w-full rounded-xl bg-[#064E3B] px-4 text-sm font-extrabold text-white hover:bg-[#043927] disabled:opacity-60 cursor-pointer"
+            className="min-h-12 w-full rounded-xl bg-[#065F46] px-4 text-sm font-extrabold text-white hover:bg-[#064E3B] disabled:opacity-60 cursor-pointer"
           >
             {busy
               ? "Sending verification code…"
@@ -414,7 +594,7 @@ export function AuthClient({
 
           <p className="text-center text-[11px] text-[#6B7280]">
             By registering you agree to our{" "}
-            <Link href="/privacy" className="text-[#064E3B] underline">
+            <Link href="/privacy" className="text-[#065F46] underline">
               Privacy Policy
             </Link>
             .
@@ -425,15 +605,30 @@ export function AuthClient({
       {/* ---------------- 6-DIGIT OTP VERIFICATION ---------------- */}
       {tab === "verify" && otpMeta ? (
         <form onSubmit={handleVerifyOtp} className="space-y-4">
-          <div>
+          <div className="flex items-center justify-between">
             <span className="inline-flex rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-xs font-bold text-[#065F46]">
-              Step 2 of 2 · Verify {otpMeta.channel.toUpperCase()}
+              {otpMeta.purpose === "login"
+                ? `Sign-In Code · ${otpMeta.channel.toUpperCase()}`
+                : `Step 2 of 2 · Verify ${otpMeta.channel.toUpperCase()}`}
             </span>
-            <h1 className="mt-2 text-xl font-extrabold text-[#111827]">
+            <button
+              type="button"
+              onClick={() => {
+                setTab(otpMeta.purpose === "login" ? "login" : "register");
+                setError(null);
+              }}
+              className="text-xs font-bold text-[#6B7280] hover:text-[#111827] cursor-pointer"
+            >
+              ← Back
+            </button>
+          </div>
+
+          <div>
+            <h1 className="text-xl font-extrabold text-[#111827]">
               Enter your 6-digit code
             </h1>
             <p className="mt-1 text-xs text-[#4B5563]">
-              We sent a 6-digit verification code via{" "}
+              We sent a 6-digit code via{" "}
               <strong className="uppercase">{otpMeta.channel}</strong> to{" "}
               <strong>{otpMeta.maskedTarget}</strong>.
             </p>
@@ -452,21 +647,21 @@ export function AuthClient({
 
           {otpMeta.sandboxCode ? (
             <div className="rounded-xl border border-[#93C5FD] bg-[#EFF6FF] p-3 text-xs text-[#1E40AF] space-y-1">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <span className="font-bold">
                   📨 Instant Verification Code ({otpMeta.channel}):
                 </span>
                 <button
                   type="button"
                   onClick={() => setOtpCode(otpMeta.sandboxCode || "")}
-                  className="rounded bg-[#1E40AF] px-2 py-0.5 text-[11px] font-bold text-white cursor-pointer"
+                  className="rounded bg-[#1E40AF] px-2.5 py-1 text-[11px] font-bold text-white cursor-pointer"
                 >
                   Auto-fill {otpMeta.sandboxCode}
                 </button>
               </div>
               <p className="text-[11px] opacity-90">
-                Shown in sandbox mode when external SMS/SMTP keys aren&apos;t set so
-                you can test verification immediately.
+                Shown in sandbox mode when external SMS/SMTP keys aren&apos;t set
+                so you can verify immediately.
               </p>
             </div>
           ) : null}
@@ -492,12 +687,16 @@ export function AuthClient({
           <button
             type="submit"
             disabled={busy}
-            className="min-h-12 w-full rounded-xl bg-[#064E3B] px-4 text-sm font-extrabold text-white hover:bg-[#043927] disabled:opacity-60 cursor-pointer"
+            className="min-h-12 w-full rounded-xl bg-[#065F46] px-4 text-sm font-extrabold text-white hover:bg-[#064E3B] disabled:opacity-60 cursor-pointer"
           >
-            {busy ? "Verifying…" : "✓ VERIFY & CONTINUE"}
+            {busy
+              ? "Verifying…"
+              : otpMeta.purpose === "login"
+              ? "✓ VERIFY & SIGN IN"
+              : "✓ VERIFY & CONTINUE"}
           </button>
 
-          <div className="border-t border-[#E4E1D6] pt-3 text-center space-y-2">
+          <div className="border-t border-[#E5E2D9] pt-3 text-center space-y-2">
             <p className="text-xs text-[#4B5563]">
               Prefer another verification channel?
             </p>
@@ -508,9 +707,14 @@ export function AuthClient({
                   type="button"
                   disabled={busy}
                   onClick={() => handleResend(ch)}
-                  className="rounded-lg border border-[#D5D1C4] bg-white px-2.5 py-1 text-xs font-semibold text-[#374151] hover:border-[#064E3B] cursor-pointer"
+                  className="rounded-lg border border-[#CFC9BA] bg-white px-2.5 py-1 text-xs font-semibold text-[#374151] hover:border-[#065F46] cursor-pointer"
                 >
-                  Send via {ch === "phone" ? "SMS" : ch === "whatsapp" ? "WhatsApp" : "Email"}
+                  Send via{" "}
+                  {ch === "phone"
+                    ? "SMS"
+                    : ch === "whatsapp"
+                    ? "WhatsApp"
+                    : "Email"}
                 </button>
               ))}
             </div>

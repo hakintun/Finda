@@ -80,7 +80,9 @@ export default async function SellerLayout({
                 View public shop
               </Link>
               <form action={logout}>
-                <button className="btn btn-sm">Sign out</button>
+                <button className="btn btn-sm" data-signout="1">
+                  Sign out
+                </button>
               </form>
             </div>
           </div>

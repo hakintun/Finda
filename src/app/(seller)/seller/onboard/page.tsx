@@ -1,51 +1,82 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getDB } from "@/lib/db";
+import { getDB, saveDB, nowISO } from "@/lib/db";
 import { getCustomerSession } from "@/lib/customer-auth";
+import { toE164 } from "@/lib/freshness";
 import OnboardingWizard from "./wizard";
-import { getDraft, STEPS } from "@/lib/onboarding";
+import { emptyDraft, getDraft, STEPS } from "@/lib/onboarding";
 
 export const dynamic = "force-dynamic";
 
 export default async function OnboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ step?: string }>;
+  searchParams: Promise<{ step?: string; __ft?: string }>;
 }) {
-  const [draft, customer, sp] = await Promise.all([
+  const [rawDraft, customer, sp] = await Promise.all([
     getDraft(),
     getCustomerSession(),
     searchParams,
   ]);
 
-  if (draft.published_shop_id) {
-    redirect(`/seller/onboard/published?shop=${draft.published_shop_id}`);
+  // If the signed-in user already owns an active shop, send them straight to their Stall Manager
+  if (customer?.shop) {
+    const suffix = sp.__ft ? `?__ft=${encodeURIComponent(sp.__ft)}` : "";
+    redirect(`/seller${suffix}`);
   }
 
   const db = getDB();
-  const initialDraft: any = { ...draft };
+  db.onboarding_drafts = db.onboarding_drafts || [];
 
+  // Never trap a new visitor/account in an already-published stale draft from an earlier cookie
+  let activeDraft: any = rawDraft;
+  if (activeDraft.published_shop_id) {
+    activeDraft = emptyDraft();
+    db.onboarding_drafts.push(activeDraft);
+    saveDB(db);
+  }
+
+  let dirty = false;
   // Pre-fill ONLY the currently authenticated user's own contact if they already registered
   if (customer?.user) {
-    if (!initialDraft.phone && customer.user.phone) {
-      initialDraft.phone = customer.user.phone;
+    const normPhone = customer.user.phone ? toE164(customer.user.phone) : null;
+    if (!activeDraft.phone && normPhone) {
+      activeDraft.phone = normPhone;
+      dirty = true;
     }
-    if (!initialDraft.email && customer.user.email) {
-      initialDraft.email = customer.user.email;
+    if (!activeDraft.email && customer.user.email) {
+      activeDraft.email = customer.user.email;
+      dirty = true;
     }
-    if (!initialDraft.owner_name && customer.user.name) {
-      initialDraft.owner_name = customer.user.name;
+    if (!activeDraft.owner_name && customer.user.name) {
+      activeDraft.owner_name = customer.user.name;
+      dirty = true;
+    }
+    // If the seller already verified their account on /auth and has a valid Nigerian phone,
+    // skip redundant Step 1 OTP and begin directly at Step 2!
+    if (customer.user.is_verified && activeDraft.phone && !activeDraft.verified) {
+      activeDraft.verified = true;
+      activeDraft.consent = true;
+      activeDraft.step = Math.max(activeDraft.step || 1, 2);
+      dirty = true;
     }
   }
 
+  if (dirty) {
+    activeDraft.updated_at = nowISO();
+    saveDB(db);
+  }
+
+  const initialDraft = { ...activeDraft };
   const requested = Number(sp.step || initialDraft.step || 1);
+  const effectiveStep = Math.min(Math.max(requested, 1), 6);
 
   return (
     <main className="wrap narrow">
       <div className="row-between wrapflex" style={{ margin: "20px 0 14px" }}>
         <div>
           <span className="badge badge-neutral">
-            Seller onboarding · step {Math.min(requested, 6)} of 6
+            Seller onboarding · step {effectiveStep} of 6
           </span>
           <h1
             style={{ margin: "10px 0 4px", fontSize: 26, letterSpacing: "-.03em" }}
@@ -63,11 +94,9 @@ export default async function OnboardPage({
       </div>
 
       <div className="progress" style={{ marginBottom: 6 }}>
-        <span style={{ width: `${(Math.min(requested, 6) / 6) * 100}%` }} />
+        <span style={{ width: `${(effectiveStep / 6) * 100}%` }} />
       </div>
-      <div className="tiny muted mb16">
-        {STEPS[Math.min(requested, 6) - 1]?.title}
-      </div>
+      <div className="tiny muted mb16">{STEPS[effectiveStep - 1]?.title}</div>
 
       <OnboardingWizard
         initialDraft={initialDraft}
@@ -90,7 +119,7 @@ export default async function OnboardPage({
         categories={
           [...new Set(db.products.map((p: any) => p.category as string))].sort() as string[]
         }
-        startStep={Math.min(Math.max(requested, 1), 6)}
+        startStep={effectiveStep}
       />
     </main>
   );

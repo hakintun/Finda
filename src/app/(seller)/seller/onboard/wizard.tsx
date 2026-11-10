@@ -4,6 +4,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatNaira, toE164 } from "@/lib/freshness";
 import { suggestProducts, didYouMean, type Product } from "@/lib/products";
+import { completeClientAuthAndNavigate } from "@/lib/client-session";
+
+function parsePriceInput(val: string | number | null | undefined): number {
+  const cleaned = String(val ?? "").replace(/[^0-9.]/g, "");
+  if (!cleaned) return 0;
+  const n = Number(cleaned);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
 
 type DraftItem = { title: string; product_id: string | null; price_naira: string; stock_status: string };
 type Draft = {
@@ -40,41 +48,60 @@ export default function OnboardingWizard({
   );
   const [phoneInput, setPhoneInput] = useState(initialDraft.phone || "");
   const [emailInput, setEmailInput] = useState((initialDraft as any).email || "");
+  const [passwordInput, setPasswordInput] = useState("");
   const [publishWarnings, setPublishWarnings] = useState<string[]>([]);
 
-  /* ------------------------------------------------ persistence */
+  /* ------------------------------------------------ persistence (zero-loss full snapshot) */
+  const latestDraftRef = useRef<Draft>(draft);
+  useEffect(() => {
+    latestDraftRef.current = draft;
+  }, [draft]);
+
   const saveTimer = useRef<any>(null);
-  const queueSave = (patch: Partial<Draft>, validateTo?: number) => {
+  const queueSave = (fullDraft: Draft, validateTo?: number) => {
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
       const res = await fetch("/api/onboard", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "save", patch, validateStep: validateTo ?? step }),
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "save",
+          draft_id: fullDraft.id,
+          patch: fullDraft,
+          validateStep: validateTo ?? step,
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (data?.ok) {
         setSavedAt(data.saved_at);
-        setErrors(data.errors || []);
         setBanned(data.bannedHits || []);
       }
-    }, 450);
+    }, 320);
   };
 
   const patch = (p: Partial<Draft>, validateTo?: number) => {
-    setDraft((d) => ({ ...d, ...p }));
-    queueSave(p, validateTo);
+    const merged: Draft = { ...latestDraftRef.current, ...p };
+    latestDraftRef.current = merged;
+    setDraft(merged);
+    queueSave(merged, validateTo);
   };
 
   /* ------------------------------------------------ step 1: OTP */
   async function sendOtp() {
-    setBusy(true); setErrors([]);
+    setBusy(true);
+    setErrors([]);
     const res = await fetch("/api/onboard", {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action: "send-otp",
+        draft_id: latestDraftRef.current.id,
         channel: verifyChannel,
         phone: phoneInput,
         email: emailInput || undefined,
+        password: passwordInput || undefined,
       }),
     });
     const data = await res.json();
@@ -82,43 +109,84 @@ export default function OnboardingWizard({
     if (!data.ok) return setErrors(data.errors || ["Could not send the code."]);
     setDemoCode(data.demo_code);
     setWaLink(data.whatsapp_link || null);
+    latestDraftRef.current = data.draft;
     setDraft(data.draft);
   }
 
-  async function verifyOtp() {
-    setBusy(true); setErrors([]);
+  async function resetOtpTarget() {
+    setBusy(true);
+    setErrors([]);
     const res = await fetch("/api/onboard", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "verify-otp", code: otpCode, consent: true }),
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "reset-otp",
+        draft_id: latestDraftRef.current.id,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    setBusy(false);
+    if (data?.ok && data.draft) {
+      latestDraftRef.current = data.draft;
+      setDraft(data.draft);
+      setOtpCode("");
+      setDemoCode(null);
+      setWaLink(null);
+    }
+  }
+
+  async function verifyOtp() {
+    setBusy(true);
+    setErrors([]);
+    const res = await fetch("/api/onboard", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "verify-otp",
+        draft_id: latestDraftRef.current.id,
+        code: otpCode,
+        consent: true,
+      }),
     });
     const data = await res.json();
     setBusy(false);
     if (!data.ok) return setErrors(data.errors || ["Wrong code."]);
+    latestDraftRef.current = data.draft;
     setDraft(data.draft);
     setStep(2);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   /* ------------------------------------------------ nav */
   function next() {
+    const cur = latestDraftRef.current;
     const e: string[] = [];
-    if (step === 1 && !draft.verified) e.push("Confirm the code we sent to your phone.");
+    if (step === 1 && !cur.verified) e.push("Confirm the verification code on Step 1 first.");
     if (step === 2) {
-      if (!draft.business_name.trim()) e.push("Enter your shop name.");
-      if (!draft.owner_name.trim()) e.push("Enter the name buyers should ask for.");
+      if (!cur.business_name.trim() || cur.business_name.trim().length < 2)
+        e.push("Enter your shop name (at least 2 characters).");
+      if (!cur.owner_name.trim() || cur.owner_name.trim().length < 2)
+        e.push("Enter the name buyers should ask for (at least 2 characters).");
     }
-    if (step === 3 && !draft.primary_category) e.push("Choose what you mostly sell.");
+    if (step === 3 && !cur.primary_category) e.push("Choose what you mostly sell.");
     if (step === 4) {
-      if (draft.lat == null || draft.lng == null) e.push("Drop your shop pin on the map.");
-      if (!draft.zone_id) e.push("Choose the market area your shop is in.");
-      if (!draft.landmark_text.trim() || draft.landmark_text.trim().length < 6) e.push("Add a landmark — this is how buyers find your stall.");
+      if (cur.lat == null || cur.lng == null) e.push("Drop your shop pin on the map.");
+      if (!cur.zone_id) e.push("Choose the market area your shop is in.");
+      if (!cur.landmark_text.trim() || cur.landmark_text.trim().length < 6)
+        e.push("Add a walkable street landmark (at least 6 characters).");
     }
     if (step === 5) {
-      const real = draft.items.filter((i) => i.title.trim() && Number(i.price_naira) > 0);
-      if (real.length < 1) e.push("Add at least 1 item (aim for 5).");
+      const real = cur.items.filter((i) => i.title.trim() && parsePriceInput(i.price_naira) > 0);
+      if (real.length < 1) e.push("Add at least 1 item with a Naira price (aim for 5).");
     }
     if (banned.length) e.push(...banned);
     setErrors(e);
-    if (e.length) return;
+    if (e.length) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const target = Math.min(step + 1, 6);
     setStep(target);
     patch({ step: target }, target);
@@ -135,34 +203,60 @@ export default function OnboardingWizard({
 
   /* ------------------------------------------------ items */
   const setItem = (idx: number, p: Partial<DraftItem>) => {
-    const items = draft.items.map((it, i) => (i === idx ? { ...it, ...p } : it));
+    const items = latestDraftRef.current.items.map((it, i) => (i === idx ? { ...it, ...p } : it));
     patch({ items });
   };
   const addItem = () => {
-    if (draft.items.length >= 12) return;
-    patch({ items: [...draft.items, { title: "", product_id: null, price_naira: "", stock_status: "in" }] });
-    setDraft((d) => ({ ...d, items: [...d.items, { title: "", product_id: null, price_naira: "", stock_status: "in" }] }));
+    if (latestDraftRef.current.items.length >= 12) return;
+    const items = [
+      ...latestDraftRef.current.items,
+      { title: "", product_id: null, price_naira: "", stock_status: "in" },
+    ];
+    patch({ items });
   };
   const removeItem = (idx: number) => {
-    const items = draft.items.filter((_, i) => i !== idx);
-    setDraft((d) => ({ ...d, items }));
+    const items = latestDraftRef.current.items.filter((_, i) => i !== idx);
     patch({ items });
   };
 
   /* ------------------------------------------------ publish */
   async function publish() {
-    setBusy(true); setErrors([]);
-    const res = await fetch("/api/onboard", {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "publish" }),
-    });
-    const data = await res.json();
-    setBusy(false);
-    if (!data.ok) return setErrors(data.errors || ["Could not publish."]);
-    setPublishWarnings(data.warnings || []);
-    router.push(`/seller/onboard/published?shop=${data.seller_id}`);
+    clearTimeout(saveTimer.current);
+    setBusy(true);
+    setErrors([]);
+    try {
+      const snapshot = latestDraftRef.current;
+      const res = await fetch("/api/onboard", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "publish",
+          draft_id: snapshot.id,
+          draft: snapshot,
+        }),
+      });
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (!res.ok || !data.ok) {
+        setBusy(false);
+        setErrors(data.errors || ["Could not publish your shop. Please check all steps and try again."]);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      setPublishWarnings(data.warnings || []);
+      await completeClientAuthAndNavigate(
+        `/seller/onboard/published?shop=${encodeURIComponent(data.seller_id)}`,
+        data.sessionToken
+      );
+    } catch {
+      setBusy(false);
+      setErrors(["Network error while publishing — please tap Publish my shop again."]);
+    }
   }
 
-  const filledItems = draft.items.filter((i) => i.title.trim() && Number(i.price_naira) > 0).length;
+  const filledItems = draft.items.filter(
+    (i) => i.title.trim() && parsePriceInput(i.price_naira) > 0
+  ).length;
 
   return (
     <>
@@ -254,6 +348,19 @@ export default function OnboardingWizard({
                 </label>
               ) : null}
 
+              <label className="field mb16">
+                <span className="lbl">Account Password (optional — for password sign-in)</span>
+                <input
+                  type="password"
+                  placeholder="Min. 6 characters (or leave blank to sign in via OTP)"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                />
+                <span className="hint">
+                  You can always sign in later with a 6-digit code OR this password.
+                </span>
+              </label>
+
               <button className="btn btn-primary btn-block mt16" onClick={sendOtp} disabled={busy}>
                 {busy ? "Sending…" : `Send 6-digit code via ${verifyChannel.toUpperCase()}`}
               </button>
@@ -324,6 +431,9 @@ export default function OnboardingWizard({
                 </button>
                 <button className="btn" onClick={sendOtp} disabled={busy}>
                   Resend
+                </button>
+                <button className="btn btn-ghost" onClick={resetOtpTarget} disabled={busy}>
+                  Change number
                 </button>
               </div>
               {!draft.consent ? (
@@ -432,18 +542,37 @@ export default function OnboardingWizard({
             <div className="stat-line"><span className="muted">Items</span><span className="v">{filledItems}</span></div>
           </div>
 
-          {draft.items.filter((i) => i.title && i.price_naira).length ? (
+          {draft.items.filter((i) => i.title && parsePriceInput(i.price_naira) > 0).length ? (
             <div className="mt16">
-              {draft.items.filter((i) => i.title && i.price_naira).map((i, n) => (
-                <div className="stat-line" key={n}>
-                  <span>{i.title}</span>
-                  <span className="v">{formatNaira(Math.round(Number(i.price_naira) * 100))}</span>
-                </div>
-              ))}
+              {draft.items
+                .filter((i) => i.title && parsePriceInput(i.price_naira) > 0)
+                .map((i, n) => (
+                  <div className="stat-line" key={n}>
+                    <span>{i.title}</span>
+                    <span className="v">
+                      {formatNaira(Math.round(parsePriceInput(i.price_naira) * 100))}
+                    </span>
+                  </div>
+                ))}
             </div>
           ) : null}
 
-          {publishWarnings.map((w) => <div key={w} className="notice notice-warn mt16">{w}</div>)}
+          {publishWarnings.map((w) => (
+            <div key={w} className="notice notice-warn mt16">
+              {w}
+            </div>
+          ))}
+
+          {errors.length ? (
+            <div className="notice notice-err mt16">
+              <strong>Please complete before publishing:</strong>
+              <ul style={{ margin: "6px 0 0", paddingLeft: 18 }}>
+                {errors.map((e) => (
+                  <li key={e}>{e}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           <button className="btn btn-primary btn-block mt16" onClick={publish} disabled={busy}>
             {busy ? "Publishing…" : "Publish my shop"}
@@ -512,10 +641,17 @@ function LocationStep({ draft, zones, patch }: { draft: Draft; zones: Zone[]; pa
 
       <label className="field mb16">
         <span className="lbl">Market area</span>
-        <select value={draft.zone_id} onChange={(e) => {
-          const z = zones.find((x) => x.id === e.target.value)!;
-          patch({ zone_id: z.id, lat: z.lat, lng: z.lng }, 4);
-        }}>
+        <select
+          value={draft.zone_id}
+          onChange={(e) => {
+            const z = zones.find((x) => x.id === e.target.value);
+            if (!z) {
+              patch({ zone_id: "", lat: null, lng: null }, 4);
+              return;
+            }
+            patch({ zone_id: z.id, lat: z.lat, lng: z.lng }, 4);
+          }}
+        >
           <option value="">Choose your market area…</option>
           {zones.map((z) => <option key={z.id} value={z.id}>{z.name} ({z.cluster})</option>)}
         </select>
@@ -652,8 +788,13 @@ function ItemRow({
       <div className="row mt8" style={{ gap: 10, alignItems: "flex-end" }}>
         <label className="field grow">
           <span className="lbl tiny">Price (₦)</span>
-          <input type="number" inputMode="numeric" placeholder="185000" value={item.price_naira}
-            onChange={(e) => onChange({ price_naira: e.target.value })} />
+          <input
+            type="text"
+            inputMode="numeric"
+            placeholder="e.g. 18500"
+            value={item.price_naira}
+            onChange={(e) => onChange({ price_naira: e.target.value })}
+          />
         </label>
         <label className="field" style={{ minWidth: 132 }}>
           <span className="lbl tiny">Stock</span>

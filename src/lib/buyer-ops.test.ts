@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 import {
   createConfirmRequest,
   revealSellerPhone,
@@ -49,44 +50,47 @@ describe("buyer-ops integration rules", () => {
       buyerName: "Chinedu",
       buyerPhone: "0803 555 1212",
     });
-    expect(res.ok).toBe(true);
-    expect(db.confirm_requests).toHaveLength(1);
-    expect((db.confirm_requests[0] as any).state).toBe("pending");
-    expect((db.confirm_requests[0] as any).buyer_phone).toBe("+2348035551212");
+    assert.equal(res.ok, true);
+    assert.equal(db.confirm_requests.length, 1);
+    assert.equal((db.confirm_requests[0] as any).state, "pending");
+    assert.equal((db.confirm_requests[0] as any).buyer_phone, "+2348035551212");
   });
 
   it("auto-demotes a listing to unconfirmed after 3 distinct not_available strikes (US-3.2)", () => {
     const db = makeMockDb();
-    expect(
+    assert.equal(
       submitAccuracyFeedback(db, {
         listingId: "lst_test",
         verdict: "not_available",
         buyerKey: "b1",
-      }).demoted
-    ).toBe(false);
+      }).demoted,
+      false
+    );
     // Same buyer tapping twice does not count as 2 strikes
-    expect(
+    assert.equal(
       submitAccuracyFeedback(db, {
         listingId: "lst_test",
         verdict: "not_available",
         buyerKey: "b1",
-      }).strikes
-    ).toBe(1);
-    expect(
+      }).strikes,
+      1
+    );
+    assert.equal(
       submitAccuracyFeedback(db, {
         listingId: "lst_test",
         verdict: "not_available",
         buyerKey: "b2",
-      }).demoted
-    ).toBe(false);
+      }).demoted,
+      false
+    );
 
     const third = submitAccuracyFeedback(db, {
       listingId: "lst_test",
       verdict: "not_available",
       buyerKey: "b3",
     });
-    expect(third.demoted).toBe(true);
-    expect(db.listings[0].stock_status).toBe("unconfirmed");
+    assert.equal(third.demoted, true);
+    assert.equal(db.listings[0].stock_status, "unconfirmed");
   });
 
   it("enforces 15 reveals/hour anti-scraping rate limit on phone numbers (US-4.2)", () => {
@@ -96,35 +100,37 @@ describe("buyer-ops integration rules", () => {
         sellerId: "shop_test",
         clientKey: "ip_1",
       });
-      expect(okRes.ok).toBe(true);
+      assert.equal(okRes.ok, true);
     }
     const blocked = revealSellerPhone(db, {
       sellerId: "shop_test",
       clientKey: "ip_1",
     });
-    expect(blocked.ok).toBe(false);
+    assert.equal(blocked.ok, false);
     if (!blocked.ok) {
-      expect(blocked.status).toBe(429);
+      assert.equal(blocked.status, 429);
     }
   });
 
   it("records demand posts and buyer abuse reports cleanly", () => {
     const db = makeMockDb();
-    expect(
+    assert.equal(
       submitDemandPost(db, {
         rawText: "Need 1.5HP copper coil AC around Woji",
         cluster: "Ada George",
-      }).ok
-    ).toBe(true);
-    expect(db.demand_posts).toHaveLength(1);
+      }).ok,
+      true
+    );
+    assert.equal(db.demand_posts.length, 1);
 
-    expect(
+    assert.equal(
       submitBuyerReport(db, {
         listingId: "lst_test",
         reason: "wrong_price",
         note: "Quoted higher price on arrival",
-      }).ok
-    ).toBe(true);
-    expect(db.reports).toHaveLength(1);
+      }).ok,
+      true
+    );
+    assert.equal(db.reports.length, 1);
   });
 });

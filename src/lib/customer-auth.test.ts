@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 import {
   authenticateCustomer,
   issueVerificationOtp,
@@ -74,10 +75,10 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       password: "securePassword1",
       channel: "email",
     });
-    expect(reg.ok).toBe(true);
+    assert.equal(reg.ok, true);
     if (!reg.ok) return;
-    expect(reg.otp?.channel).toBe("email");
-    expect(reg.user.is_verified).toBe(false);
+    assert.equal(reg.otp?.channel, "email");
+    assert.equal(reg.user.is_verified, false);
 
     // Verify Email OTP
     const verEmail = verifyCustomerOtp(db, {
@@ -85,24 +86,25 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       channel: "email",
       code: reg.otp!.sandboxCode!,
     });
-    expect(verEmail.ok).toBe(true);
-    expect(reg.user.is_verified).toBe(true);
-    expect(reg.user.verified_channels).toContain("email");
+    assert.equal(verEmail.ok, true);
+    assert.equal(reg.user.is_verified, true);
+    assert.ok(reg.user.verified_channels.includes("email"));
 
     // Also verify Phone SMS
     const smsOtp = issueVerificationOtp(db, {
       userId: reg.user.id,
       channel: "phone",
     });
-    expect(smsOtp.ok).toBe(true);
+    assert.equal(smsOtp.ok, true);
     if (smsOtp.ok) {
-      expect(
+      assert.equal(
         verifyCustomerOtp(db, {
           userId: reg.user.id,
           channel: "phone",
           code: smsOtp.sandboxCode!,
-        }).ok
-      ).toBe(true);
+        }).ok,
+        true
+      );
     }
 
     // Also verify WhatsApp
@@ -110,21 +112,22 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       userId: reg.user.id,
       channel: "whatsapp",
     });
-    expect(waOtp.ok).toBe(true);
+    assert.equal(waOtp.ok, true);
     if (waOtp.ok) {
-      expect(waOtp.whatsappLink).toContain("wa.me/2348051112233");
-      expect(
+      assert.ok(waOtp.whatsappLink?.includes("wa.me/2348051112233"));
+      assert.equal(
         verifyCustomerOtp(db, {
           userId: reg.user.id,
           channel: "whatsapp",
           code: waOtp.sandboxCode!,
-        }).ok
-      ).toBe(true);
+        }).ok,
+        true
+      );
     }
 
-    expect(reg.user.verified_channels).toEqual(
-      expect.arrayContaining(["email", "phone", "whatsapp"])
-    );
+    assert.ok(reg.user.verified_channels.includes("email"));
+    assert.ok(reg.user.verified_channels.includes("phone"));
+    assert.ok(reg.user.verified_channels.includes("whatsapp"));
   });
 
   it("never leaks already-registered customer names or shops during sign-up", () => {
@@ -136,10 +139,10 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       password: "password123",
       channel: "email",
     });
-    expect(dup.ok).toBe(false);
+    assert.equal(dup.ok, false);
     if (!dup.ok) {
-      expect(dup.error).toBe("account_exists");
-      expect(JSON.stringify(dup)).not.toContain("Secret Existing");
+      assert.equal(dup.error, "account_exists");
+      assert.ok(!JSON.stringify(dup).includes("Secret Existing"));
     }
   });
 
@@ -147,24 +150,24 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
     const db = makeDb();
 
     // Initially visible in catalog
-    expect(queryBuyerCatalog(db, { q: "rice" }).results).toHaveLength(1);
-    expect(queryBuyerCatalog(db, {}).results).toHaveLength(1);
+    assert.equal(queryBuyerCatalog(db, { q: "rice" }).results.length, 1);
+    assert.equal(queryBuyerCatalog(db, {}).results.length, 1);
 
     // Admin delists the customer
     const delist = toggleSellerStatus(db, "usr_admin", "shop_existing");
-    expect(delist.ok).toBe(true);
-    if (delist.ok) expect(delist.status).toBe("delisted");
+    assert.equal(delist.ok, true);
+    if (delist.ok) assert.equal(delist.status, "delisted");
 
     // Immediately gone from both keyword search and browse catalog
-    expect(queryBuyerCatalog(db, { q: "rice" }).results).toHaveLength(0);
-    expect(queryBuyerCatalog(db, {}).results).toHaveLength(0);
+    assert.equal(queryBuyerCatalog(db, { q: "rice" }).results.length, 0);
+    assert.equal(queryBuyerCatalog(db, {}).results.length, 0);
     // Active sessions for delisted customer are revoked
-    expect(db.user_sessions).toHaveLength(0);
+    assert.equal(db.user_sessions.length, 0);
 
     // Restoring brings them back immediately
     const restore = toggleSellerStatus(db, "usr_admin", "shop_existing");
-    expect(restore.ok).toBe(true);
-    expect(queryBuyerCatalog(db, { q: "rice" }).results).toHaveLength(1);
+    assert.equal(restore.ok, true);
+    assert.equal(queryBuyerCatalog(db, { q: "rice" }).results.length, 1);
   });
 
   it("authenticates registered customer and blocks suspended/delisted accounts", () => {
@@ -176,13 +179,13 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       password: "mySecretPassword",
       channel: "whatsapp",
     });
-    expect(reg.ok).toBe(true);
+    assert.equal(reg.ok, true);
 
     const okLogin = authenticateCustomer(db, {
       identifier: "0809 888 7766",
       password: "mySecretPassword",
     });
-    expect(okLogin.ok).toBe(true);
+    assert.equal(okLogin.ok, true);
 
     // Suspend user -> login denied
     if (reg.ok) {
@@ -192,25 +195,25 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       identifier: "08098887766",
       password: "mySecretPassword",
     });
-    expect(blocked.ok).toBe(false);
+    assert.equal(blocked.ok, false);
   });
 
   it("delists and restores a customer record directly via toggleCustomerStatus", () => {
     const db = makeDb();
-    expect(queryBuyerCatalog(db, {}).results).toHaveLength(1);
-    expect(db.user_sessions).toHaveLength(1);
+    assert.equal(queryBuyerCatalog(db, {}).results.length, 1);
+    assert.equal(db.user_sessions.length, 1);
 
     const out = toggleCustomerStatus(db, "usr_admin", "usr_existing");
-    expect(out.ok).toBe(true);
-    if (out.ok) expect(out.status).toBe("delisted");
+    assert.equal(out.ok, true);
+    if (out.ok) assert.equal(out.status, "delisted");
 
     // Linked shop & listings vanish from catalog and sessions are revoked
-    expect(queryBuyerCatalog(db, {}).results).toHaveLength(0);
-    expect(db.user_sessions).toHaveLength(0);
+    assert.equal(queryBuyerCatalog(db, {}).results.length, 0);
+    assert.equal(db.user_sessions.length, 0);
 
     const back = toggleCustomerStatus(db, "usr_admin", "usr_existing");
-    expect(back.ok).toBe(true);
-    expect(queryBuyerCatalog(db, {}).results).toHaveLength(1);
+    assert.equal(back.ok, true);
+    assert.equal(queryBuyerCatalog(db, {}).results.length, 1);
   });
 
   it("allows OTP-only accounts to sign in seamlessly via 6-digit code (WhatsApp/SMS/Email)", () => {
@@ -220,15 +223,15 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       identifier: "+2348030001111",
       password: "anyPassword",
     });
-    expect(pwAttempt.ok).toBe(false);
-    if (!pwAttempt.ok) expect(pwAttempt.error).toBe("otp_only_account");
+    assert.equal(pwAttempt.ok, false);
+    if (!pwAttempt.ok) assert.equal(pwAttempt.error, "otp_only_account");
 
     // Sign in with 6-digit code via WhatsApp
     const otpReq = requestLoginOtp(db, {
       identifier: "0803 000 1111",
       channel: "whatsapp",
     });
-    expect(otpReq.ok).toBe(true);
+    assert.equal(otpReq.ok, true);
     if (!otpReq.ok) return;
 
     const ver = verifyCustomerOtp(db, {
@@ -236,18 +239,18 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       channel: "whatsapp",
       code: otpReq.sandboxCode!,
     });
-    expect(ver.ok).toBe(true);
+    assert.equal(ver.ok, true);
     if (ver.ok) {
-      expect(ver.user.id).toBe("usr_existing");
-      expect(ver.shop?.id).toBe("shop_existing");
+      assert.equal(ver.user.id, "usr_existing");
+      assert.equal(ver.shop?.id, "shop_existing");
     }
   });
 
   it("parses formatted Naira prices with commas and symbols cleanly during publish validation", () => {
-    expect(parsePriceNaira("18,500")).toBe(18500);
-    expect(parsePriceNaira("₦ 250,000")).toBe(250000);
-    expect(parsePriceNaira("4500")).toBe(4500);
-    expect(parsePriceNaira("")).toBe(0);
+    assert.equal(parsePriceNaira("18,500"), 18500);
+    assert.equal(parsePriceNaira("₦ 250,000"), 250000);
+    assert.equal(parsePriceNaira("4500"), 4500);
+    assert.equal(parsePriceNaira(""), 0);
 
     const d = emptyDraft("drf_test_publish");
     d.verified = true;
@@ -268,6 +271,6 @@ describe("Multi-channel customer verification, privacy & admin delisting", () =>
       },
     ];
 
-    expect(validateStep(5, d)).toEqual([]);
+    assert.deepEqual(validateStep(5, d), []);
   });
 });

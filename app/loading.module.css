@@ -1,0 +1,7 @@
+.screen{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:#f6f7f2;color:#202822;font-family:'DM Sans',Arial,sans-serif}
+.content{display:flex;flex-direction:column;align-items:center;gap:14px}
+.mark{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:#145d43;color:#fff;font:800 38px Manrope,Arial,sans-serif}
+.spinner{width:28px;height:28px;border:3px solid #dce8dc;border-top-color:#145d43;border-radius:50%;animation:spin .8s linear infinite}
+.content p{margin:0;color:#657268;font-size:13px;font-weight:600;letter-spacing:.02em}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spinner{animation-duration:2s}}

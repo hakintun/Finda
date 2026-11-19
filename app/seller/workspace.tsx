@@ -1,0 +1,49 @@
+'use client';
+
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { createClient } from '@/lib/supabase/browser';
+import { signOutSeller } from './actions';
+import styles from './seller.module.css';
+
+type Product={id:string;name:string;description:string;price:number|null;brand:string|null;condition:string;availability:boolean;quantity:number|null;is_active:boolean;category_id:number;location_id:number;created_at:string;category:string;location:string;imageUrl:string|null;product_images:{id:string;storage_path:string;position:number;alt_text:string}[]};
+type Category={id:number;name:string};type Location={id:number;neighbourhood:string};
+
+export default function SellerWorkspace({seller,products,categories,locations,enquiryCount}:{seller:{id:string;name:string;status:string};products:Product[];categories:Category[];locations:Location[];enquiryCount:number}){
+  const [showForm,setShowForm]=useState(false);const [toast,setToast]=useState('');const [isPending,startTransition]=useTransition();const router=useRouter();
+  const activeCount=products.filter(p=>p.is_active&&p.availability).length;
+  const notify=(message:string)=>{setToast(message);setTimeout(()=>setToast(''),3200)};
+  function refresh(){router.refresh();}
+  async function submitProduct(e:React.FormEvent<HTMLFormElement>){e.preventDefault();const form=e.currentTarget;const fd=new FormData(form);const files=fd.getAll('images').filter((x):x is File=>x instanceof File&&x.size>0);if(!files.length){notify('Add at least one product photo.');return;}if(files.length>5){notify('You can upload up to 5 photos.');return;}if(files.some(f=>!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>5*1024*1024)){notify('Use JPG, PNG or WebP images under 5 MB each.');return;}
+    const supabase=createClient();startTransition(async()=>{let createdId:string|undefined;const uploaded:string[]=[];try{const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error('Your session expired. Sign in again.');
+      const name=String(fd.get('name')||'').trim();const description=String(fd.get('description')||'').trim();const categoryId=Number(fd.get('category_id'));const locationId=Number(fd.get('location_id'));const priceRaw=String(fd.get('price')||'').trim();const quantityRaw=String(fd.get('quantity')||'').trim();const condition=String(fd.get('condition')||'new');
+      const {data:product,error}=await supabase.from('products').insert({seller_id:seller.id,name,description,category_id:categoryId,location_id:locationId,price:priceRaw?Number(priceRaw):null,brand:String(fd.get('brand')||'').trim()||null,condition,availability:true,quantity:quantityRaw?Number(quantityRaw):null,keywords:String(fd.get('keywords')||'').split(',').map(x=>x.trim()).filter(Boolean),is_active:false}).select('id').single();
+      if(error)throw new Error(error.message);createdId=product.id;
+      const records=[] as {product_id:string;storage_path:string;position:number;alt_text:string}[];
+      for(let i=0;i<files.length;i++){const file=files[i];const safeName=file.name.toLowerCase().replace(/[^a-z0-9._-]+/g,'-');const path=`${user.id}/${product.id}/${crypto.randomUUID()}-${safeName}`;const {error:uploadError}=await supabase.storage.from('product-images').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});if(uploadError)throw new Error(uploadError.message);uploaded.push(path);records.push({product_id:product.id,storage_path:path,position:i,alt_text:`${name} product photo ${i+1}`});}
+      const {error:imageError}=await supabase.from('product_images').insert(records);if(imageError)throw new Error(imageError.message);
+      const {error:activateError}=await supabase.from('products').update({is_active:true}).eq('id',product.id);if(activateError)throw new Error(activateError.message);
+      setShowForm(false);notify('Product published.');form.reset();refresh();
+    }catch(error){if(uploaded.length)await supabase.storage.from('product-images').remove(uploaded);if(createdId)await supabase.from('products').delete().eq('id',createdId);notify(error instanceof Error?error.message:'Product could not be saved.');}
+    });
+  }
+  function toggleAvailability(product:Product){const supabase=createClient();runAction(async()=>{const {error}=await supabase.from('products').update({availability:!product.availability}).eq('id',product.id).eq('seller_id',seller.id);if(error)throw error;},product.availability?'Product marked unavailable.':'Product marked available.');}
+  function deleteProduct(product:Product){if(!window.confirm(`Delete “${product.name}”? This can’t be undone.`))return;const supabase=createClient();runAction(async()=>{const {data:images,error}=await supabase.from('product_images').select('storage_path').eq('product_id',product.id);if(error)throw error;if(images?.length){const {error:storageError}=await supabase.storage.from('product-images').remove(images.map(i=>i.storage_path));if(storageError)throw storageError;}const {error:deleteError}=await supabase.from('products').delete().eq('id',product.id).eq('seller_id',seller.id);if(deleteError)throw deleteError;},'Product deleted.');}
+  function runAction(action:()=>Promise<void>,success:string){startTransition(async()=>{try{await action();notify(success);refresh();}catch(e){notify(e instanceof Error?e.message:'The action failed.');}})}
+  return <main className={styles.page}><header className={styles.bar}><Link className={styles.brand} href="/"><span className={styles.brandIcon}>f</span>finda<span className={styles.dot}>.</span></Link><div style={{display:'flex',alignItems:'center',gap:14}}><span className={styles.barLink}>{seller.name}</span><form action={signOutSeller}><button className={styles.barLink} style={{border:0,background:'none',cursor:'pointer'}}>Sign out</button></form></div></header><section className={`${styles.card} ${styles.statusCard}`}>
+    <div className={styles.eyebrow}>SELLER WORKSPACE</div><div className={styles.statusTop}><div><h1>{seller.name}</h1><p className={styles.intro}>Manage your listings and shop activity.</p></div><span className={`${styles.statusPill} ${styles.approved}`}>Approved seller</span></div>
+    <div className={styles.stats}><div className={styles.stat}><b>{products.length}</b><small>Total products</small></div><div className={styles.stat}><b>{activeCount}</b><small>Available listings</small></div><div className={styles.stat}><b>{enquiryCount}</b><small>Contact actions</small></div></div>
+    <div className={styles.toolbar}><h2>Your products</h2><button className={styles.addButton} onClick={()=>setShowForm(true)}>＋ Add product</button></div>
+    <div className={styles.productList}>{products.map(p=><article className={styles.product} key={p.id}>{p.imageUrl?<img className={styles.productImage} src={p.imageUrl} alt={p.name}/>:<span className={styles.placeholder}>▧</span>}<div className={styles.productInfo}><b>{p.name}</b><small>{p.category} · {p.location} · {p.condition} · {p.price===null?'Price not set':`₦${Number(p.price).toLocaleString('en-NG')}`}</small><small>{p.is_active?'Published':'Not public'} · {p.availability?'Available':'Unavailable'}</small></div><div className={styles.productActions}><label className={styles.toggle}><input type="checkbox" checked={p.availability} disabled={isPending} onChange={()=>toggleAvailability(p)}/> Available</label><button className="" onClick={()=>toggleAvailability(p)}>{p.availability?'Mark unavailable':'Mark available'}</button><button className={styles.danger} disabled={isPending} onClick={()=>deleteProduct(p)}>Delete</button></div></article>)}{!products.length&&<div className={styles.empty}>You haven’t added any products yet. Add your first listing to help local buyers find your shop.</div>}</div>
+    </section>
+    {showForm&&<div className={styles.overlay} onClick={()=>setShowForm(false)}><section className={styles.modal} onClick={e=>e.stopPropagation()}><button className={styles.close} onClick={()=>setShowForm(false)}>×</button><h2>Add a product</h2><p>Add accurate details and at least one clear photo. Listings appear publicly after they’re saved.</p><form className={styles.form} onSubmit={submitProduct}>
+      <label>Product name<input name="name" required maxLength={120} placeholder="e.g. Samsung Galaxy A55"/></label><label>Category<select name="category_id" defaultValue="" required><option value="" disabled>Select category</option>{categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+      <label className={styles.full}>Description<textarea name="description" required maxLength={3000} placeholder="Describe the product and its key details"/></label><label>Price in naira<input name="price" type="number" min="0" step="0.01" placeholder="Optional"/></label><label>Brand<input name="brand" placeholder="Optional"/></label>
+      <label>Condition<select name="condition" required defaultValue="new"><option value="new">New</option><option value="used">Used</option><option value="refurbished">Refurbished</option></select></label><label>Neighbourhood<select name="location_id" defaultValue="" required><option value="" disabled>Select area</option>{locations.map(l=><option key={l.id} value={l.id}>{l.neighbourhood}</option>)}</select></label>
+      <label>Quantity<input name="quantity" type="number" min="0" step="1" placeholder="Optional"/></label><label>Keywords<input name="keywords" placeholder="Separate with commas"/></label><label className={styles.full}>Product photos<input name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple required/><small>At least one photo; up to 5 photos, JPG/PNG/WebP, 5 MB max each.</small></label>
+      <button className={styles.submit} disabled={isPending}>{isPending?'Saving product…':'Save and publish product'}</button>
+    </form></section></div>}
+    {toast&&<div className={styles.toast}>{toast}</div>}
+  </main>;
+}

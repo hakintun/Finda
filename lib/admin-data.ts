@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 
-export type AdminSeller = { id:string; name:string; shop:string; category:string; location:string; submitted:string; status:string; phone:string };
+export type AdminSeller = { id:string; name:string; shop:string; category:string; location:string; submitted:string; status:string; applicationStatus:string; phone:string };
 export type AdminProduct = { id:string; name:string; seller:string; category:string; price:number|null; status:string };
 export type AdminBuyer = { id:string; name:string; phone:string; registered:string; suspended:boolean };
 export type AdminReport = { id:string; title:string; item:string; reason:string; received:string; status:string };
@@ -48,7 +48,7 @@ export async function loadAdminData():Promise<AdminData>{
   apps.forEach(a=>{if(!latestApp.has(a.seller_id))latestApp.set(a.seller_id,a)});
   const sellers:AdminSeller[]=sellersRaw.map(s=>{
     const user=usersById.get(s.user_id);const application=latestApp.get(s.id);
-    return {id:s.id,name:user?.full_name||'Seller',shop:s.business_name,category:categoryById.get(s.category_id)||'Uncategorized',location:locationById.get(s.location_id)||'Location unavailable',submitted:application?dateLabel(application.submitted_at):dateLabel(s.created_at),status:statusLabel(application?.status||s.status),phone:s.business_phone||user?.phone||'Not provided'};
+    return {id:s.id,name:user?.full_name||'Seller',shop:s.business_name,category:categoryById.get(s.category_id)||'Uncategorized',location:locationById.get(s.location_id)||'Location unavailable',submitted:application?dateLabel(application.submitted_at):dateLabel(s.created_at),status:statusLabel(s.status),applicationStatus:statusLabel(application?.status||s.status),phone:s.business_phone||user?.phone||'Not provided'};
   });
   const sellerById=new Map(sellersRaw.map(s=>[s.id,s.business_name]));
   const products:AdminProduct[]=productsRaw.map(p=>({id:p.id,name:p.name,seller:sellerById.get(p.seller_id)||'Seller unavailable',category:categoryById.get(p.category_id)||'Uncategorized',price:p.price===null?null:Number(p.price),status:p.is_active?'Active':'Disabled'}));

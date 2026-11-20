@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { submitSellerApplication } from '../actions';
+import { signOutSeller, submitSellerApplication } from '../actions';
 import styles from '../seller.module.css';
+import SubmitApplicationButton from './submit-button';
 
 export const dynamic='force-dynamic';
 
@@ -17,10 +18,12 @@ export default async function SellerRegister({searchParams}:{searchParams:Promis
   }
   return <main className={styles.page}><header className={styles.bar}><Link className={styles.brand} href="/"><span className={styles.brandIcon}>f</span>finda<span className={styles.dot}>.</span></Link><Link className={styles.barLink} href="/seller/login">Already applied? Sign in →</Link></header><section className={styles.card}>
     <div className={styles.eyebrow}>SELL ON FINDA</div><h1>{existingSeller?'Update your application and reapply':user?'Complete your seller application':'Bring your shop to FINDA'}</h1><p className={styles.intro}>{existingSeller?'Your previous application was rejected. Update your business details, then submit a new application for review.':'Reach customers looking for products in Port Harcourt. Your application will be reviewed before you can publish listings.'}</p>
+    {existingSeller&&<div className={`${styles.message} ${styles.accountNotice}`}>This signed-in account already has a rejected seller application. Submitting this form will update and resubmit <b>{existingSeller.business_name}</b>. If this is a different seller, sign out and apply with their own account.<form action={signOutSeller}><button type="submit">Sign out and switch account →</button></form></div>}
     {!configured&&<div className={`${styles.message} ${styles.error}`}>Supabase isn’t configured. Add your project URL and public key to `.env.local` before applying.</div>}
     {params['check-email']&&<div className={styles.message}>Check your email to confirm your account. Your application will be submitted when you follow the confirmation link.</div>}
     {params.error&&<div className={`${styles.message} ${styles.error}`}>{params.error==='password'?'Use a password with at least 8 characters.':params.error==='terms'?'Accept the seller terms to submit your application.':params.error==='signup'?'We could not create this account. The email may already be registered; sign in and continue your application.':params.error==='application'?'Your account was confirmed, but the seller application could not be completed. Sign in and contact FINDA support.':decodeURIComponent(params.error)}</div>}
-    {(!categories.length||!locations.length)&&configured&&<div className={`${styles.message} ${styles.error}`}>Add active categories and Port Harcourt neighbourhoods in Supabase before applying.</div>}
+    {!categories.length&&configured&&<div className={`${styles.message} ${styles.error}`}>There are no active business categories. A FINDA admin must add or activate categories in Supabase before sellers can apply.</div>}
+    {!locations.length&&configured&&<div className={`${styles.message} ${styles.error}`}>There are no active Port Harcourt neighbourhoods. A FINDA admin must add or activate locations in Supabase before sellers can apply.</div>}
     <form className={styles.form} action={submitSellerApplication}>
       {!user&&<><label>Full name<input name="full_name" autoComplete="name" required placeholder="Your full name"/></label><label>Phone number<input name="phone" type="tel" autoComplete="tel" required placeholder="080…"/></label><label className={styles.full}>Email address<input name="email" type="email" autoComplete="email" required placeholder="you@example.com"/></label><label className={styles.full}>Password<input name="password" type="password" minLength={8} autoComplete="new-password" required placeholder="At least 8 characters"/></label></>}
       {user&&<><div className={styles.account}>Applying as <b>{user.email}</b></div><label>Full name<input name="full_name" defaultValue={String(user.user_metadata.full_name||'')} autoComplete="name" required/></label><label>Phone number<input name="phone" defaultValue={String(user.user_metadata.phone||'')} type="tel" required placeholder="080…"/></label></>}
@@ -31,7 +34,7 @@ export default async function SellerRegister({searchParams}:{searchParams:Promis
       <label>Business phone<input name="business_phone" defaultValue={existingSeller?.business_phone||''} type="tel" required placeholder="Phone customers can call"/></label>
       <label className={styles.full}>WhatsApp number<input name="whatsapp" defaultValue={existingSeller?.whatsapp||''} type="tel" required placeholder="Include country code, e.g. 2348012345678"/></label>
       <label className={styles.check}><input name="terms" type="checkbox" required/><span>I agree to FINDA’s seller terms and confirm my business details are accurate.</span></label>
-      <button className={styles.submit} disabled={!configured||!categories.length||!locations.length}>{existingSeller?'Submit new application →':'Submit seller application →'}</button>
+      <SubmitApplicationButton disabled={!configured||!categories.length||!locations.length} label={existingSeller?'Submit new application →':'Submit seller application →'}/>
     </form>
     <small className={styles.foot}>Applications start as pending. Products can be published after admin approval.</small>
   </section></main>;

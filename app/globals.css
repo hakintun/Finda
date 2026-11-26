@@ -3,3 +3,36 @@
 @media(max-width:1220px){.header,.hero,.categorysection,.productsection,footer,.sellbanner{margin-left:32px;margin-right:32px}.trustrow{gap:35px}}@media(max-width:800px){.topline{padding:0 18px}.header{height:67px;margin:0 18px}nav{gap:14px;margin:0}nav button{font-size:11px}.headright{gap:10px}.sellbtn{padding:11px 12px}.hero{margin:0 24px;min-height:490px;grid-template-columns:1.05fr .95fr}.herotext{padding-left:0}h1{font-size:42px}.heroart{transform:scale(.85);transform-origin:center right;margin-right:-28px}.trustrow{gap:20px;padding:0 18px}.trustlink{display:none}.categorysection,.productsection{margin:0 24px}.categories{grid-template-columns:repeat(3,1fr)}.category{height:110px}.productgrid{grid-template-columns:repeat(2,1fr)}.productimage{height:220px}.sellbanner{margin:0 24px 65px;padding:24px 5%}.footlinks{gap:35px}}@media(max-width:560px){.topline{font-size:9px}.header{margin:0 15px}.brand{font-size:24px}nav,.headright{display:none}.mobilemenu{display:block}.hero{display:flex;flex-direction:column;align-items:stretch;margin:0 19px;padding:49px 0 0;min-height:0}.herotext{padding:0}.eyebrow{font-size:8px}.herotext h1{font-size:42px;margin:17px 0 12px}.herotext>p{font-size:12px;margin-bottom:20px}.searchbar{height:53px}.searchbar button{padding:12px;font-size:10px}.searchbar input{font-size:10px}.popular{gap:5px;flex-wrap:wrap}.popular button{font-size:9px;padding:5px 8px}.socialproof{margin-top:22px}.heroart{height:300px;transform:none;margin:0 -15px}.heroart:before{width:245px;height:245px;right:38px;top:25px}.sun{width:66px;height:66px;right:40px;top:10px}.heroimage{width:265px;height:295px;right:62px;bottom:0}.sellerfloat{left:1px;top:81px;padding:9px}.pricefloat{right:1px;bottom:12px;transform:scale(.87);transform-origin:right bottom}.scribble{font-size:42px;right:2px;top:135px}.trustrow{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:19px}.trustrow>div>b{width:27px;height:27px}.trustrow strong{font-size:9px}.trustrow small{font-size:8px}.categorysection,.productsection{margin:0 18px;padding-top:51px}.sectionhead{align-items:start}.sectionhead h2{font-size:22px}.textlink{font-size:9px;padding:0;margin-top:17px}.categories{gap:8px}.category{height:96px;padding:10px}.caticon{height:34px;width:34px;font-size:18px;margin-bottom:10px}.category strong{font-size:9px}.catarrow{right:8px;top:10px}.productshead{display:block}.filters{margin-top:15px}.filters label{flex:1}.filters select{max-width:none;flex:1}.productgrid{gap:10px}.productimage{height:154px}.productinfo{padding:10px 9px}.productinfo>strong{font-size:10px}.productprice{font-size:13px}.sellerline{font-size:8px;gap:5px}.selleravatar{width:22px;height:22px}.productbadge{font-size:7px;left:6px;top:6px;padding:5px}.heart{right:6px;top:6px;width:26px;height:26px}.sellerline small{font-size:7px}.productsection{padding-bottom:53px}.sellbanner{margin:0 18px 52px;grid-template-columns:1fr;padding:25px 22px 28px}.sellillustration{height:120px}.shopshape{height:94px;width:96px;font-size:18px}.sellillustration>span{left:30%;top:0}.sellbanner h2{font-size:21px}.sellbanner p{font-size:10px}.bannerdecor{font-size:56px;right:15px}.howsection{padding:52px 22px}.howsection h2{font-size:25px}.howsteps{grid-template-columns:1fr;gap:13px;margin-top:28px}.howsteps>div{padding:10px 0}.howsteps span{display:inline-block;margin:0 10px 0 0}.howsteps p{max-width:none;margin:7px 0}.howsteps strong{font-size:12px}footer{margin:0 19px;padding:35px 0 16px;grid-template-columns:1fr;gap:22px}.footlinks{justify-content:space-between;gap:10px}.footlinks strong{font-size:10px}.footlinks a,.footlinks button{font-size:9px}.copyright{font-size:8px}.productmodal{grid-template-columns:1fr;max-width:390px}.productmodal>img{height:220px;min-height:0}.modalbody{padding:23px}.modalbody h2{font-size:21px}.dialog{padding:28px}.toast{width:max-content;max-width:90%;text-align:center}.empty{padding:35px 15px}}
 .imageplaceholder{display:grid;place-items:center;width:100%;height:100%;min-height:160px;background:linear-gradient(135deg,#eef4ec,#f7eee2);color:#145d43;font-size:13px;font-weight:700;text-align:center;padding:20px}
 .contactlist{display:grid;gap:8px;margin:16px 0}.contactlist p{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;margin:0;border:1px solid #e8ebe6;border-radius:6px;color:#202822;font-size:12px}.contactlist small{color:#747d76;font-size:10px}
+/* Small-screen defaults shared by the marketplace and account pages. */
+html,body{max-width:100%;overflow-x:clip}img{max-width:100%}button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+@media(max-width:420px){
+  .topline{height:auto;min-height:34px;gap:8px;padding:calc(7px + env(safe-area-inset-top)) 12px 7px;font-size:8px}
+  .header{margin:0 12px}
+  .hero{margin:0 14px}
+  .herotext h1{font-size:clamp(34px,10vw,42px);letter-spacing:-1.4px}
+  .categorysection,.productsection{margin-left:14px;margin-right:14px}
+  .filters{gap:6px}.filters label{padding:0 7px}.filters select{font-size:9px}
+  .productgrid{gap:8px}.productimage{height:clamp(126px,42vw,154px)}
+  .sellbanner{margin-left:14px;margin-right:14px}
+  footer{margin-left:14px;margin-right:14px}
+  .copyright{gap:8px;flex-wrap:wrap;line-height:1.5}
+  .productmodal{width:100%;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px)}
+  .overlay{padding:12px}
+  .modalactions{flex-wrap:wrap}.modalactions>*{flex:1 1 120px;min-height:42px;justify-content:center}
+  .dialog{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;padding:28px 20px}
+}
+@media(max-width:350px){
+  .topline>span:first-child{max-width:48%}
+  .hero{margin:0 12px}
+  .searchbar{padding:4px}.searchicon{width:30px}
+  .searchbar button{padding:11px 9px}.searchbar button span{margin-left:4px}
+  .categorysection,.productsection{margin-left:12px;margin-right:12px}
+  .categories{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .productgrid{grid-template-columns:1fr}.productimage{height:210px}
+  .filters label{min-width:0}.filters select{min-width:0}
+  .footlinks{gap:7px}.footlinks>div{min-width:0}
+}
+@media(max-height:520px) and (orientation:landscape){
+  .overlay{align-items:start;overflow-y:auto}
+  .productmodal,.dialog{max-height:none}
+}

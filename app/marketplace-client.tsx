@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
-type Product = { id:string; name:string; category:string; price:number|null; seller:string; area:string; image:string; description:string; condition:string; brand:string; whatsapp:string; phone:string };
+type Product = { id:string; name:string; category:string; price:number|null; seller:string; area:string; image:string; description:string; condition:string; brand:string; whatsapp:string; phone:string; createdAt:string };
 type Category = { name:string };
 const categoryIcons=['▯','⌁','⌂','◈','✳','⚙'];
 const naira=(n:number|null)=>n==null?'Contact for price':`₦${n.toLocaleString('en-NG')}`;
@@ -10,7 +10,7 @@ const naira=(n:number|null)=>n==null?'Contact for price':`₦${n.toLocaleString(
 export default function Home({ products, categories, loadError }: { products:Product[]; categories:Category[]; loadError?:boolean }) {
   const [query,setQuery]=useState(''); const [activeCategory,setActiveCategory]=useState(''); const [area,setArea]=useState(''); const [sort,setSort]=useState('Recommended');
   const [saved,setSaved]=useState<string[]>([]); const [selected,setSelected]=useState<Product|null>(null); const [dialog,setDialog]=useState(''); const [notice,setNotice]=useState(''); const [tab,setTab]=useState('Discover');
-  const filtered=useMemo(()=>products.filter(p=>`${p.name} ${p.category} ${p.seller} ${p.area} ${p.brand} ${p.description}`.toLowerCase().includes(query.toLowerCase())&&(!activeCategory||p.category===activeCategory)&&(!area||p.area===area)).sort((a,b)=>sort==='Lowest price'?(a.price??Infinity)-(b.price??Infinity):sort==='Highest price'?(b.price??-Infinity)-(a.price??-Infinity):sort==='Newest'?0:0),[products,query,activeCategory,area,sort]);
+  const filtered=useMemo(()=>products.filter(p=>`${p.name} ${p.category} ${p.seller} ${p.area} ${p.brand} ${p.description}`.toLowerCase().includes(query.toLowerCase())&&(!activeCategory||p.category===activeCategory)&&(!area||p.area===area)).sort((a,b)=>sort==='Lowest price'?(a.price??Infinity)-(b.price??Infinity):sort==='Highest price'?(b.price??-Infinity)-(a.price??-Infinity):sort==='Newest'?Date.parse(b.createdAt)-Date.parse(a.createdAt):0),[products,query,activeCategory,area,sort]);
   function toast(s:string){setNotice(s);setTimeout(()=>setNotice(''),2800)}
   function toggleSave(id:string){setSaved(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]); if(!saved.includes(id))toast('Sign in to keep your saved finds.');}
   return <main>

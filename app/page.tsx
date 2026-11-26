@@ -27,7 +27,7 @@ export default async function Page() {
         id: row.id, name: row.name, description: row.description, price: row.price == null ? null : Number(row.price),
         brand: row.brand ?? '', condition: row.condition, seller: seller?.business_name ?? 'Local seller',
         whatsapp: seller?.whatsapp ?? '', phone: seller?.business_phone ?? '', category: category?.name ?? 'Other',
-        area: location?.neighbourhood ?? '', image,
+        area: location?.neighbourhood ?? '', image, createdAt: row.created_at,
       };
     });
     categories = categoryResult.data ?? [];

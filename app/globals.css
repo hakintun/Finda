@@ -36,3 +36,4 @@ html,body{max-width:100%;overflow-x:clip}img{max-width:100%}button,a,input,selec
   .overlay{align-items:start;overflow-y:auto}
   .productmodal,.dialog{max-height:none}
 }
+.modalactions button:first-child{border:0;background:#25a45a;color:#fff}.authToggle{display:block;margin:14px auto 0;padding:8px;border:0;background:transparent;color:var(--green);font-size:14px;font-weight:700}

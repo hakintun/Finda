@@ -32,7 +32,7 @@ export default async function SellerRegister({searchParams}:{searchParams:Promis
       <label className={styles.full}>Street address<input name="address" defaultValue={existingSeller?.address||''} required placeholder="Shop address or landmark"/></label>
       <label>Neighbourhood<select name="location_id" defaultValue={existingSeller?.location_id||''} required><option value="" disabled>Select an area</option>{locations.map(l=><option key={l.id} value={l.id}>{l.neighbourhood}</option>)}</select></label>
       <label>Business phone<input name="business_phone" defaultValue={existingSeller?.business_phone||''} type="tel" required placeholder="Phone customers can call"/></label>
-      <label className={styles.full}>WhatsApp number<input name="whatsapp" defaultValue={existingSeller?.whatsapp||''} type="tel" required placeholder="Include country code, e.g. 2348012345678"/></label>
+      <label className={styles.full}>WhatsApp number<input name="whatsapp" defaultValue={existingSeller?.whatsapp||''} type="tel" required placeholder="08012345678 or +2348012345678"/><small>Buyers can message you even if they haven’t saved your number.</small></label>
       <label className={styles.check}><input name="terms" type="checkbox" required/><span>I agree to FINDA’s seller terms and confirm my business details are accurate.</span></label>
       <SubmitApplicationButton disabled={!configured||!categories.length||!locations.length} label={existingSeller?'Submit new application →':'Submit seller application →'}/>
     </form>
